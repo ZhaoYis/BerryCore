@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{59C2EEA0-1386-4680-A1D0-ECF54F852F54}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BerryCore.BLL</RootNamespace>
+    <AssemblyName>BerryCore.BLL</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Base\BaseBLL.cs" />
+    <Compile Include="Base\BaseBLL.T.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\BerryCore.DataAccess\BerryCore.Data.Repository\BerryCore.Data.Repository.csproj">
+      <Project>{a3724e87-cb69-4498-90e9-4efbf51632a0}</Project>
+      <Name>BerryCore.Data.Repository</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\BerryCore.Framework\Utils\BerryCore.Log\BerryCore.Log.csproj">
+      <Project>{36f14e26-5650-400c-ba8f-a76d28c767cb}</Project>
+      <Name>BerryCore.Log</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\BerryCore.Models\BerryCore.Entity\BerryCore.Entity.csproj">
+      <Project>{a9e7dda2-4029-45ae-aa1f-5a27d3182954}</Project>
+      <Name>BerryCore.Entity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BerryCore.IBLL\BerryCore.IBLL.csproj">
+      <Project>{6d12cb2e-14b0-4843-a915-daf2962e5171}</Project>
+      <Name>BerryCore.IBLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BerryCore.IService\BerryCore.IService.csproj">
+      <Project>{ecade0bd-0186-4598-a514-07c8c6ef7c84}</Project>
+      <Name>BerryCore.IService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BerryCore.Service\BerryCore.Service.csproj">
+      <Project>{93f2b784-8364-42dd-a170-83ac969f5bf3}</Project>
+      <Name>BerryCore.Service</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
