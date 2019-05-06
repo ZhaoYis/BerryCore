@@ -232,7 +232,7 @@ namespace BerryCore.Extensions.QueryableEx
         public static string ExpandAndToString<T>(this IEnumerable<T> collection, string separator)
         {
             List<T> source = collection as List<T> ?? collection.ToList();
-            if (source.IsEmpty())
+            if (!source.Any())
             {
                 return "";
             }

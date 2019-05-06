@@ -42,7 +42,7 @@ namespace BerryCore.Entity.Test
         /// <summary>
         /// 新增调用
         /// </summary>
-        protected override void Create()
+        public override void Create()
         {
             this.Id = CommonHelper.GetGuid();
             this.DeleteMark = false;

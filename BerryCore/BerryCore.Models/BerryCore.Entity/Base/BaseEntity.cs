@@ -38,20 +38,20 @@ namespace BerryCore.Entity.Base
         /// PK
         /// </summary>
         [NotMapped]
-        protected virtual int PK { get; set; }
+        public virtual int PK { get; set; }
 
         /// <summary>
         /// 主键
         /// </summary>
         [Key]
-        protected virtual string Id { get; set; }
+        public virtual string Id { get; set; }
 
         #region 扩展操作方法
 
         /// <summary>
         /// 新增调用
         /// </summary>
-        protected virtual void Create()
+        public virtual void Create()
         {
             this.Id = CommonHelper.GetGuid();
         }
@@ -60,7 +60,7 @@ namespace BerryCore.Entity.Base
         /// 编辑调用
         /// </summary>
         /// <param name="id">主键值</param>
-        protected virtual void Modify(string id)
+        public virtual void Modify(string id)
         {
             this.Id = id;
         }
@@ -70,7 +70,7 @@ namespace BerryCore.Entity.Base
         /// </summary>
         /// <param name="func"></param>
         /// <returns></returns>
-        protected virtual bool DuplicateChecking(Func<bool> func)
+        public virtual bool DuplicateChecking(Func<bool> func)
         {
             return func.Invoke();
         }
