@@ -23,7 +23,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Web;
 
 namespace BerryCore.Utilities
@@ -35,7 +34,7 @@ namespace BerryCore.Utilities
     /// 最后修改者  ：赵轶
     /// 最后修改日期：2019/5/3 22:00:46 
     /// </summary>
-    public sealed class StringHelper
+    public static class StringHelper
     {
         #region 防止SQL注入，过滤字符串
 
@@ -85,10 +84,16 @@ namespace BerryCore.Utilities
         public static string Splice<T>(IEnumerable<T> list, string quotes = "", string separator = ",")
         {
             if (list == null)
+            {
                 return string.Empty;
+            }
+
             var result = new StringBuilder();
             foreach (var each in list)
+            {
                 result.AppendFormat("{0}{1}{0}{2}", quotes, each, separator);
+            }
+
             return result.ToString().TrimEnd(separator.ToCharArray());
         }
 
@@ -219,9 +224,15 @@ namespace BerryCore.Utilities
         public static string Truncate(string text, int length, int endCharCount = 0, string endChar = ".")
         {
             if (string.IsNullOrWhiteSpace(text))
+            {
                 return string.Empty;
+            }
+
             if (text.Length < length)
+            {
                 return text;
+            }
+
             return text.Substring(0, length) + GetEndString(endCharCount, endChar);
         }
 
@@ -232,7 +243,10 @@ namespace BerryCore.Utilities
         {
             StringBuilder result = new StringBuilder();
             for (int i = 0; i < endCharCount; i++)
+            {
                 result.Append(endChar);
+            }
+
             return result.ToString();
         }
 
@@ -265,7 +279,10 @@ namespace BerryCore.Utilities
         public static string DelLastLength(string str, int Length)
         {
             if (string.IsNullOrEmpty(str))
+            {
                 return "";
+            }
+
             str = str.Substring(0, str.Length - Length);
             return str;
         }
@@ -282,7 +299,11 @@ namespace BerryCore.Utilities
         /// <returns>是否合法的bool值。</returns>
         public static bool QuickValidate(string express, string value)
         {
-            if (value == null) return false;
+            if (value == null)
+            {
+                return false;
+            }
+
             Regex myRegex = new Regex(express);
             if (value.Length == 0)
             {
@@ -299,7 +320,10 @@ namespace BerryCore.Utilities
         /// <returns></returns>
         public static List<string> GetValueByRegex(string text, string pattern)
         {
-            if (string.IsNullOrEmpty(text)) return new List<string>();
+            if (string.IsNullOrEmpty(text))
+            {
+                return new List<string>();
+            }
 
             List<string> res = new List<string>();
             Regex regex = new Regex(pattern);
@@ -334,7 +358,9 @@ namespace BerryCore.Utilities
             strText = System.Text.RegularExpressions.Regex.Replace(strText, "&[^;]+;", "");
 
             if (length > 0 && strText.Length > length)
+            {
                 return strText.Substring(0, length);
+            }
 
             return strText;
         }
@@ -384,7 +410,10 @@ namespace BerryCore.Utilities
         {
             var result = HttpUtility.UrlEncode(url, encoding);
             if (!isUpper)
+            {
                 return result;
+            }
+
             return GetUpperEncode(result);
         }
 
@@ -399,9 +428,15 @@ namespace BerryCore.Utilities
             {
                 string character = encode[i].ToString();
                 if (character == "%")
+                {
                     index = i;
+                }
+
                 if (i - index == 1 || i - index == 2)
+                {
                     character = character.ToUpper();
+                }
+
                 result.Append(character);
             }
             return result.ToString();

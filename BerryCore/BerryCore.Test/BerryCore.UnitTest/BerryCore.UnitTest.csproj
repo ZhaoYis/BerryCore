@@ -65,6 +65,9 @@
     <Content Include="XmlConfig\system.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="XmlConfig\RedisServiceConfig.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\BerryCore.Business\BerryCore.BLL\BerryCore.BLL.csproj">

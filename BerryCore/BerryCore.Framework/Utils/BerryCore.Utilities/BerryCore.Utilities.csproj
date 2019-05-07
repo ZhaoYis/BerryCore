@@ -44,9 +44,27 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommonHelper.cs" />
+    <Compile Include="ComparintHelper.cs" />
     <Compile Include="ConfigHelper.cs" />
+    <Compile Include="CookieHelper.cs" />
+    <Compile Include="Encrypt\AESEncryptHelper.cs" />
+    <Compile Include="Encrypt\BigInteger.cs" />
+    <Compile Include="Encrypt\DESEncryptHelper.cs" />
+    <Compile Include="Encrypt\RSAEncryptHelper.cs" />
+    <Compile Include="GlobalIdGeneratorHelper.cs" />
+    <Compile Include="GZipHelper.cs" />
+    <Compile Include="HttpHelper.cs" />
+    <Compile Include="IniHelper.cs" />
+    <Compile Include="Md5Helper.cs" />
+    <Compile Include="NetworkMonitor\NetworkAdapter.cs" />
+    <Compile Include="NetworkMonitor\NetworkMonitor.cs" />
+    <Compile Include="PinYinHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RegistryKeyHelper.cs" />
+    <Compile Include="RestartComputerHelper.cs" />
+    <Compile Include="SessionHelper.cs" />
     <Compile Include="StringHelper.cs" />
+    <Compile Include="ValidateHelper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -19,11 +19,7 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BerryCore.Utilities
 {
@@ -34,7 +30,7 @@ namespace BerryCore.Utilities
     /// 最后修改者  ：赵轶
     /// 最后修改日期：2019/5/4 8:38:32 
     /// </summary>
-    public class CommonHelper
+    public static class CommonHelper
     {
         #region 获取全局唯一GUID
 
@@ -65,7 +61,9 @@ namespace BerryCore.Utilities
         {
             byte[] raw = new byte[16];
             if (UuidCreateSequential(raw) != 0)
+            {
                 throw new System.ComponentModel.Win32Exception(System.Runtime.InteropServices.Marshal.GetLastWin32Error());
+            }
 
             byte[] fix = new byte[16];
 
@@ -110,7 +108,7 @@ namespace BerryCore.Utilities
         {
             return InternetGetConnectedState(out _, 0);
         }
-        
+
         #endregion
     }
 }

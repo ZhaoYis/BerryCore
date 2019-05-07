@@ -31,6 +31,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="JWT, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\JWT.3.0.0\lib\net35\JWT.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -41,7 +47,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IgnoreTokenAttribute.cs" />
+    <Compile Include="JWTHelper.cs" />
+    <Compile Include="JWTPlayloadInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Cache\Berry.Cache.Core\Berry.Cache.Core.csproj">
+      <Project>{1f0d4e6e-fff8-4914-89f3-53198463d5a3}</Project>
+      <Name>Berry.Cache.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BerryCore.Extensions\BerryCore.Extensions.csproj">
+      <Project>{c89b9ab2-a27b-498b-8d59-fd1713596c35}</Project>
+      <Name>BerryCore.Extensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BerryCore.Utilities\BerryCore.Utilities.csproj">
+      <Project>{f843472b-e7c1-4e45-9e52-99f29c7f16e3}</Project>
+      <Name>BerryCore.Utilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
