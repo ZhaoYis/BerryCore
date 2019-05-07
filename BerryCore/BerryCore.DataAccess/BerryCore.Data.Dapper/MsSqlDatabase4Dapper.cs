@@ -1239,7 +1239,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="entity">待更新实体</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public int Update<T>(T entity, int? timeout = Timeout) where T : class
+        public int Update<T>(object entity, int? timeout = Timeout) where T : class
         {
             int res = 0;
             this.Logger(this.GetType(), "更新-Update", () =>
@@ -1252,12 +1252,12 @@ namespace BerryCore.Data.Dapper
                     {
                         using (IDbConnection connection = this.BaseDbConnection)
                         {
-                            res = connection.Execute(sql, null, null, timeout, CommandType.Text);
+                            res = connection.Execute(sql, entity, null, timeout, CommandType.Text);
                         }
                     }
                     else
                     {
-                        res = this.BaseDbTransaction.Connection.Execute(sql, null, this.BaseDbTransaction, timeout, CommandType.Text);
+                        res = this.BaseDbTransaction.Connection.Execute(sql, entity, this.BaseDbTransaction, timeout, CommandType.Text);
                     }
                 }
             }, e =>
@@ -1275,7 +1275,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="condition">筛选条件</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public int Update<T>(T entity, Expression<Func<T, bool>> condition, int? timeout = Timeout) where T : class
+        public int Update<T>(object entity, Expression<Func<T, bool>> condition, int? timeout = Timeout) where T : class
         {
             int res = 0;
             this.Logger(this.GetType(), "根据条件以及指定属性名称更新-Update", () =>
@@ -1291,12 +1291,12 @@ namespace BerryCore.Data.Dapper
                     {
                         using (IDbConnection connection = this.BaseDbConnection)
                         {
-                            res = connection.Execute(sql, null, null, timeout, CommandType.Text);
+                            res = connection.Execute(sql, entity, null, timeout, CommandType.Text);
                         }
                     }
                     else
                     {
-                        res = this.BaseDbTransaction.Connection.Execute(sql, null, this.BaseDbTransaction, timeout, CommandType.Text);
+                        res = this.BaseDbTransaction.Connection.Execute(sql, entity, this.BaseDbTransaction, timeout, CommandType.Text);
                     }
                 }
             }, e =>

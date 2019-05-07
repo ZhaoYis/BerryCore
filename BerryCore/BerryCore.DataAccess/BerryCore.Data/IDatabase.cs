@@ -380,7 +380,7 @@ namespace BerryCore.Data
         /// <param name="entity">待更新实体</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        int Update<T>(T entity, int? timeout = 15) where T : class;
+        int Update<T>(object entity, int? timeout = 15) where T : class;
 
         /// <summary>
         /// 根据条件以及指定属性名称更新
@@ -390,7 +390,7 @@ namespace BerryCore.Data
         /// <param name="condition">筛选条件</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        int Update<T>(T entity, Expression<Func<T, bool>> condition, int? timeout = 15) where T : class;
+        int Update<T>(object entity, Expression<Func<T, bool>> condition, int? timeout = 15) where T : class;
 
         #endregion
 

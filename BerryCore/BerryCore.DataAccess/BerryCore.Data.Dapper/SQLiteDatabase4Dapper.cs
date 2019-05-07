@@ -460,7 +460,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="entity">待更新实体</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public int Update<T>(T entity, int? timeout) where T : class
+        public int Update<T>(object entity, int? timeout) where T : class
         {
             throw new NotImplementedException();
         }
@@ -473,7 +473,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="condition">筛选条件</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public int Update<T>(T entity, Expression<Func<T, bool>> condition, int? timeout) where T : class
+        public int Update<T>(object entity, Expression<Func<T, bool>> condition, int? timeout) where T : class
         {
             throw new NotImplementedException();
         }

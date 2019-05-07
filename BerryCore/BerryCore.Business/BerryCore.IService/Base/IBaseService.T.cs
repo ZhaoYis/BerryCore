@@ -84,7 +84,7 @@ namespace BerryCore.IService.Base
         /// <param name="entity">要修改的列及修改后列的值集合</param>
         /// <param name="condition">筛选条件</param>
         /// <returns>返回受影响行数</returns>
-        int Update(T entity, Expression<Func<T, bool>> condition);
+        int Update(object entity, Expression<Func<T, bool>> condition);
 
         /// <summary>
         /// 执行T-SQL

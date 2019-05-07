@@ -106,6 +106,35 @@ namespace BerryCore.UnitTest
 
             Console.WriteLine("执行结果：{0}", res);
         }
-        
+
+        /// <summary>
+        /// 根据条件删除
+        /// </summary>
+        [TestMethod]
+        public void TestMethod_DeleteByCondition_T()
+        {
+            BaseBLL<UserEntity> bll = new BaseBLL<UserEntity>();
+            int res = bll.Delete(u => u.PK > 90);
+
+            Console.WriteLine("执行结果：{0}", res);
+
+            IEnumerable<UserEntity> userEntities = bll.GetList(u => u.Id != "");
+            Console.WriteLine("删除后剩余记录数：{0}", userEntities.Count());
+        }
+
+        /// <summary>
+        /// 根据条件更新
+        /// </summary>
+        [TestMethod]
+        public void TestMethod_UpdateByCondition_T()
+        {
+            BaseBLL<UserEntity> bll = new BaseBLL<UserEntity>();
+            int res = bll.Update(new
+            {
+                Name = "大师兄丶"
+            }, u => u.PK > 1 && u.PK < 10);
+
+            Console.WriteLine("执行结果：{0}", res);
+        }
     }
 }

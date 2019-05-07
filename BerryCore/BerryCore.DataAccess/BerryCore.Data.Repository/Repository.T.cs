@@ -413,7 +413,7 @@ namespace BerryCore.Data.Repository
         /// <typeparam name="T">动态对象</typeparam>
         /// <param name="entity">待更新实体</param>
         /// <returns></returns>
-        public int Update(T entity)
+        public int Update(object entity)
         {
             return _db.Update<T>(entity);
         }
@@ -425,7 +425,7 @@ namespace BerryCore.Data.Repository
         /// <param name="entity">待更新实体</param>
         /// <param name="condition">筛选条件</param>
         /// <returns></returns>
-        public int Update(T entity, Expression<Func<T, bool>> condition)
+        public int Update(object entity, Expression<Func<T, bool>> condition)
         {
             return _db.Update<T>(entity, condition);
         }

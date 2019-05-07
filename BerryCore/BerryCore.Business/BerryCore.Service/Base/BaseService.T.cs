@@ -175,7 +175,7 @@ namespace BerryCore.Service.Base
         /// <param name="entity">要修改的列及修改后列的值集合</param>
         /// <param name="condition">筛选条件</param>
         /// <returns>返回受影响行数</returns>
-        public int Update(T entity, Expression<Func<T, bool>> condition)
+        public int Update(object entity, Expression<Func<T, bool>> condition)
         {
             int res = 0;
             this.Logger(this.GetType(), "Update-根据条件更新", () =>

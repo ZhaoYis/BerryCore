@@ -108,7 +108,7 @@ namespace BerryCore.BLL.Base
         /// <param name="entity">要修改的列及修改后列的值集合</param>
         /// <param name="condition">筛选条件</param>
         /// <returns>返回受影响行数</returns>
-        public int Update(T entity, Expression<Func<T, bool>> condition)
+        public int Update(object entity, Expression<Func<T, bool>> condition)
         {
             return service.Update(entity, condition);
         }

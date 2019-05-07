@@ -47,7 +47,7 @@ namespace BerryCore.Data
         public static StringBuilder InsertSql(string tableName, Hashtable ht)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append(" Insert Into ");
+            sb.Append(" INSERT INTO ");
             sb.Append(tableName);
             sb.Append("(");
             StringBuilder sp = new StringBuilder();
@@ -60,7 +60,7 @@ namespace BerryCore.Data
                     sp.Append("," + DbParameters.CreateDbParmCharacter() + "" + key);
                 }
             }
-            sb.Append(sbPrame.ToString().Substring(1, sbPrame.ToString().Length - 1) + ") Values (");
+            sb.Append(sbPrame.ToString().Substring(1, sbPrame.ToString().Length - 1) + ") VALUES (");
             sb.Append(sp.ToString().Substring(1, sp.ToString().Length - 1) + ")");
             return sb;
         }
@@ -79,7 +79,7 @@ namespace BerryCore.Data
             List<string> notMappedField = EntityAttributeHelper.GetNotMappedFields<T>();
 
             StringBuilder sb = new StringBuilder();
-            sb.Append(" Insert Into ");
+            sb.Append(" INSERT INTO ");
             sb.Append(table);
             sb.Append("(");
             StringBuilder sp = new StringBuilder();
@@ -109,7 +109,7 @@ namespace BerryCore.Data
                     }
                 }
             }
-            sb.Append(sbPrame.ToString().Substring(1, sbPrame.ToString().Length - 1) + ") Values (");
+            sb.Append(sbPrame.ToString().Substring(1, sbPrame.ToString().Length - 1) + ") VALUES (");
             sb.Append(sp.ToString().Substring(1, sp.ToString().Length - 1) + ")");
             return sb;
         }
@@ -128,9 +128,9 @@ namespace BerryCore.Data
         public static StringBuilder UpdateSql(string tableName, Hashtable ht, string pkName)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append(" Update ");
+            sb.Append(" UPDATE ");
             sb.Append(tableName);
-            sb.Append(" Set ");
+            sb.Append(" SET ");
             bool isFirstValue = true;
             foreach (string key in ht.Keys)
             {
@@ -151,7 +151,7 @@ namespace BerryCore.Data
                     }
                 }
             }
-            sb.Append(" Where ").Append(pkName).Append("=").Append(DbParameters.CreateDbParmCharacter() + pkName);
+            sb.Append(" WHERE ").Append(pkName).Append("=").Append(DbParameters.CreateDbParmCharacter() + pkName);
             return sb;
         }
 
@@ -162,7 +162,7 @@ namespace BerryCore.Data
         /// <param name="pkName">主键</param>
         /// <param name="where">自定义条件</param>
         /// <returns>int</returns>
-        public static StringBuilder UpdateSql<T>(T entity, string pkName = "", string where = "")
+        public static StringBuilder UpdateSql<T>(object entity, string pkName = "", string where = "")
         {
             Type type = entity.GetType();
             //表名
@@ -175,15 +175,16 @@ namespace BerryCore.Data
             PropertyInfo[] props = type.GetProperties();
             StringBuilder sb = new StringBuilder();
 
-            sb.Append(" Update ");
+            sb.Append(" UPDATE ");
             sb.Append(table);
-            sb.Append(" Set ");
+            sb.Append(" SET ");
             bool isFirstValue = true;
             foreach (PropertyInfo prop in props)
             {
                 if (!notMappedField.Contains(prop.Name))
                 {
                     object value = prop.GetValue(entity, null);
+                    
                     if (value != null && keyField != prop.Name)
                     {
                         if (value.GetType() == typeof(DateTime))
@@ -228,7 +229,7 @@ namespace BerryCore.Data
 
             if (!string.IsNullOrEmpty(pkName))
             {
-                sb.Append(" Where ").Append(pkName).Append("=").Append(DbParameters.CreateDbParmCharacter() + pkName);
+                sb.Append(" WHERE ").Append(pkName).Append("=").Append(DbParameters.CreateDbParmCharacter() + pkName);
             }
             else if (!string.IsNullOrEmpty(where))
             {
@@ -242,7 +243,7 @@ namespace BerryCore.Data
         /// </summary>
         /// <param name="entity">实体类</param>
         /// <returns>int</returns>
-        public static StringBuilder UpdateSql<T>(T entity)
+        public static StringBuilder UpdateSql<T>(object entity)
         {
             Type type = entity.GetType();
             //表名
@@ -255,9 +256,9 @@ namespace BerryCore.Data
             PropertyInfo[] props = type.GetProperties();
             StringBuilder sb = new StringBuilder();
 
-            sb.Append("Update ");
+            sb.Append(" UPDATE ");
             sb.Append(table);
-            sb.Append(" Set ");
+            sb.Append(" SET ");
             bool isFirstValue = true;
             foreach (PropertyInfo prop in props)
             {
@@ -305,7 +306,7 @@ namespace BerryCore.Data
                     }
                 }
             }
-            sb.Append(" Where ").Append(keyField).Append("=").Append(DbParameters.CreateDbParmCharacter() + keyField);
+            sb.Append(" WHERE ").Append(keyField).Append("=").Append(DbParameters.CreateDbParmCharacter() + keyField);
             return sb;
         }
 
@@ -320,7 +321,7 @@ namespace BerryCore.Data
         /// <returns></returns>
         public static StringBuilder DeleteSql(string tableName)
         {
-            return new StringBuilder("Delete From " + tableName);
+            return new StringBuilder("DELETE FROM " + tableName);
         }
 
         /// <summary>
@@ -337,7 +338,7 @@ namespace BerryCore.Data
                 where = "1 = 1";
             }
 
-            return new StringBuilder("Delete From " + table + " " + where);
+            return new StringBuilder("DELETE FROM " + table + " " + where);
         }
 
         /// <summary>
@@ -348,7 +349,7 @@ namespace BerryCore.Data
         /// <returns></returns>
         public static StringBuilder DeleteSql(string tableName, string pkName)
         {
-            return new StringBuilder("Delete From " + tableName + " Where " + pkName + " = " + DbParameters.CreateDbParmCharacter() + pkName + "");
+            return new StringBuilder("DELETE FROM " + tableName + " WHERE " + pkName + " = " + DbParameters.CreateDbParmCharacter() + pkName + "");
         }
 
         /// <summary>
@@ -359,7 +360,7 @@ namespace BerryCore.Data
         /// <returns></returns>
         public static StringBuilder DeleteSql(string tableName, Hashtable ht)
         {
-            StringBuilder sb = new StringBuilder("Delete From " + tableName + " Where 1=1");
+            StringBuilder sb = new StringBuilder("DELETE FROM " + tableName + " WHERE 1=1");
             foreach (string key in ht.Keys)
             {
                 sb.Append(" AND " + key + " = " + DbParameters.CreateDbParmCharacter() + "" + key + "");
@@ -379,7 +380,7 @@ namespace BerryCore.Data
             //表名
             string table = EntityAttributeHelper.GetEntityTable<T>();
 
-            StringBuilder sb = new StringBuilder("Delete From " + table + " Where 1=1");
+            StringBuilder sb = new StringBuilder("DELETE FROM " + table + " WHERE 1=1");
             foreach (PropertyInfo prop in props)
             {
                 if (prop.GetValue(entity, null) != null)
