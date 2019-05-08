@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Berry.Cache.Core.RegisterService;
 
 namespace BerryCore.UnitTest
 {
@@ -14,6 +15,11 @@ namespace BerryCore.UnitTest
     [TestClass]
     public partial class BaseServiceUnitTest
     {
+        static BaseServiceUnitTest()
+        {
+            IRegisterService registerService = RegisterService.Start().UseRedisCache();
+        }
+
         /// <summary>
         /// 测试执行T-SQL语句
         /// </summary>

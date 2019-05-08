@@ -18,14 +18,10 @@
 //----------------------------------------------------------------*/
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BerryCore.Utilities;
 using Microsoft.Practices.Unity;
 using Microsoft.Practices.Unity.Configuration;
+using System;
 
 namespace BerryCore.IOC
 {

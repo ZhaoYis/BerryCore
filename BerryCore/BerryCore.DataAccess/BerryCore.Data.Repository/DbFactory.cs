@@ -20,8 +20,10 @@
 
 using BerryCore.IOC;
 using BerryCore.Log;
+using BerryCore.Utilities;
 using Microsoft.Practices.Unity;
 using System;
+using System.Runtime.Remoting.Messaging;
 
 namespace BerryCore.Data.Repository
 {
@@ -49,18 +51,22 @@ namespace BerryCore.Data.Repository
         /// <returns></returns>
         public IDatabase Base()
         {
-            IDatabase database = null;
+            string cacheKey = string.Format("{0}:{1}", this.GetType().Name, string.Format("{0}_{1}", BaseConnStringName, BaseParameterName).GetMd5Code());
+            IDatabase database = CallContext.GetData(cacheKey) as IDatabase;
             this.Logger(typeof(DbFactory), "连接基础库，默认-Base", () =>
             {
-                UnityIocHelper helper = UnityIocHelper.UnityIocInstance;
-                //特别注意：此处的 connStringName 参数名称必须与IDatabase实现类的构造函数参数名称一致
-                ResolverOverride parm = UnityIocHelper.GetParameterOverride(BaseParameterName, BaseConnStringName);
+                if (database == null)
+                {
+                    UnityIocHelper helper = UnityIocHelper.UnityIocInstance;
+                    //特别注意：此处的 connStringName 参数名称必须与IDatabase实现类的构造函数参数名称一致
+                    ResolverOverride parm = UnityIocHelper.GetParameterOverride(BaseParameterName, BaseConnStringName);
 
-                string mapToName = UnityIocHelper.GetmapToByName("DbContainer", "DatabaseType");
-                DatabaseType dbType = (DatabaseType)Enum.Parse(typeof(DatabaseType), mapToName, true);
-                DbTypeContainer.DbType = dbType;
+                    string mapToName = UnityIocHelper.GetmapToByName("DbContainer", "DatabaseType");
+                    DatabaseType dbType = (DatabaseType)Enum.Parse(typeof(DatabaseType), mapToName, true);
+                    DbTypeContainer.DbType = dbType;
 
-                database = helper.GetService<IDatabase>(parm);
+                    database = helper.GetService<IDatabase>(parm);
+                }
             }, e =>
             {
 
@@ -75,18 +81,22 @@ namespace BerryCore.Data.Repository
         /// <returns></returns>
         public IDatabase Base(string connStringName)
         {
-            IDatabase database = null;
+            string cacheKey = string.Format("{0}:{1}", this.GetType().Name, string.Format("{0}_{1}", connStringName, BaseParameterName).GetMd5Code());
+            IDatabase database = CallContext.GetData(cacheKey) as IDatabase;
             this.Logger(typeof(DbFactory), "连接数据库，带参-Base", () =>
             {
-                UnityIocHelper helper = UnityIocHelper.UnityIocInstance;
-                //特别注意：此处的 connStringName 参数名称必须与IDatabase实现类的构造函数参数名称一致
-                ResolverOverride parm = UnityIocHelper.GetParameterOverride(BaseParameterName, connStringName);
+                if (database == null)
+                {
+                    UnityIocHelper helper = UnityIocHelper.UnityIocInstance;
+                    //特别注意：此处的 connStringName 参数名称必须与IDatabase实现类的构造函数参数名称一致
+                    ResolverOverride parm = UnityIocHelper.GetParameterOverride(BaseParameterName, connStringName);
 
-                string mapToName = UnityIocHelper.GetmapToByName("DbContainer", "DatabaseType");
-                DatabaseType dbType = (DatabaseType)Enum.Parse(typeof(DatabaseType), mapToName, true);
-                DbTypeContainer.DbType = dbType;
+                    string mapToName = UnityIocHelper.GetmapToByName("DbContainer", "DatabaseType");
+                    DatabaseType dbType = (DatabaseType)Enum.Parse(typeof(DatabaseType), mapToName, true);
+                    DbTypeContainer.DbType = dbType;
 
-                database = helper.GetService<IDatabase>(parm);
+                    database = helper.GetService<IDatabase>(parm);
+                }
             }, e =>
             {
 
@@ -101,16 +111,20 @@ namespace BerryCore.Data.Repository
         /// <returns></returns>
         public IDatabase Base(DatabaseType dbType)
         {
-            IDatabase database = null;
+            string cacheKey = string.Format("{0}:{1}", this.GetType().Name, string.Format("{0}_{1}_{2}", BaseConnStringName, BaseParameterName, dbType.ToString()).GetMd5Code());
+            IDatabase database = CallContext.GetData(cacheKey) as IDatabase;
             this.Logger(typeof(DbFactory), "连接数据库，带参-Base", () =>
             {
-                UnityIocHelper helper = UnityIocHelper.UnityIocInstance;
-                //特别注意：此处的 connStringName 参数名称必须与IDatabase实现类的构造函数参数名称一致
-                ResolverOverride parm = UnityIocHelper.GetParameterOverride(BaseParameterName, BaseConnStringName);
+                if (database == null)
+                {
+                    UnityIocHelper helper = UnityIocHelper.UnityIocInstance;
+                    //特别注意：此处的 connStringName 参数名称必须与IDatabase实现类的构造函数参数名称一致
+                    ResolverOverride parm = UnityIocHelper.GetParameterOverride(BaseParameterName, BaseConnStringName);
 
-                DbTypeContainer.DbType = dbType;
+                    DbTypeContainer.DbType = dbType;
 
-                database = helper.GetService<IDatabase>(parm);
+                    database = helper.GetService<IDatabase>(parm);
+                }
             }, e =>
             {
 
@@ -126,16 +140,20 @@ namespace BerryCore.Data.Repository
         /// <returns></returns>
         public IDatabase Base(DatabaseType dbType, string connStringName)
         {
-            IDatabase database = null;
+            string cacheKey = string.Format("{0}:{1}", this.GetType().Name, string.Format("{0}_{1}_{2}", connStringName, BaseParameterName, dbType.ToString()).GetMd5Code());
+            IDatabase database = CallContext.GetData(cacheKey) as IDatabase;
             this.Logger(typeof(DbFactory), "连接数据库，带参-Base", () =>
             {
-                UnityIocHelper helper = UnityIocHelper.UnityIocInstance;
-                //特别注意：此处的 connStringName 参数名称必须与IDatabase实现类的构造函数参数名称一致
-                ResolverOverride parm = UnityIocHelper.GetParameterOverride(BaseParameterName, connStringName);
+                if (database == null)
+                {
+                    UnityIocHelper helper = UnityIocHelper.UnityIocInstance;
+                    //特别注意：此处的 connStringName 参数名称必须与IDatabase实现类的构造函数参数名称一致
+                    ResolverOverride parm = UnityIocHelper.GetParameterOverride(BaseParameterName, connStringName);
 
-                DbTypeContainer.DbType = dbType;
+                    DbTypeContainer.DbType = dbType;
 
-                database = helper.GetService<IDatabase>(parm);
+                    database = helper.GetService<IDatabase>(parm);
+                }
             }, e =>
             {
 

@@ -83,6 +83,10 @@
       <Project>{6f955ef1-b280-4d0c-92a8-2c8a73265027}</Project>
       <Name>BerryCore.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\BerryCore.Framework\Cache\Berry.Cache.Core\Berry.Cache.Core.csproj">
+      <Project>{1f0d4e6e-fff8-4914-89f3-53198463d5a3}</Project>
+      <Name>Berry.Cache.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\BerryCore.Framework\Global\BerryCore.Code\BerryCore.Code.csproj">
       <Project>{e17bd892-70dd-4a2c-ae1d-728237eb9da1}</Project>
       <Name>BerryCore.Code</Name>
