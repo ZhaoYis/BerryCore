@@ -60,9 +60,17 @@
     <Compile Include="SqlHelper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\BerryCore.Framework\Cache\Berry.Cache.Core\Berry.Cache.Core.csproj">
+      <Project>{1f0d4e6e-fff8-4914-89f3-53198463d5a3}</Project>
+      <Name>Berry.Cache.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\BerryCore.Framework\Global\BerryCore.Code\BerryCore.Code.csproj">
       <Project>{E17BD892-70DD-4A2C-AE1D-728237EB9DA1}</Project>
       <Name>BerryCore.Code</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\BerryCore.Framework\Utils\BerryCore.Utilities\BerryCore.Utilities.csproj">
+      <Project>{f843472b-e7c1-4e45-9e52-99f29c7f16e3}</Project>
+      <Name>BerryCore.Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

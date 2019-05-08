@@ -18,6 +18,8 @@
 //----------------------------------------------------------------*/
 #endregion
 
+using System;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -55,6 +57,52 @@ namespace BerryCore.Utilities
                 builder.Append(s.ToString(len));//加密结果"x2"结果为32位,"x3"结果为48位,"x4"结果为64位
             }
             return builder.ToString();
+        }
+
+        /// <summary>
+        /// 获取字符串MD5字符串
+        /// </summary>
+        /// <param name="source">加密字符</param>
+        /// <param name="len">加密结果"x2"结果为32位,"x3"结果为48位,"x4"结果为64位</param>
+        /// <returns></returns>>
+        public static string GetMd5Code(this string source, string len = "x2")
+        {
+            return Md5(source, len);
+        }
+
+        /// <summary>
+        /// 计算文件的MD5
+        /// </summary>
+        /// <param name="path">文件全路径</param>
+        /// <returns></returns>
+        public static string GetMd5FromFile(string path)
+        {
+            try
+            {
+                if (File.Exists(path))
+                {
+                    using (FileStream stream = new FileStream(path, FileMode.Open))
+                    {
+                        MD5 md5 = new MD5CryptoServiceProvider();
+                        byte[] result = md5.ComputeHash(stream);
+
+                        StringBuilder builder = new StringBuilder();
+                        foreach (byte s in result)
+                        {
+                            builder.Append(s.ToString("x2"));
+                        }
+                        return builder.ToString();
+                    }
+                }
+                else
+                {
+                    return "";
+                }
+            }
+            catch (Exception)
+            {
+                return "";
+            }
         }
     }
 }
