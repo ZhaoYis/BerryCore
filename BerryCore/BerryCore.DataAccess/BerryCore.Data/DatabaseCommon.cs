@@ -18,6 +18,8 @@
 //----------------------------------------------------------------*/
 #endregion
 
+using Berry.Cache.Core.Base;
+using BerryCore.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -70,48 +72,56 @@ namespace BerryCore.Data
         /// </summary>
         /// <param name="entity">实体类</param>
         /// <returns>int</returns>
-        public static StringBuilder InsertSql<T>(T entity)
+        public static string InsertSql<T>(T entity)
         {
-            Type type = entity.GetType();
-            //表名
-            string table = EntityAttributeHelper.GetEntityTable<T>();
-            //获取不做映射的字段
-            List<string> notMappedField = EntityAttributeHelper.GetNotMappedFields<T>();
-
-            StringBuilder sb = new StringBuilder();
-            sb.Append(" INSERT INTO ");
-            sb.Append(table);
-            sb.Append("(");
-            StringBuilder sp = new StringBuilder();
-            StringBuilder sbPrame = new StringBuilder();
-            PropertyInfo[] props = type.GetProperties();
-            foreach (PropertyInfo prop in props)
+            string cacheKey = string.Format("T-SQL:INSERT:{0}:{1}", typeof(T).Name, typeof(T).FullName.GetMd5Code());
+            string cache = CacheFactory.GetCache().Get<string>(cacheKey);
+            if (string.IsNullOrEmpty(cache))
             {
-                if (!notMappedField.Contains(prop.Name))
+                StringBuilder sb = new StringBuilder();
+                Type type = entity.GetType();
+                //表名
+                string table = EntityAttributeHelper.GetEntityTable<T>();
+                //获取不做映射的字段
+                List<string> notMappedField = EntityAttributeHelper.GetNotMappedFields<T>();
+
+                sb.Append(" INSERT INTO ");
+                sb.Append(table);
+                sb.Append("(");
+                StringBuilder sp = new StringBuilder();
+                StringBuilder sbPrame = new StringBuilder();
+                PropertyInfo[] props = type.GetProperties();
+                foreach (PropertyInfo prop in props)
                 {
-                    object value = prop.GetValue(entity, null);
-                    if (value != null)
+                    if (!notMappedField.Contains(prop.Name))
                     {
-                        if (value.GetType() == typeof(DateTime))
+                        object value = prop.GetValue(entity, null);
+                        if (value != null)
                         {
-                            var time = (DateTime)value;
-                            if (time.Ticks != 0 && time != DateTime.MinValue && time != SqlDateTime.MinValue.Value)
+                            if (value.GetType() == typeof(DateTime))
+                            {
+                                var time = (DateTime)value;
+                                if (time.Ticks != 0 && time != DateTime.MinValue && time != SqlDateTime.MinValue.Value)
+                                {
+                                    sbPrame.Append(",[" + prop.Name + "]");
+                                    sp.Append("," + DbParameters.CreateDbParmCharacter() + "" + (prop.Name));
+                                }
+                            }
+                            else
                             {
                                 sbPrame.Append(",[" + prop.Name + "]");
                                 sp.Append("," + DbParameters.CreateDbParmCharacter() + "" + (prop.Name));
                             }
                         }
-                        else
-                        {
-                            sbPrame.Append(",[" + prop.Name + "]");
-                            sp.Append("," + DbParameters.CreateDbParmCharacter() + "" + (prop.Name));
-                        }
                     }
                 }
+                sb.Append(sbPrame.ToString().Substring(1, sbPrame.ToString().Length - 1) + ") VALUES (");
+                sb.Append(sp.ToString().Substring(1, sp.ToString().Length - 1) + ")");
+
+                cache = sb.ToString();
+                CacheFactory.GetCache().Add(cacheKey, cache);
             }
-            sb.Append(sbPrame.ToString().Substring(1, sbPrame.ToString().Length - 1) + ") VALUES (");
-            sb.Append(sp.ToString().Substring(1, sp.ToString().Length - 1) + ")");
-            return sb;
+            return cache;
         }
 
         #endregion 拼接 Insert SQL语句
@@ -162,35 +172,56 @@ namespace BerryCore.Data
         /// <param name="pkName">主键</param>
         /// <param name="where">自定义条件</param>
         /// <returns>int</returns>
-        public static StringBuilder UpdateSql<T>(object entity, string pkName = "", string where = "")
+        public static string UpdateSql<T>(object entity, string pkName = "", string where = "")
         {
-            Type type = entity.GetType();
-            //表名
-            string table = EntityAttributeHelper.GetEntityTable<T>();
-            //主键
-            string keyField = EntityAttributeHelper.GetEntityKey<T>();
-            //获取不做映射的字段
-            List<string> notMappedField = EntityAttributeHelper.GetNotMappedFields<T>();
-
-            PropertyInfo[] props = type.GetProperties();
-            StringBuilder sb = new StringBuilder();
-
-            sb.Append(" UPDATE ");
-            sb.Append(table);
-            sb.Append(" SET ");
-            bool isFirstValue = true;
-            foreach (PropertyInfo prop in props)
+            string cacheKey = string.Format("T-SQL:UPDATE:{0}:{1}", typeof(T).Name, string.Format("{0}{1}{2}", typeof(T).FullName, pkName, where).GetMd5Code());
+            string cache = CacheFactory.GetCache().Get<string>(cacheKey);
+            if (string.IsNullOrEmpty(cache))
             {
-                if (!notMappedField.Contains(prop.Name))
+                StringBuilder sb = new StringBuilder();
+                Type type = entity.GetType();
+                //表名
+                string table = EntityAttributeHelper.GetEntityTable<T>();
+                //主键
+                string keyField = EntityAttributeHelper.GetEntityKey<T>();
+                //获取不做映射的字段
+                List<string> notMappedField = EntityAttributeHelper.GetNotMappedFields<T>();
+
+                PropertyInfo[] props = type.GetProperties();
+
+                sb.Append(" UPDATE ");
+                sb.Append(table);
+                sb.Append(" SET ");
+                bool isFirstValue = true;
+                foreach (PropertyInfo prop in props)
                 {
-                    object value = prop.GetValue(entity, null);
-                    
-                    if (value != null && keyField != prop.Name)
+                    if (!notMappedField.Contains(prop.Name))
                     {
-                        if (value.GetType() == typeof(DateTime))
+                        object value = prop.GetValue(entity, null);
+
+                        if (value != null && keyField != prop.Name)
                         {
-                            var time = (DateTime)value;
-                            if (time.Ticks != 0 && time != DateTime.MinValue && time != SqlDateTime.MinValue.Value)
+                            if (value.GetType() == typeof(DateTime))
+                            {
+                                var time = (DateTime)value;
+                                if (time.Ticks != 0 && time != DateTime.MinValue && time != SqlDateTime.MinValue.Value)
+                                {
+                                    if (isFirstValue)
+                                    {
+                                        isFirstValue = false;
+                                        sb.Append("[" + prop.Name + "]");
+                                        sb.Append("=");
+                                        sb.Append(DbParameters.CreateDbParmCharacter() + prop.Name);
+                                    }
+                                    else
+                                    {
+                                        sb.Append(",[" + prop.Name + "]");
+                                        sb.Append("=");
+                                        sb.Append(DbParameters.CreateDbParmCharacter() + prop.Name);
+                                    }
+                                }
+                            }
+                            else
                             {
                                 if (isFirstValue)
                                 {
@@ -207,35 +238,22 @@ namespace BerryCore.Data
                                 }
                             }
                         }
-                        else
-                        {
-                            if (isFirstValue)
-                            {
-                                isFirstValue = false;
-                                sb.Append("[" + prop.Name + "]");
-                                sb.Append("=");
-                                sb.Append(DbParameters.CreateDbParmCharacter() + prop.Name);
-                            }
-                            else
-                            {
-                                sb.Append(",[" + prop.Name + "]");
-                                sb.Append("=");
-                                sb.Append(DbParameters.CreateDbParmCharacter() + prop.Name);
-                            }
-                        }
                     }
                 }
-            }
 
-            if (!string.IsNullOrEmpty(pkName))
-            {
-                sb.Append(" WHERE ").Append(pkName).Append("=").Append(DbParameters.CreateDbParmCharacter() + pkName);
+                if (!string.IsNullOrEmpty(pkName))
+                {
+                    sb.Append(" WHERE ").Append(pkName).Append("=").Append(DbParameters.CreateDbParmCharacter() + pkName);
+                }
+                else if (!string.IsNullOrEmpty(where))
+                {
+                    sb.Append(" " + where);
+                }
+
+                cache = sb.ToString();
+                CacheFactory.GetCache().Add(cacheKey, cache);
             }
-            else if (!string.IsNullOrEmpty(where))
-            {
-                sb.Append(" " + where);
-            }
-            return sb;
+            return cache;
         }
 
         /// <summary>
@@ -243,34 +261,55 @@ namespace BerryCore.Data
         /// </summary>
         /// <param name="entity">实体类</param>
         /// <returns>int</returns>
-        public static StringBuilder UpdateSql<T>(object entity)
+        public static string UpdateSql<T>(object entity)
         {
-            Type type = entity.GetType();
-            //表名
-            string table = EntityAttributeHelper.GetEntityTable<T>();
-            //主键
-            string keyField = EntityAttributeHelper.GetEntityKey<T>();
-            //获取不做映射的字段
-            List<string> notMappedField = EntityAttributeHelper.GetNotMappedFields<T>();
-
-            PropertyInfo[] props = type.GetProperties();
-            StringBuilder sb = new StringBuilder();
-
-            sb.Append(" UPDATE ");
-            sb.Append(table);
-            sb.Append(" SET ");
-            bool isFirstValue = true;
-            foreach (PropertyInfo prop in props)
+            string cacheKey = string.Format("T-SQL:UPDATE:{0}:{1}", typeof(T).Name, typeof(T).FullName.GetMd5Code());
+            string cache = CacheFactory.GetCache().Get<string>(cacheKey);
+            if (string.IsNullOrEmpty(cache))
             {
-                if (!notMappedField.Contains(prop.Name))
+                StringBuilder sb = new StringBuilder();
+                Type type = entity.GetType();
+                //表名
+                string table = EntityAttributeHelper.GetEntityTable<T>();
+                //主键
+                string keyField = EntityAttributeHelper.GetEntityKey<T>();
+                //获取不做映射的字段
+                List<string> notMappedField = EntityAttributeHelper.GetNotMappedFields<T>();
+
+                PropertyInfo[] props = type.GetProperties();
+
+                sb.Append(" UPDATE ");
+                sb.Append(table);
+                sb.Append(" SET ");
+                bool isFirstValue = true;
+                foreach (PropertyInfo prop in props)
                 {
-                    object value = prop.GetValue(entity, null);
-                    if (value != null && keyField != prop.Name)
+                    if (!notMappedField.Contains(prop.Name))
                     {
-                        if (value.GetType() == typeof(DateTime))
+                        object value = prop.GetValue(entity, null);
+                        if (value != null && keyField != prop.Name)
                         {
-                            var time = (DateTime)value;
-                            if (time.Ticks != 0 && time != DateTime.MinValue && time != SqlDateTime.MinValue.Value)
+                            if (value.GetType() == typeof(DateTime))
+                            {
+                                var time = (DateTime)value;
+                                if (time.Ticks != 0 && time != DateTime.MinValue && time != SqlDateTime.MinValue.Value)
+                                {
+                                    if (isFirstValue)
+                                    {
+                                        isFirstValue = false;
+                                        sb.Append("[" + prop.Name + "]");
+                                        sb.Append("=");
+                                        sb.Append(DbParameters.CreateDbParmCharacter() + prop.Name);
+                                    }
+                                    else
+                                    {
+                                        sb.Append(",[" + prop.Name + "]");
+                                        sb.Append("=");
+                                        sb.Append(DbParameters.CreateDbParmCharacter() + prop.Name);
+                                    }
+                                }
+                            }
+                            else
                             {
                                 if (isFirstValue)
                                 {
@@ -287,27 +326,14 @@ namespace BerryCore.Data
                                 }
                             }
                         }
-                        else
-                        {
-                            if (isFirstValue)
-                            {
-                                isFirstValue = false;
-                                sb.Append("[" + prop.Name + "]");
-                                sb.Append("=");
-                                sb.Append(DbParameters.CreateDbParmCharacter() + prop.Name);
-                            }
-                            else
-                            {
-                                sb.Append(",[" + prop.Name + "]");
-                                sb.Append("=");
-                                sb.Append(DbParameters.CreateDbParmCharacter() + prop.Name);
-                            }
-                        }
                     }
                 }
+                sb.Append(" WHERE ").Append(keyField).Append("=").Append(DbParameters.CreateDbParmCharacter() + keyField);
+
+                cache = sb.ToString();
+                CacheFactory.GetCache().Add(cacheKey, cache);
             }
-            sb.Append(" WHERE ").Append(keyField).Append("=").Append(DbParameters.CreateDbParmCharacter() + keyField);
-            return sb;
+            return cache;
         }
 
         #endregion 拼接 Update SQL语句
@@ -333,7 +359,7 @@ namespace BerryCore.Data
         {
             //表名
             string table = EntityAttributeHelper.GetEntityTable<T>();
-            if (string.IsNullOrWhiteSpace(where))
+            if (string.IsNullOrEmpty(where))
             {
                 where = "1 = 1";
             }
@@ -373,22 +399,30 @@ namespace BerryCore.Data
         /// </summary>
         /// <param name="entity">实体类</param>
         /// <returns></returns>
-        public static StringBuilder DeleteSql<T>(T entity)
+        public static string DeleteSql<T>(T entity)
         {
-            Type type = entity.GetType();
-            PropertyInfo[] props = type.GetProperties();
-            //表名
-            string table = EntityAttributeHelper.GetEntityTable<T>();
-
-            StringBuilder sb = new StringBuilder("DELETE FROM " + table + " WHERE 1=1");
-            foreach (PropertyInfo prop in props)
+            string cacheKey = string.Format("T-SQL:DELETE:{0}:{1}", typeof(T).Name, typeof(T).FullName.GetMd5Code());
+            string cache = CacheFactory.GetCache().Get<string>(cacheKey);
+            if (string.IsNullOrEmpty(cache))
             {
-                if (prop.GetValue(entity, null) != null)
+                Type type = entity.GetType();
+                PropertyInfo[] props = type.GetProperties();
+                //表名
+                string table = EntityAttributeHelper.GetEntityTable<T>();
+
+                StringBuilder sb = new StringBuilder("DELETE FROM " + table + " WHERE 1=1");
+                foreach (PropertyInfo prop in props)
                 {
-                    sb.Append(" AND " + prop.Name + " = " + DbParameters.CreateDbParmCharacter() + "" + prop.Name + "");
+                    if (prop.GetValue(entity, null) != null)
+                    {
+                        sb.Append(" AND " + prop.Name + " = " + DbParameters.CreateDbParmCharacter() + "" + prop.Name + "");
+                    }
                 }
+
+                cache = sb.ToString();
+                CacheFactory.GetCache().Add(cacheKey, cache);
             }
-            return sb;
+            return cache;
         }
 
         #endregion 拼接 Delete SQL语句
@@ -429,37 +463,44 @@ namespace BerryCore.Data
         /// <param name="where">条件</param>
         /// <param name="allFieid">是否查询所有字段</param>
         /// <returns></returns>
-        public static StringBuilder SelectSql<T>(string where, bool allFieid = false) where T : class
+        public static string SelectSql<T>(string where, bool allFieid = false) where T : class
         {
-            //表名
-            string table = EntityAttributeHelper.GetEntityTable<T>();
+            string cacheKey = string.Format("T-SQL:SELECT:{0}:{1}", typeof(T).Name, string.Format("{0}{1}", typeof(T).FullName, allFieid.ToString()).GetMd5Code());
+            string cache = CacheFactory.GetCache().Get<string>(cacheKey);
+            if (string.IsNullOrEmpty(cache))
+            {
+                //表名
+                string table = EntityAttributeHelper.GetEntityTable<T>();
 
-            PropertyInfo[] props = EntityAttributeHelper.GetProperties(typeof(T));
-            StringBuilder sbColumns = new StringBuilder();
-            if (allFieid)
-            {
-                sbColumns.Append(" * ");
-            }
-            else
-            {
-                foreach (PropertyInfo prop in props)
+                PropertyInfo[] props = EntityAttributeHelper.GetProperties(typeof(T));
+                StringBuilder sbColumns = new StringBuilder();
+                if (allFieid)
                 {
-                    //string propertytype = prop.PropertyType.ToString();
-                    sbColumns.Append("[" + prop.Name + "],");
+                    sbColumns.Append(" * ");
                 }
-                if (sbColumns.Length > 0)
+                else
                 {
-                    sbColumns.Remove(sbColumns.ToString().Length - 1, 1);
+                    foreach (PropertyInfo prop in props)
+                    {
+                        //string propertytype = prop.PropertyType.ToString();
+                        sbColumns.Append("[" + prop.Name + "],");
+                    }
+                    if (sbColumns.Length > 0)
+                    {
+                        sbColumns.Remove(sbColumns.ToString().Length - 1, 1);
+                    }
                 }
-            }
 
-            if (string.IsNullOrWhiteSpace(where))
-            {
-                where = " WHERE 1 = 1";
-            }
+                if (string.IsNullOrWhiteSpace(where))
+                {
+                    where = " WHERE 1 = 1";
+                }
 
-            string strSql = string.Format("SELECT {0} FROM {1} {2}", sbColumns.ToString(), table, where);
-            return new StringBuilder(strSql);
+                string strSql = string.Format("SELECT {0} FROM {1} {2}", sbColumns.ToString(), table, where);
+                cache = strSql.ToString();
+                CacheFactory.GetCache().Add(cacheKey, cache);
+            }
+            return cache;
         }
 
         /// <summary>

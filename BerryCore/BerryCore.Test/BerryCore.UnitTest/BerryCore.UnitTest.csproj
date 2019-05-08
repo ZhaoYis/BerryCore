@@ -52,6 +52,7 @@
     <Compile Include="BaseServiceUnitTest.cs" />
     <Compile Include="BaseServiceUnitTest.T.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UtilitiesUnitTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />

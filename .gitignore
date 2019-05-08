@@ -32,3 +32,6 @@ BerryCore/BerryCore.Framework/Utils/BerryCore.Extensions/bin/
 BerryCore/BerryCore.Framework/Cache/Berry.Cache.Core/bin/
 BerryCore/BerryCore.Framework/Cache/Berry.Cache.Core/obj/
 BerryCore/BerryCore.Framework/Utils/BerryCore.Utilities.JWT/bin/
+BerryCore/BerryCore.DataAccess/BerryCore.Data.Dapper/bin/
+BerryCore/BerryCore.Business/BerryCore.BLL/bin/
+BerryCore/BerryCore.DataAccess/BerryCore.Data/bin/

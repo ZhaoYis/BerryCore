@@ -60,6 +60,17 @@ namespace BerryCore.Utilities
         }
 
         /// <summary>
+        /// 获取字符串MD5字符串
+        /// </summary>
+        /// <param name="source">加密字符</param>
+        /// <param name="len">加密结果"x2"结果为32位,"x3"结果为48位,"x4"结果为64位</param>
+        /// <returns></returns>>
+        public static string GetMd5Code(this string source, string len = "x2")
+        {
+            return Md5(source, len);
+        }
+
+        /// <summary>
         /// 计算文件的MD5
         /// </summary>
         /// <param name="path">文件全路径</param>
