@@ -16,13 +16,15 @@ namespace Berry.Cache.Core.Redis
         /// 实例
         /// </summary>
         private static readonly ICacheService CacheService = null;
+
         /// <summary>
         /// Redis操作帮助类
         /// </summary>
-        private RedisHelper _redisHelper = new RedisHelper();
+        private RedisHelper _redisHelper = null;
 
         private RedisCacheService()
         {
+            _redisHelper = new RedisHelper(0, null);
         }
 
         static RedisCacheService()
