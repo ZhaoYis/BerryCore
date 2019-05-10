@@ -39,27 +39,50 @@ namespace BerryCore.Data.Repository
         /// <summary>
         /// 默认连接字符串配置项名称
         /// </summary>
-        private const string BaseConnStringName = "MsSqlBaseDbConnectionString";
+        private const string BaseMsSqlConnStringConfigName = "MsSqlBaseDbConnectionString";
         /// <summary>
-        /// IDatabase实现类的构造函数参数名
+        /// IDatabase实现类的构造函数参数名（不要更改，需要修改的话每个IDatabase具体实现的构造函数的参数名称都需要修改）
         /// </summary>
-        private const string BaseParameterName = "connStringName";
+        private const string BaseParameterName = "connConfigName";
 
         /// <summary>
-        /// 连接基础库，默认
+        /// 获取默认连接字符串配置项名称
         /// </summary>
+        /// <param name="type">数据库类型</param>
         /// <returns></returns>
-        public IDatabase Base()
+        public string GetDefaultBaseConnStringConfigName(DatabaseType type)
         {
-            string cacheKey = string.Format("{0}:{1}", this.GetType().Name, string.Format("{0}_{1}", BaseConnStringName, BaseParameterName).GetMd5Code());
+            switch (type)
+            {
+                case DatabaseType.SqlServer:
+                    return BaseMsSqlConnStringConfigName;
+                case DatabaseType.MySql:
+                    return "";
+                case DatabaseType.Oracle:
+                    return "";
+                case DatabaseType.SQLite:
+                    return "SQLiteBaseDbConnectionString";
+                default:
+                    return BaseMsSqlConnStringConfigName;
+            }
+        }
+
+        /// <summary>
+        /// 连接数据库
+        /// </summary>
+        /// <param name="connConfigName">连接字符串配置项名称</param>
+        /// <returns></returns>
+        public IDatabase Base(string connConfigName)
+        {
+            string cacheKey = string.Format("{0}:{1}", this.GetType().Name, string.Format("{0}_{1}", connConfigName, BaseParameterName).GetMd5Code());
             IDatabase database = CallContext.GetData(cacheKey) as IDatabase;
-            this.Logger(typeof(DbFactory), "连接基础库，默认-Base", () =>
+            this.Logger(typeof(DbFactory), "连接数据库，带参-Base", () =>
             {
                 if (database == null)
                 {
                     UnityIocHelper helper = UnityIocHelper.UnityIocInstance;
                     //特别注意：此处的 connStringName 参数名称必须与IDatabase实现类的构造函数参数名称一致
-                    ResolverOverride parm = UnityIocHelper.GetParameterOverride(BaseParameterName, BaseConnStringName);
+                    ResolverOverride parm = UnityIocHelper.GetParameterOverride(BaseParameterName, connConfigName);
 
                     string mapToName = UnityIocHelper.GetmapToByName("DbContainer", "DatabaseType");
                     DatabaseType dbType = (DatabaseType)Enum.Parse(typeof(DatabaseType), mapToName, true);
@@ -73,45 +96,16 @@ namespace BerryCore.Data.Repository
             });
             return database;
         }
-
+        
         /// <summary>
-        /// 连接数据库，带参
-        /// </summary>
-        /// <param name="connStringName">连接字符串配置项名称</param>
-        /// <returns></returns>
-        public IDatabase Base(string connStringName)
-        {
-            string cacheKey = string.Format("{0}:{1}", this.GetType().Name, string.Format("{0}_{1}", connStringName, BaseParameterName).GetMd5Code());
-            IDatabase database = CallContext.GetData(cacheKey) as IDatabase;
-            this.Logger(typeof(DbFactory), "连接数据库，带参-Base", () =>
-            {
-                if (database == null)
-                {
-                    UnityIocHelper helper = UnityIocHelper.UnityIocInstance;
-                    //特别注意：此处的 connStringName 参数名称必须与IDatabase实现类的构造函数参数名称一致
-                    ResolverOverride parm = UnityIocHelper.GetParameterOverride(BaseParameterName, connStringName);
-
-                    string mapToName = UnityIocHelper.GetmapToByName("DbContainer", "DatabaseType");
-                    DatabaseType dbType = (DatabaseType)Enum.Parse(typeof(DatabaseType), mapToName, true);
-                    DbTypeContainer.DbType = dbType;
-
-                    database = helper.GetService<IDatabase>(parm);
-                }
-            }, e =>
-            {
-
-            });
-            return database;
-        }
-
-        /// <summary>
-        /// 连接数据库，带参
+        /// 连接数据库
         /// </summary>
         /// <param name="dbType">数据库类型</param>
+        /// <param name="connConfigName">连接字符串配置项名称</param>
         /// <returns></returns>
-        public IDatabase Base(DatabaseType dbType)
+        public IDatabase Base(DatabaseType dbType, string connConfigName)
         {
-            string cacheKey = string.Format("{0}:{1}", this.GetType().Name, string.Format("{0}_{1}_{2}", BaseConnStringName, BaseParameterName, dbType.ToString()).GetMd5Code());
+            string cacheKey = string.Format("{0}:{1}", this.GetType().Name, string.Format("{0}_{1}_{2}", connConfigName, BaseParameterName, dbType.ToString()).GetMd5Code());
             IDatabase database = CallContext.GetData(cacheKey) as IDatabase;
             this.Logger(typeof(DbFactory), "连接数据库，带参-Base", () =>
             {
@@ -119,36 +113,7 @@ namespace BerryCore.Data.Repository
                 {
                     UnityIocHelper helper = UnityIocHelper.UnityIocInstance;
                     //特别注意：此处的 connStringName 参数名称必须与IDatabase实现类的构造函数参数名称一致
-                    ResolverOverride parm = UnityIocHelper.GetParameterOverride(BaseParameterName, BaseConnStringName);
-
-                    DbTypeContainer.DbType = dbType;
-
-                    database = helper.GetService<IDatabase>(parm);
-                }
-            }, e =>
-            {
-
-            });
-            return database;
-        }
-
-        /// <summary>
-        /// 连接数据库，带参
-        /// </summary>
-        /// <param name="dbType">数据库类型</param>
-        /// <param name="connStringName">连接字符串配置项名称</param>
-        /// <returns></returns>
-        public IDatabase Base(DatabaseType dbType, string connStringName)
-        {
-            string cacheKey = string.Format("{0}:{1}", this.GetType().Name, string.Format("{0}_{1}_{2}", connStringName, BaseParameterName, dbType.ToString()).GetMd5Code());
-            IDatabase database = CallContext.GetData(cacheKey) as IDatabase;
-            this.Logger(typeof(DbFactory), "连接数据库，带参-Base", () =>
-            {
-                if (database == null)
-                {
-                    UnityIocHelper helper = UnityIocHelper.UnityIocInstance;
-                    //特别注意：此处的 connStringName 参数名称必须与IDatabase实现类的构造函数参数名称一致
-                    ResolverOverride parm = UnityIocHelper.GetParameterOverride(BaseParameterName, connStringName);
+                    ResolverOverride parm = UnityIocHelper.GetParameterOverride(BaseParameterName, connConfigName);
 
                     DbTypeContainer.DbType = dbType;
 

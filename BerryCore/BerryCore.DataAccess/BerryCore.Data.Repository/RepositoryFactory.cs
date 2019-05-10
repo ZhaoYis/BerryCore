@@ -35,23 +35,18 @@ namespace BerryCore.Data.Repository
         private static readonly DbFactory dbFactory = new DbFactory();
 
         /// <summary>
-        /// 定义仓储（基础库）
+        /// 定义仓储（默认适用MSSQL的基础库）
         /// </summary>
-        /// <returns></returns>
-        protected IRepository BaseRepository()
-        {
-            return new Repository(dbFactory.Base());
-        }
-
-        /// <summary>
-        /// 定义仓储
-        /// </summary>
-        /// <param name="connString">连接字符串</param>
         /// <param name="databaseType">数据库类型，默认SqlServer数据库</param>
+        /// <param name="connConfigName">连接字符串配置项名称</param>
         /// <returns></returns>
-        protected IRepository BaseRepository(string connString, DatabaseType databaseType = DatabaseType.SqlServer)
+        protected IRepository BaseRepository(DatabaseType databaseType = DatabaseType.SqlServer, string connConfigName = "")
         {
-            return new Repository(dbFactory.Base(databaseType, connString));
+            if (string.IsNullOrEmpty(connConfigName))
+            {
+                connConfigName = dbFactory.GetDefaultBaseConnStringConfigName(databaseType);
+            }
+            return new Repository(dbFactory.Base(databaseType, connConfigName));
         }
 
         #region 扩展操作方法

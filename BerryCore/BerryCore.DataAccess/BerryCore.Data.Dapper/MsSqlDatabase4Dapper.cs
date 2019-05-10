@@ -57,12 +57,12 @@ namespace BerryCore.Data.Dapper
         /// <summary>
         /// 构造方法
         /// </summary>
-        /// <param name="connStringName">连接字符串配置项名称</param>
-        public MsSqlDatabase4Dapper(string connStringName)
+        /// <param name="connConfigName">连接字符串配置项名称</param>
+        public MsSqlDatabase4Dapper(string connConfigName)
         {
             lock (_lock)
             {
-                this.ConnectionString = ConfigHelper.GetConnectionString(connStringName);
+                this.ConnectionString = ConfigHelper.GetConnectionString(connConfigName);
             }
         }
 
@@ -81,12 +81,12 @@ namespace BerryCore.Data.Dapper
         {
             get
             {
-                IDbConnection dbconnection = new SqlConnection(this.ConnectionString);
-                if (dbconnection.State == ConnectionState.Closed)
+                IDbConnection dbConnection = new SqlConnection(this.ConnectionString);
+                if (dbConnection.State == ConnectionState.Closed)
                 {
-                    dbconnection.Open();
+                    dbConnection.Open();
                 }
-                return dbconnection;
+                return dbConnection;
             }
         }
 

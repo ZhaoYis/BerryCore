@@ -22,8 +22,16 @@ using BerryCore.Log;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
+using System.Data.SQLite;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
+using BerryCore.Data.ExMessage;
+using BerryCore.Utilities;
+using BerryCore.Utilities.Lambda2SQL;
+using Dapper;
 
 namespace BerryCore.Data.Dapper
 {
@@ -36,8 +44,34 @@ namespace BerryCore.Data.Dapper
     /// </summary>
     public class SQLiteDatabase4Dapper : BaseLogger, IDatabase
     {
+        #region 构造函数
+
         /// <summary>
-        /// 数据库连接字符串
+        /// 对象锁🔒
+        /// </summary>
+        private static readonly object _lock = new object();
+
+        /// <summary>
+        /// 超时时间
+        /// </summary>
+        private const int Timeout = 30;
+
+        /// <summary>
+        /// 构造方法
+        /// </summary>
+        /// <param name="connConfigName">连接字符串配置项名称</param>
+        public SQLiteDatabase4Dapper(string connConfigName)
+        {
+            lock (_lock)
+            {
+                this.ConnectionString = ConfigHelper.GetConnectionString(connConfigName);
+            }
+        }
+
+        #endregion
+
+        /// <summary>
+        /// 数据库连接字符串（SQLite为数据库文件地址）
         /// </summary>
         public string ConnectionString { get; set; }
 
@@ -45,7 +79,35 @@ namespace BerryCore.Data.Dapper
         /// 获取基础数据库连接
         /// </summary>
         /// <returns></returns>
-        public IDbConnection BaseDbConnection { get; }
+        public IDbConnection BaseDbConnection
+        {
+            get
+            {
+                SQLiteConnectionStringBuilder connectionString = new SQLiteConnectionStringBuilder
+                {
+                    DataSource = this.ConnectionString,
+                    DefaultTimeout = 1000
+                };
+                IDbConnection dbConnection = new SQLiteConnection(connectionString.ToString());
+
+                if (dbConnection.State == ConnectionState.Closed)
+                {
+                    dbConnection.Open();
+                }
+                return dbConnection;
+            }
+        }
+
+        /// <summary>
+        /// 检测数据库文件是否存在,无则创建
+        /// </summary>
+        public void CheckDbFileIsExist()
+        {
+            lock (_lock)
+            {
+                if (!File.Exists(this.ConnectionString)) SQLiteConnection.CreateFile(this.ConnectionString);
+            }
+        }
 
         /// <summary>
         /// 数据库事务
@@ -58,7 +120,13 @@ namespace BerryCore.Data.Dapper
         /// <returns></returns>
         public IDatabase BeginTrans()
         {
-            throw new NotImplementedException();
+            IDbConnection dbConnection = this.BaseDbConnection;
+            if (dbConnection.State == ConnectionState.Closed)
+            {
+                dbConnection.Open();
+            }
+            this.BaseDbTransaction = dbConnection.BeginTransaction();
+            return this;
         }
 
         /// <summary>
@@ -66,8 +134,38 @@ namespace BerryCore.Data.Dapper
         /// </summary>
         /// <returns></returns>
         public int Commit()
-        {
-            throw new NotImplementedException();
+        {int res = -1;
+            this.Logger(this.GetType(), "提交事务-Commit", () =>
+             {
+                 if (this.BaseDbTransaction != null)
+                 {
+                     this.BaseDbTransaction.Commit();
+                     this.Close();
+                 }
+                 res = 1;
+             }, e =>
+            {
+                if (e.InnerException != null && e is CustomException)
+                {
+                    SqlException sqlEx = e.InnerException.InnerException as SqlException;
+                    if (sqlEx != null)
+                    {
+                        string msg = DataAccessExMessage.GetSqlExceptionMessage(sqlEx.Number);
+                        throw CustomException.ThrowDataAccessException(sqlEx, msg);
+                    }
+                }
+                else
+                {
+                    throw new Exception("提交事务发生异常-Commit", e.InnerException);
+                }
+            }, () =>
+            {
+                if (this.BaseDbTransaction == null)
+                {
+                    this.Close();
+                }
+            });
+            return res;
         }
 
         /// <summary>
@@ -75,7 +173,12 @@ namespace BerryCore.Data.Dapper
         /// </summary>
         public void Rollback()
         {
-            throw new NotImplementedException();
+            if (this.BaseDbTransaction != null)
+            {
+                this.BaseDbTransaction.Rollback();
+                this.BaseDbTransaction.Dispose();
+                this.Close();
+            }
         }
 
         /// <summary>
@@ -83,7 +186,11 @@ namespace BerryCore.Data.Dapper
         /// </summary>
         public void Close()
         {
-            throw new NotImplementedException();
+            IDbConnection dbConnection = this.BaseDbConnection;
+            if (dbConnection != null && dbConnection.State != ConnectionState.Closed)
+            {
+                dbConnection.Close();
+            }
         }
 
         /// <summary>
@@ -93,7 +200,7 @@ namespace BerryCore.Data.Dapper
         /// <returns></returns>
         public int ExecuteBySql(string strSql)
         {
-            throw new NotImplementedException();
+            return this.ExecuteBySql(strSql, null);
         }
 
         /// <summary>
@@ -103,9 +210,27 @@ namespace BerryCore.Data.Dapper
         /// <param name="parameters">参数</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public int ExecuteBySql(string strSql, object parameters, int? timeout)
+        public int ExecuteBySql(string strSql, object parameters, int? timeout = Timeout)
         {
-            throw new NotImplementedException();
+            int res = 0;
+            this.Logger(this.GetType(), "执行 SQL 语句-ExecuteBySql", () =>
+            {
+                if (this.BaseDbTransaction == null)
+                {
+                    using (IDbConnection connection = this.BaseDbConnection)
+                    {
+                        res = connection.Execute(strSql, parameters, null, timeout, CommandType.Text);
+                    }
+                }
+                else
+                {
+                    res = this.BaseDbTransaction.Connection.Execute(strSql, parameters, this.BaseDbTransaction, timeout, CommandType.Text);
+                }
+            }, e =>
+            {
+                this.Rollback();
+            });
+            return res;
         }
 
         /// <summary>
@@ -116,9 +241,27 @@ namespace BerryCore.Data.Dapper
         /// <param name="parameters">参数</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public IEnumerable<TR> ExecuteBySqlAndReturnList<TR>(string strSql, object parameters, int? timeout)
+        public IEnumerable<TR> ExecuteBySqlAndReturnList<TR>(string strSql, object parameters, int? timeout = Timeout)
         {
-            throw new NotImplementedException();
+            IEnumerable<TR> res = default(IEnumerable<TR>);
+            this.Logger(this.GetType(), "执行 SQL 语句返回集合-ExecuteBySqlAndReturnList", () =>
+            {
+                if (this.BaseDbTransaction == null)
+                {
+                    using (IDbConnection connection = this.BaseDbConnection)
+                    {
+                        res = connection.Query<TR>(strSql, parameters, null, true, timeout, CommandType.Text);
+                    }
+                }
+                else
+                {
+                    res = this.BaseDbTransaction.Connection.Query<TR>(strSql, parameters, this.BaseDbTransaction, true, timeout, CommandType.Text);
+                }
+            }, e =>
+            {
+                this.Rollback();
+            });
+            return res;
         }
 
         /// <summary>
@@ -129,9 +272,27 @@ namespace BerryCore.Data.Dapper
         /// <param name="parameters">参数</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public TR ExecuteBySqlAndReturnObject<TR>(string strSql, object parameters, int? timeout)
+        public TR ExecuteBySqlAndReturnObject<TR>(string strSql, object parameters, int? timeout = Timeout)
         {
-            throw new NotImplementedException();
+            TR res = default(TR);
+            this.Logger(this.GetType(), "执行 SQL 语句返回对象-ExecuteBySqlAndReturnObject", () =>
+            {
+                if (this.BaseDbTransaction == null)
+                {
+                    using (IDbConnection connection = this.BaseDbConnection)
+                    {
+                        res = connection.Query<TR>(strSql, parameters, null, true, timeout, CommandType.Text).FirstOrDefault();
+                    }
+                }
+                else
+                {
+                    res = this.BaseDbTransaction.Connection.Query<TR>(strSql, parameters, this.BaseDbTransaction, true, timeout, CommandType.Text).FirstOrDefault();
+                }
+            }, e =>
+            {
+                this.Rollback();
+            });
+            return res;
         }
 
         /// <summary>
@@ -141,7 +302,7 @@ namespace BerryCore.Data.Dapper
         /// <returns></returns>
         public int ExecuteByProc(string procName)
         {
-            throw new NotImplementedException();
+            return this.ExecuteByProc(procName, null);
         }
 
         /// <summary>
@@ -151,9 +312,27 @@ namespace BerryCore.Data.Dapper
         /// <param name="parameters">参数</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public int ExecuteByProc(string procName, object parameters, int? timeout)
+        public int ExecuteByProc(string procName, object parameters, int? timeout = Timeout)
         {
-            throw new NotImplementedException();
+            int res = 0;
+            this.Logger(this.GetType(), "执行存储过程-ExecuteByProc", () =>
+            {
+                if (this.BaseDbTransaction == null)
+                {
+                    using (IDbConnection connection = this.BaseDbConnection)
+                    {
+                        res = connection.Execute(procName, parameters, null, timeout, CommandType.StoredProcedure);
+                    }
+                }
+                else
+                {
+                    res = this.BaseDbTransaction.Connection.Execute(procName, parameters, this.BaseDbTransaction, timeout, CommandType.StoredProcedure);
+                }
+            }, e =>
+            {
+                this.Rollback();
+            });
+            return res;
         }
 
         /// <summary>
@@ -164,7 +343,7 @@ namespace BerryCore.Data.Dapper
         /// <returns></returns>
         public IEnumerable<TR> ExecuteByProc<TR>(string procName) where TR : class
         {
-            throw new NotImplementedException();
+            return this.ExecuteByProc<TR>(procName, null);
         }
 
         /// <summary>
@@ -175,9 +354,27 @@ namespace BerryCore.Data.Dapper
         /// <param name="parameters">参数</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public IEnumerable<TR> ExecuteByProc<TR>(string procName, object parameters, int? timeout) where TR : class
+        public IEnumerable<TR> ExecuteByProc<TR>(string procName, object parameters, int? timeout = Timeout) where TR : class
         {
-            throw new NotImplementedException();
+            IEnumerable<TR> res = default(IEnumerable<TR>);
+            this.Logger(this.GetType(), "执行存储过程，返回集合-ExecuteByProc", () =>
+            {
+                if (this.BaseDbTransaction == null)
+                {
+                    using (IDbConnection connection = this.BaseDbConnection)
+                    {
+                        res = connection.Query<TR>(procName, parameters, null, true, timeout, CommandType.StoredProcedure);
+                    }
+                }
+                else
+                {
+                    res = this.BaseDbTransaction.Connection.Query<TR>(procName, parameters, this.BaseDbTransaction, true, timeout, CommandType.StoredProcedure);
+                }
+            }, e =>
+            {
+                this.Rollback();
+            });
+            return res;
         }
 
         /// <summary>
@@ -187,9 +384,32 @@ namespace BerryCore.Data.Dapper
         /// <param name="entity">实体</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public int Insert<T>(T entity, int? timeout) where T : class
+        public int Insert<T>(T entity, int? timeout = Timeout) where T : class
         {
-            throw new NotImplementedException();
+            int res = 0;
+            this.Logger(this.GetType(), "实体插入-Insert", () =>
+            {
+                if (entity != null)
+                {
+                    string sql = DatabaseCommon.InsertSql<T>(entity).ToString();
+
+                    if (this.BaseDbTransaction == null)
+                    {
+                        using (IDbConnection connection = this.BaseDbConnection)
+                        {
+                            res = connection.Execute(sql, entity, null, timeout, CommandType.Text);
+                        }
+                    }
+                    else
+                    {
+                        res = this.BaseDbTransaction.Connection.Execute(sql, entity, this.BaseDbTransaction, timeout, CommandType.Text);
+                    }
+                }
+            }, e =>
+            {
+                this.Rollback();
+            });
+            return res;
         }
 
         /// <summary>
@@ -199,9 +419,32 @@ namespace BerryCore.Data.Dapper
         /// <param name="entities">实体集合</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public int BatchInsert<T>(List<T> entities, int? timeout) where T : class
+        public int BatchInsert<T>(List<T> entities, int? timeout = Timeout) where T : class
         {
-            throw new NotImplementedException();
+            int res = 0;
+            this.Logger(this.GetType(), "实体批量插入-BatchInsert", () =>
+            {
+                if (entities != null && entities.Count > 0)
+                {
+                    string sql = DatabaseCommon.InsertSql<T>(entities.First()).ToString();
+
+                    if (this.BaseDbTransaction == null)
+                    {
+                        using (IDbConnection connection = this.BaseDbConnection)
+                        {
+                            res = connection.Execute(sql, entities, null, timeout, CommandType.Text);
+                        }
+                    }
+                    else
+                    {
+                        res = this.BaseDbTransaction.Connection.Execute(sql, entities, this.BaseDbTransaction, timeout, CommandType.Text);
+                    }
+                }
+            }, e =>
+            {
+                this.Rollback();
+            });
+            return res;
         }
 
         /// <summary>
@@ -209,9 +452,30 @@ namespace BerryCore.Data.Dapper
         /// </summary>
         /// <typeparam name="T">动态对象</typeparam>
         /// <returns></returns>
-        public int Delete<T>(int? timeout) where T : class
+        public int Delete<T>(int? timeout = Timeout) where T : class
         {
-            throw new NotImplementedException();
+            int res = 0;
+            this.Logger(this.GetType(), "删除-Delete", () =>
+            {
+                string tableName = EntityAttributeHelper.GetEntityTable<T>();
+                string sql = DatabaseCommon.DeleteSql(tableName).ToString();
+
+                if (this.BaseDbTransaction == null)
+                {
+                    using (IDbConnection connection = this.BaseDbConnection)
+                    {
+                        res = connection.Execute(sql, null, null, timeout, CommandType.Text);
+                    }
+                }
+                else
+                {
+                    res = this.BaseDbTransaction.Connection.Execute(sql, null, this.BaseDbTransaction, timeout, CommandType.Text);
+                }
+            }, e =>
+            {
+                this.Rollback();
+            });
+            return res;
         }
 
         /// <summary>
@@ -221,9 +485,32 @@ namespace BerryCore.Data.Dapper
         /// <param name="entity">实体</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public int Delete<T>(T entity, int? timeout) where T : class
+        public int Delete<T>(T entity, int? timeout = Timeout) where T : class
         {
-            throw new NotImplementedException();
+            int res = 0;
+            this.Logger(this.GetType(), "删除-Delete", () =>
+            {
+                if (entity != null)
+                {
+                    string sql = DatabaseCommon.DeleteSql<T>(entity).ToString();
+
+                    if (this.BaseDbTransaction == null)
+                    {
+                        using (IDbConnection connection = this.BaseDbConnection)
+                        {
+                            res = connection.Execute(sql, entity, null, timeout, CommandType.Text);
+                        }
+                    }
+                    else
+                    {
+                        res = this.BaseDbTransaction.Connection.Execute(sql, entity, this.BaseDbTransaction, timeout, CommandType.Text);
+                    }
+                }
+            }, e =>
+            {
+                this.Rollback();
+            });
+            return res;
         }
 
         /// <summary>
@@ -233,9 +520,32 @@ namespace BerryCore.Data.Dapper
         /// <param name="entities">实体集合</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public int BatchDelete<T>(List<T> entities, int? timeout) where T : class
+        public int BatchDelete<T>(List<T> entities, int? timeout = Timeout) where T : class
         {
-            throw new NotImplementedException();
+            int res = 0;
+            this.Logger(this.GetType(), "批量删除-BatchDelete", () =>
+            {
+                if (entities != null && entities.Count > 0)
+                {
+                    string sql = DatabaseCommon.DeleteSql<T>(entities.First()).ToString();
+
+                    if (this.BaseDbTransaction == null)
+                    {
+                        using (IDbConnection connection = this.BaseDbConnection)
+                        {
+                            res = connection.Execute(sql, entities, null, timeout, CommandType.Text);
+                        }
+                    }
+                    else
+                    {
+                        res = this.BaseDbTransaction.Connection.Execute(sql, entities, this.BaseDbTransaction, timeout, CommandType.Text);
+                    }
+                }
+            }, e =>
+            {
+                this.Rollback();
+            });
+            return res;
         }
 
         /// <summary>
@@ -245,9 +555,33 @@ namespace BerryCore.Data.Dapper
         /// <param name="condition">筛选条件</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public int Delete<T>(Expression<Func<T, bool>> condition, int? timeout) where T : class
+        public int Delete<T>(Expression<Func<T, bool>> condition, int? timeout = Timeout) where T : class
         {
-            throw new NotImplementedException();
+            int res = 0;
+            this.Logger(this.GetType(), "根据条件删除-Delete", () =>
+            {
+                LambdaExpConditions<T> lambda = new LambdaExpConditions<T>();
+                lambda.AddAndWhere(condition);
+                string where = lambda.Where();
+
+                string sql = DatabaseCommon.DeleteSql<T>(where).ToString();
+
+                if (this.BaseDbTransaction == null)
+                {
+                    using (IDbConnection connection = this.BaseDbConnection)
+                    {
+                        res = connection.Execute(sql, null, null, timeout, CommandType.Text);
+                    }
+                }
+                else
+                {
+                    res = this.BaseDbTransaction.Connection.Execute(sql, null, this.BaseDbTransaction, timeout, CommandType.Text);
+                }
+            }, e =>
+            {
+                this.Rollback();
+            });
+            return res;
         }
 
         /// <summary>
@@ -257,9 +591,33 @@ namespace BerryCore.Data.Dapper
         /// <param name="keyValue">主键</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public int Delete<T>(object keyValue, int? timeout) where T : class
+        public int Delete<T>(object keyValue, int? timeout = Timeout) where T : class
         {
-            throw new NotImplementedException();
+            int res = 0;
+            this.Logger(this.GetType(), "根据主键删除-Delete", () =>
+            {
+                Type type = keyValue.GetType();
+                string key = EntityAttributeHelper.GetEntityKey<T>();
+                string whereStr = string.Format(type == typeof(int) ? " WHERE {0} = {1}" : " WHERE {0} = '{1}'", key, keyValue);
+
+                string sql = DatabaseCommon.DeleteSql<T>(whereStr).ToString();
+
+                if (this.BaseDbTransaction == null)
+                {
+                    using (IDbConnection connection = this.BaseDbConnection)
+                    {
+                        res = connection.Execute(sql, null, null, timeout, CommandType.Text);
+                    }
+                }
+                else
+                {
+                    res = this.BaseDbTransaction.Connection.Execute(sql, null, this.BaseDbTransaction, timeout, CommandType.Text);
+                }
+            }, e =>
+            {
+                this.Rollback();
+            });
+            return res;
         }
 
         /// <summary>
@@ -269,9 +627,33 @@ namespace BerryCore.Data.Dapper
         /// <param name="keyValue">主键</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public T FindEntity<T>(object keyValue, int? timeout) where T : class
+        public T FindEntity<T>(object keyValue, int? timeout = Timeout) where T : class
         {
-            throw new NotImplementedException();
+            T res = default(T);
+            this.Logger(this.GetType(), "根据主键查询一个实体-FindEntity", () =>
+            {
+                Type type = keyValue.GetType();
+                string key = EntityAttributeHelper.GetEntityKey<T>();
+                string whereStr = string.Format(type == typeof(int) ? " WHERE {0} = {1}" : " WHERE {0} = '{1}'", key, keyValue);
+
+                string sql = DatabaseCommon.SelectSql<T>(whereStr, true).ToString();
+
+                if (this.BaseDbTransaction == null)
+                {
+                    using (IDbConnection connection = this.BaseDbConnection)
+                    {
+                        res = connection.Query<T>(sql, null, null, true, timeout, CommandType.Text).FirstOrDefault();
+                    }
+                }
+                else
+                {
+                    res = this.BaseDbTransaction.Connection.Query<T>(sql, null, this.BaseDbTransaction, true, timeout, CommandType.Text).FirstOrDefault();
+                }
+            }, e =>
+            {
+                this.Rollback();
+            });
+            return res;
         }
 
         /// <summary>
@@ -281,9 +663,33 @@ namespace BerryCore.Data.Dapper
         /// <param name="condition">筛选条件</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public T FindEntity<T>(Expression<Func<T, bool>> condition, int? timeout) where T : class
+        public T FindEntity<T>(Expression<Func<T, bool>> condition, int? timeout = Timeout) where T : class
         {
-            throw new NotImplementedException();
+            T res = default(T);
+            this.Logger(this.GetType(), "根据条件查询一个实体-FindEntity", () =>
+            {
+                LambdaExpConditions<T> lambda = new LambdaExpConditions<T>();
+                lambda.AddAndWhere(condition);
+                string where = lambda.Where();
+
+                string sql = DatabaseCommon.SelectSql<T>(where, true).ToString();
+
+                if (this.BaseDbTransaction == null)
+                {
+                    using (IDbConnection connection = this.BaseDbConnection)
+                    {
+                        res = connection.Query<T>(sql, null, null, true, timeout, CommandType.Text).FirstOrDefault();
+                    }
+                }
+                else
+                {
+                    res = this.BaseDbTransaction.Connection.Query<T>(sql, null, this.BaseDbTransaction, true, timeout, CommandType.Text).FirstOrDefault();
+                }
+            }, e =>
+            {
+                this.Rollback();
+            });
+            return res;
         }
 
         /// <summary>
@@ -292,9 +698,29 @@ namespace BerryCore.Data.Dapper
         /// <typeparam name="T">动态对象</typeparam>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public IQueryable<T> IQueryable<T>(int? timeout) where T : class
+        public IQueryable<T> IQueryable<T>(int? timeout = Timeout) where T : class
         {
-            throw new NotImplementedException();
+            IQueryable<T> res = default(IQueryable<T>);
+            this.Logger(this.GetType(), "获取IQueryable对象-IQueryable", () =>
+            {
+                string sql = DatabaseCommon.SelectSql<T>("", true).ToString();
+
+                if (this.BaseDbTransaction == null)
+                {
+                    using (IDbConnection connection = this.BaseDbConnection)
+                    {
+                        res = connection.Query<T>(sql, null, null, true, timeout, CommandType.Text).AsQueryable();
+                    }
+                }
+                else
+                {
+                    res = this.BaseDbTransaction.Connection.Query<T>(sql, null, this.BaseDbTransaction, true, timeout, CommandType.Text).AsQueryable();
+                }
+            }, e =>
+            {
+                this.Rollback();
+            });
+            return res;
         }
 
         /// <summary>
@@ -304,9 +730,32 @@ namespace BerryCore.Data.Dapper
         /// <param name="condition">筛选条件</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public IQueryable<T> IQueryable<T>(Expression<Func<T, bool>> condition, int? timeout) where T : class
+        public IQueryable<T> IQueryable<T>(Expression<Func<T, bool>> condition, int? timeout = Timeout) where T : class
         {
-            throw new NotImplementedException();
+            IQueryable<T> res = default(IQueryable<T>);
+            this.Logger(this.GetType(), "获取IQueryable对象-IQueryable", () =>
+            {
+                LambdaExpConditions<T> lambda = new LambdaExpConditions<T>();
+                lambda.AddAndWhere(condition);
+                string where = lambda.Where();
+                string sql = DatabaseCommon.SelectSql<T>(where, true).ToString();
+
+                if (this.BaseDbTransaction == null)
+                {
+                    using (IDbConnection connection = this.BaseDbConnection)
+                    {
+                        res = connection.Query<T>(sql, null, null, true, timeout, CommandType.Text).AsQueryable();
+                    }
+                }
+                else
+                {
+                    res = this.BaseDbTransaction.Connection.Query<T>(sql, null, this.BaseDbTransaction, true, timeout, CommandType.Text).AsQueryable();
+                }
+            }, e =>
+            {
+                this.Rollback();
+            });
+            return res;
         }
 
         /// <summary>
@@ -315,9 +764,29 @@ namespace BerryCore.Data.Dapper
         /// <typeparam name="T">动态对象</typeparam>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public IEnumerable<T> FindList<T>(int? timeout) where T : class
+        public IEnumerable<T> FindList<T>(int? timeout = Timeout) where T : class
         {
-            throw new NotImplementedException();
+            IEnumerable<T> res = default(IEnumerable<T>);
+            this.Logger(this.GetType(), "得到一个集合-FindList", () =>
+            {
+                string sql = DatabaseCommon.SelectSql<T>("", true).ToString();
+
+                if (this.BaseDbTransaction == null)
+                {
+                    using (IDbConnection connection = this.BaseDbConnection)
+                    {
+                        res = connection.Query<T>(sql, null, null, true, timeout, CommandType.Text);
+                    }
+                }
+                else
+                {
+                    res = this.BaseDbTransaction.Connection.Query<T>(sql, null, this.BaseDbTransaction, true, timeout, CommandType.Text);
+                }
+            }, e =>
+            {
+                this.Rollback();
+            });
+            return res;
         }
 
         /// <summary>
@@ -327,9 +796,32 @@ namespace BerryCore.Data.Dapper
         /// <param name="condition">筛选条件</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public IEnumerable<T> FindList<T>(Expression<Func<T, bool>> condition, int? timeout) where T : class
+        public IEnumerable<T> FindList<T>(Expression<Func<T, bool>> condition, int? timeout = Timeout) where T : class
         {
-            throw new NotImplementedException();
+            IEnumerable<T> res = default(IEnumerable<T>);
+            this.Logger(this.GetType(), "根据条件查询出一个集合-FindList", () =>
+            {
+                LambdaExpConditions<T> lambda = new LambdaExpConditions<T>();
+                lambda.AddAndWhere(condition);
+                string where = lambda.Where();
+                string sql = DatabaseCommon.SelectSql<T>(where, true).ToString();
+
+                if (this.BaseDbTransaction == null)
+                {
+                    using (IDbConnection connection = this.BaseDbConnection)
+                    {
+                        res = connection.Query<T>(sql, null, null, true, timeout, CommandType.Text);
+                    }
+                }
+                else
+                {
+                    res = this.BaseDbTransaction.Connection.Query<T>(sql, null, this.BaseDbTransaction, true, timeout, CommandType.Text);
+                }
+            }, e =>
+            {
+                this.Rollback();
+            });
+            return res;
         }
 
         /// <summary>
@@ -339,9 +831,27 @@ namespace BerryCore.Data.Dapper
         /// <param name="strSql">T-SQL语句</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public IEnumerable<T> FindList<T>(string strSql, int? timeout) where T : class
+        public IEnumerable<T> FindList<T>(string strSql, int? timeout = Timeout) where T : class
         {
-            throw new NotImplementedException();
+            IEnumerable<T> res = default(IEnumerable<T>);
+            this.Logger(this.GetType(), "执行sql语句，得到一个集合-FindList", () =>
+            {
+                if (this.BaseDbTransaction == null)
+                {
+                    using (IDbConnection connection = this.BaseDbConnection)
+                    {
+                        res = connection.Query<T>(strSql, null, null, true, timeout, CommandType.Text);
+                    }
+                }
+                else
+                {
+                    res = this.BaseDbTransaction.Connection.Query<T>(strSql, null, this.BaseDbTransaction, true, timeout, CommandType.Text);
+                }
+            }, e =>
+            {
+                this.Rollback();
+            });
+            return res;
         }
 
         /// <summary>
@@ -352,9 +862,27 @@ namespace BerryCore.Data.Dapper
         /// <param name="parameters">参数</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public IEnumerable<T> FindList<T>(string strSql, object parameters, int? timeout) where T : class
+        public IEnumerable<T> FindList<T>(string strSql, object parameters, int? timeout = Timeout) where T : class
         {
-            throw new NotImplementedException();
+            IEnumerable<T> res = default(IEnumerable<T>);
+            this.Logger(this.GetType(), "执行sql语句，得到一个集合-FindList", () =>
+            {
+                if (this.BaseDbTransaction == null)
+                {
+                    using (IDbConnection connection = this.BaseDbConnection)
+                    {
+                        res = connection.Query<T>(strSql, parameters, null, true, timeout, CommandType.Text);
+                    }
+                }
+                else
+                {
+                    res = this.BaseDbTransaction.Connection.Query<T>(strSql, parameters, this.BaseDbTransaction, true, timeout, CommandType.Text);
+                }
+            }, e =>
+            {
+                this.Rollback();
+            });
+            return res;
         }
 
         /// <summary>
@@ -371,9 +899,64 @@ namespace BerryCore.Data.Dapper
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
         public IEnumerable<T> FindList<T>(string strSql, object parameters, string orderField, bool isAsc, int pageSize, int pageIndex,
-            out int total, int? timeout) where T : class
+            out int total, int? timeout = Timeout) where T : class
         {
-            throw new NotImplementedException();
+            IEnumerable<T> res = default(IEnumerable<T>);
+            int temp = 0;
+            this.Logger(this.GetType(), "执行sql语句，获取分页数据-FindList", () =>
+            {
+                StringBuilder sb = new StringBuilder();
+                if (pageIndex == 0)
+                {
+                    pageIndex = 1;
+                }
+                int num = (pageIndex - 1) * pageSize;
+                int num1 = (pageIndex) * pageSize;
+                string orderBy = "";
+
+                //表名
+                string table = EntityAttributeHelper.GetEntityTable<T>();
+
+                if (!string.IsNullOrEmpty(orderField))
+                {
+                    if (orderField.ToUpper().IndexOf("ASC", StringComparison.Ordinal) + orderField.ToUpper().IndexOf("DESC", StringComparison.Ordinal) > 0)
+                    {
+                        orderBy = "Order By " + orderField;
+                    }
+                    else
+                    {
+                        orderBy = "Order By " + orderField + " " + (isAsc ? "ASC" : "DESC");
+                    }
+                }
+                else
+                {
+                    orderBy = "Order By (Select 0)";
+                }
+                sb.Append("Select * From (Select ROW_NUMBER() Over (" + orderBy + ")");
+                sb.Append(" As rowNum, * From (" + strSql + ") As T ) As N Where rowNum > " + num + " And rowNum <= " + num1 + "");
+
+                //查询总记录数
+                string selectCountSql = "Select Count(*) From " + table + " WHERE 1 = 1";
+
+                if (this.BaseDbTransaction == null)
+                {
+                    using (IDbConnection connection = this.BaseDbConnection)
+                    {
+                        temp = (int)connection.ExecuteScalar(selectCountSql);
+                        res = connection.Query<T>(sb.ToString(), parameters, null, true, timeout, CommandType.Text);
+                    }
+                }
+                else
+                {
+                    temp = (int)this.BaseDbTransaction.Connection.ExecuteScalar(selectCountSql, null, this.BaseDbTransaction);
+                    res = this.BaseDbTransaction.Connection.Query<T>(sb.ToString(), parameters, this.BaseDbTransaction, true, timeout, CommandType.Text);
+                }
+            }, e =>
+            {
+                this.Rollback();
+            });
+            total = temp;
+            return res;
         }
 
         /// <summary>
@@ -389,9 +972,69 @@ namespace BerryCore.Data.Dapper
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
         public IEnumerable<T> FindList<T>(Expression<Func<T, bool>> condition, string orderField, bool isAsc, int pageSize, int pageIndex, out int total,
-            int? timeout) where T : class
+            int? timeout = Timeout) where T : class
         {
-            throw new NotImplementedException();
+            IEnumerable<T> res = default(IEnumerable<T>);
+            int temp = 0;
+            this.Logger(this.GetType(), "执行sql语句，获取分页数据-FindList", () =>
+            {
+                StringBuilder sb = new StringBuilder();
+                if (pageIndex == 0)
+                {
+                    pageIndex = 1;
+                }
+                int num = (pageIndex - 1) * pageSize;
+                int num1 = (pageIndex) * pageSize;
+                string orderBy = "";
+
+                LambdaExpConditions<T> lambda = new LambdaExpConditions<T>();
+                lambda.AddAndWhere(condition);
+                string where = lambda.Where();
+
+                //表名
+                string table = EntityAttributeHelper.GetEntityTable<T>();
+                string strSql = DatabaseCommon.SelectSql<T>(where, true).ToString();
+
+                if (!string.IsNullOrEmpty(orderField))
+                {
+                    if (orderField.ToUpper().IndexOf("ASC", StringComparison.Ordinal) + orderField.ToUpper().IndexOf("DESC", StringComparison.Ordinal) > 0)
+                    {
+                        orderBy = "Order By " + orderField;
+                    }
+                    else
+                    {
+                        orderBy = "Order By " + orderField + " " + (isAsc ? "ASC" : "DESC");
+                    }
+                }
+                else
+                {
+                    orderBy = "Order By (Select 0)";
+                }
+                sb.Append("Select * From (Select ROW_NUMBER() Over (" + orderBy + ")");
+                sb.Append(" As rowNum, * From (" + strSql + ") As T ) As N Where rowNum > " + num + " And rowNum <= " + num1 + "");
+
+                //查询总记录数
+                string selectCountSql = "Select Count(*) From " + table + " WHERE 1 = 1";
+
+                if (this.BaseDbTransaction == null)
+                {
+                    using (IDbConnection connection = this.BaseDbConnection)
+                    {
+                        temp = (int)connection.ExecuteScalar(selectCountSql);
+                        res = connection.Query<T>(sb.ToString(), null, null, true, timeout, CommandType.Text);
+                    }
+                }
+                else
+                {
+                    temp = (int)this.BaseDbTransaction.Connection.ExecuteScalar(selectCountSql, null, this.BaseDbTransaction);
+                    res = this.BaseDbTransaction.Connection.Query<T>(sb.ToString(), null, this.BaseDbTransaction, true, timeout, CommandType.Text);
+                }
+            }, e =>
+            {
+                this.Rollback();
+            });
+            total = temp;
+            return res;
         }
 
         /// <summary>
@@ -401,9 +1044,35 @@ namespace BerryCore.Data.Dapper
         /// <param name="condition">筛选条件</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public DataTable FindTable<T>(Expression<Func<T, bool>> condition, int? timeout) where T : class
+        public DataTable FindTable<T>(Expression<Func<T, bool>> condition, int? timeout = Timeout) where T : class
         {
-            throw new NotImplementedException();
+            DataTable res = new DataTable(typeof(T).Name);
+            this.Logger(this.GetType(), "根据条件查询一个DataTable-FindTable", () =>
+            {
+                LambdaExpConditions<T> lambda = new LambdaExpConditions<T>();
+                lambda.AddAndWhere(condition);
+                string where = lambda.Where();
+
+                string sql = DatabaseCommon.SelectSql<T>(where, true).ToString();
+
+                if (this.BaseDbTransaction == null)
+                {
+                    using (IDbConnection connection = this.BaseDbConnection)
+                    {
+                        var reader = connection.ExecuteReader(sql, null, null, timeout, CommandType.Text);
+                        res.Load(reader);
+                    }
+                }
+                else
+                {
+                    var reader = this.BaseDbTransaction.Connection.ExecuteReader(sql, null, this.BaseDbTransaction, timeout, CommandType.Text);
+                    res.Load(reader);
+                }
+            }, e =>
+            {
+                this.Rollback();
+            });
+            return res;
         }
 
         /// <summary>
@@ -413,9 +1082,29 @@ namespace BerryCore.Data.Dapper
         /// <param name="parameters">参数</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public DataTable FindTable(string strSql, object parameters, int? timeout)
+        public DataTable FindTable(string strSql, object parameters, int? timeout = Timeout)
         {
-            throw new NotImplementedException();
+            DataTable res = new DataTable("DefaultTable");
+            this.Logger(this.GetType(), "查询一个DataTable-FindTable", () =>
+            {
+                if (this.BaseDbTransaction == null)
+                {
+                    using (IDbConnection connection = this.BaseDbConnection)
+                    {
+                        var reader = connection.ExecuteReader(strSql, parameters, null, timeout, CommandType.Text);
+                        res.Load(reader);
+                    }
+                }
+                else
+                {
+                    var reader = this.BaseDbTransaction.Connection.ExecuteReader(strSql, parameters, this.BaseDbTransaction, timeout, CommandType.Text);
+                    res.Load(reader);
+                }
+            }, e =>
+            {
+                this.Rollback();
+            });
+            return res;
         }
 
         /// <summary>
@@ -430,9 +1119,63 @@ namespace BerryCore.Data.Dapper
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
         public DataTable FindTable(string strSql, string orderField, bool isAsc, int pageSize, int pageIndex, out int total,
-            int? timeout)
+            int? timeout = Timeout)
         {
-            throw new NotImplementedException();
+            DataTable res = new DataTable("DefaultPageTable");
+            int temp = 0;
+            this.Logger(this.GetType(), "获取分页DataTable-FindTable", () =>
+            {
+                StringBuilder sb = new StringBuilder();
+                if (pageIndex == 0)
+                {
+                    pageIndex = 1;
+                }
+                int num = (pageIndex - 1) * pageSize;
+                int num1 = (pageIndex) * pageSize;
+                string orderBy = "";
+
+                if (!string.IsNullOrEmpty(orderField))
+                {
+                    if (orderField.ToUpper().IndexOf("ASC", StringComparison.Ordinal) + orderField.ToUpper().IndexOf("DESC", StringComparison.Ordinal) > 0)
+                    {
+                        orderBy = "Order By " + orderField;
+                    }
+                    else
+                    {
+                        orderBy = "Order By " + orderField + " " + (isAsc ? "ASC" : "DESC");
+                    }
+                }
+                else
+                {
+                    orderBy = "Order By (Select 0)";
+                }
+                sb.Append("Select * From (Select ROW_NUMBER() Over (" + orderBy + ")");
+                sb.Append(" As rowNum, * From (" + strSql + ") As T ) As N Where rowNum > " + num + " And rowNum <= " + num1 + "");
+
+                //查询总记录数
+                string selectCountSql = "Select Count(*) From (" + strSql + ") AS t";
+
+                if (this.BaseDbTransaction == null)
+                {
+                    using (IDbConnection connection = this.BaseDbConnection)
+                    {
+                        temp = (int)connection.ExecuteScalar(selectCountSql);
+                        var reader = connection.ExecuteReader(sb.ToString(), null, null, timeout, CommandType.Text);
+                        res.Load(reader);
+                    }
+                }
+                else
+                {
+                    temp = (int)this.BaseDbTransaction.Connection.ExecuteScalar(selectCountSql, null, this.BaseDbTransaction);
+                    var reader = this.BaseDbTransaction.Connection.ExecuteReader(sb.ToString(), null, this.BaseDbTransaction, timeout, CommandType.Text);
+                    res.Load(reader);
+                }
+            }, e =>
+            {
+                this.Rollback();
+            });
+            total = temp;
+            return res;
         }
 
         /// <summary>
@@ -448,9 +1191,63 @@ namespace BerryCore.Data.Dapper
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
         public DataTable FindTable(string strSql, object parameters, string orderField, bool isAsc, int pageSize, int pageIndex,
-            out int total, int? timeout)
+            out int total, int? timeout = Timeout)
         {
-            throw new NotImplementedException();
+            DataTable res = new DataTable("DefaultPageTable");
+            int temp = 0;
+            this.Logger(this.GetType(), "获取分页DataTable-FindTable", () =>
+            {
+                StringBuilder sb = new StringBuilder();
+                if (pageIndex == 0)
+                {
+                    pageIndex = 1;
+                }
+                int num = (pageIndex - 1) * pageSize;
+                int num1 = (pageIndex) * pageSize;
+                string orderBy = "";
+
+                if (!string.IsNullOrEmpty(orderField))
+                {
+                    if (orderField.ToUpper().IndexOf("ASC", StringComparison.Ordinal) + orderField.ToUpper().IndexOf("DESC", StringComparison.Ordinal) > 0)
+                    {
+                        orderBy = "Order By " + orderField;
+                    }
+                    else
+                    {
+                        orderBy = "Order By " + orderField + " " + (isAsc ? "ASC" : "DESC");
+                    }
+                }
+                else
+                {
+                    orderBy = "Order By (Select 0)";
+                }
+                sb.Append("Select * From (Select ROW_NUMBER() Over (" + orderBy + ")");
+                sb.Append(" As rowNum, * From (" + strSql + ") As T ) As N Where rowNum > " + num + " And rowNum <= " + num1 + "");
+
+                //查询总记录数
+                string selectCountSql = "Select Count(*) From (" + strSql + ") AS t";
+
+                if (this.BaseDbTransaction == null)
+                {
+                    using (IDbConnection connection = this.BaseDbConnection)
+                    {
+                        temp = (int)connection.ExecuteScalar(selectCountSql);
+                        var reader = connection.ExecuteReader(sb.ToString(), parameters, null, timeout, CommandType.Text);
+                        res.Load(reader);
+                    }
+                }
+                else
+                {
+                    temp = (int)this.BaseDbTransaction.Connection.ExecuteScalar(selectCountSql, null, this.BaseDbTransaction);
+                    var reader = this.BaseDbTransaction.Connection.ExecuteReader(sb.ToString(), parameters, this.BaseDbTransaction, timeout, CommandType.Text);
+                    res.Load(reader);
+                }
+            }, e =>
+            {
+                this.Rollback();
+            });
+            total = temp;
+            return res;
         }
 
         /// <summary>
@@ -460,9 +1257,32 @@ namespace BerryCore.Data.Dapper
         /// <param name="entity">待更新实体</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public int Update<T>(object entity, int? timeout) where T : class
+        public int Update<T>(object entity, int? timeout = Timeout) where T : class
         {
-            throw new NotImplementedException();
+            int res = 0;
+            this.Logger(this.GetType(), "更新-Update", () =>
+            {
+                if (entity != null)
+                {
+                    string sql = DatabaseCommon.UpdateSql<T>(entity).ToString();
+
+                    if (this.BaseDbTransaction == null)
+                    {
+                        using (IDbConnection connection = this.BaseDbConnection)
+                        {
+                            res = connection.Execute(sql, entity, null, timeout, CommandType.Text);
+                        }
+                    }
+                    else
+                    {
+                        res = this.BaseDbTransaction.Connection.Execute(sql, entity, this.BaseDbTransaction, timeout, CommandType.Text);
+                    }
+                }
+            }, e =>
+            {
+                this.Rollback();
+            });
+            return res;
         }
 
         /// <summary>
@@ -473,9 +1293,35 @@ namespace BerryCore.Data.Dapper
         /// <param name="condition">筛选条件</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public int Update<T>(object entity, Expression<Func<T, bool>> condition, int? timeout) where T : class
+        public int Update<T>(object entity, Expression<Func<T, bool>> condition, int? timeout = Timeout) where T : class
         {
-            throw new NotImplementedException();
+            int res = 0;
+            this.Logger(this.GetType(), "根据条件以及指定属性名称更新-Update", () =>
+            {
+                if (entity != null)
+                {
+                    LambdaExpConditions<T> lambda = new LambdaExpConditions<T>();
+                    lambda.AddAndWhere(condition);
+                    string where = lambda.Where();
+                    string sql = DatabaseCommon.UpdateSql<T>(entity, "", where).ToString();
+
+                    if (this.BaseDbTransaction == null)
+                    {
+                        using (IDbConnection connection = this.BaseDbConnection)
+                        {
+                            res = connection.Execute(sql, entity, null, timeout, CommandType.Text);
+                        }
+                    }
+                    else
+                    {
+                        res = this.BaseDbTransaction.Connection.Execute(sql, entity, this.BaseDbTransaction, timeout, CommandType.Text);
+                    }
+                }
+            }, e =>
+            {
+                this.Rollback();
+            });
+            return res;
         }
     }
 }

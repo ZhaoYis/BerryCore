@@ -24,6 +24,7 @@ using System;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Data.SQLite;
 using System.Reflection;
 using MySql.Data.MySqlClient;
 using Oracle.DataAccess.Client;
@@ -41,7 +42,6 @@ namespace BerryCore.Data
     {
         /// <summary>
         /// 根据配置文件中所配置的数据库类型
-        /// 来获取命令参数中的参数符号Oracle为":",SqlServer为"@"
         /// </summary>
         /// <returns></returns>
         public static string CreateDbParmCharacter()
@@ -91,6 +91,10 @@ namespace BerryCore.Data
 
                 case DatabaseType.MySql:
                     parameter = new MySqlParameter();
+                    break;
+
+                case DatabaseType.SQLite:
+                    parameter = new SQLiteParameter();
                     break;
 
                 default:
@@ -147,38 +151,30 @@ namespace BerryCore.Data
                         i++;
                     }
                     break;
-                //case DatabaseType.MySql:
-                //    dbParameter = new DbParameter[size];
-                //    while (i < size)
-                //    {
-                //        dbParameter[i] = new MySqlParameter(dbParameter[i].ParameterName, dbParameter[i].Value);
-                //        i++;
-                //    }
-                //    break;
-                //case DatabaseType.Oracle:
-                //    dbParameter = new DbParameter[size];
-                //    while (i < size)
-                //    {
-                //        dbParameter[i] = new OracleParameter(dbParameter[i].ParameterName, dbParameter[i].Value);
-                //        i++;
-                //    }
-                //    break;
-                //case DatabaseType.Access:
-                //    dbParameter = new DbParameter[size];
-                //    while (i < size)
-                //    {
-                //        dbParameter[i] = new OleDbParameter(dbParameter[i].ParameterName, dbParameter[i].Value);
-                //        i++;
-                //    }
-                //    break;
-                //case DatabaseType.SqLite:
-                //    dbParameter = new DbParameter[size];
-                //    while (i < size)
-                //    {
-                //        dbParameter[i] = new SQLiteParameter(dbParameter[i].ParameterName, dbParameter[i].Value);
-                //        i++;
-                //    }
-                //    break;
+                case DatabaseType.MySql:
+                    dbParameter = new DbParameter[size];
+                    while (i < size)
+                    {
+                        dbParameter[i] = new MySqlParameter(dbParameter[i].ParameterName, dbParameter[i].Value);
+                        i++;
+                    }
+                    break;
+                case DatabaseType.Oracle:
+                    dbParameter = new DbParameter[size];
+                    while (i < size)
+                    {
+                        dbParameter[i] = new OracleParameter(dbParameter[i].ParameterName, dbParameter[i].Value);
+                        i++;
+                    }
+                    break;
+                case DatabaseType.SQLite:
+                    dbParameter = new DbParameter[size];
+                    while (i < size)
+                    {
+                        dbParameter[i] = new SQLiteParameter(dbParameter[i].ParameterName, dbParameter[i].Value);
+                        i++;
+                    }
+                    break;
                 default:
                     throw new Exception("数据库类型目前不支持！");
             }
