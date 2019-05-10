@@ -35,3 +35,11 @@ BerryCore/BerryCore.Framework/Utils/BerryCore.Utilities.JWT/bin/
 BerryCore/BerryCore.DataAccess/BerryCore.Data.Dapper/bin/
 BerryCore/BerryCore.Business/BerryCore.BLL/bin/
 BerryCore/BerryCore.DataAccess/BerryCore.Data/bin/
+BerryCore/BerryCore.WCF/BerryCore.WCF.BaseBehavior/obj/
+BerryCore/BerryCore.WCF/BerryCore.WCF.DataContract/obj/
+BerryCore/BerryCore.WCF/BerryCore.WCF.Service/obj/
+BerryCore/BerryCore.WCF/BerryCore.WCF.Service/bin/
+BerryCore/BerryCore.WCF/BerryCore.WCF.ServiceBehavior/obj/
+BerryCore/BerryCore.WCF/BerryCore.WCF.ServiceContract/obj/
+BerryCore/BerryCore.WCF/BerryCore.WCF.ServiceContract/bin/
+BerryCore/BerryCore.WCF/BerryCore.WCF.ServiceBehavior/bin/

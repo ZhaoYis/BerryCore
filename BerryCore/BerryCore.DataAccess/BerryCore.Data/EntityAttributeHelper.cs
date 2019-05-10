@@ -56,7 +56,7 @@ namespace BerryCore.Data
         }
 
         /// <summary>
-        ///  获取实体对象Key
+        ///  获取不映射的字段集合
         /// </summary>
         /// <returns></returns>
         public static List<string> GetNotMappedFields<T>()
@@ -66,7 +66,7 @@ namespace BerryCore.Data
             List<string> res = new List<string>();
             foreach (PropertyInfo prop in props)
             {
-                res.AddRange(prop.GetCustomAttributes(true).OfType<NotMappedAttribute>().Select(keyattribute => prop.Name));
+                res.AddRange(prop.GetCustomAttributes(true).OfType<NotMappedAttribute>().Select(key => prop.Name));
             }
             return res;
         }
@@ -87,11 +87,11 @@ namespace BerryCore.Data
         }
 
         /// <summary>
-        /// 获取实体类 字段中文名称
+        /// 获取实体类显示名称
         /// </summary>
         /// <param name="pi">字段属性信息</param>
         /// <returns></returns>
-        public static string GetFieldText(PropertyInfo pi)
+        public static string GetFieldDisplayName(PropertyInfo pi)
         {
             string txt = "";
             var descAttrs = pi.GetCustomAttributes(typeof(DisplayNameAttribute), true);

@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--===========文档说明 开始===========-->
+
+<!--配置文件说明-->
+
+<!--===========文档说明 结束===========-->
+
+<BerryCoreWcfServiceSettings>
+
+  <Setting>
+    <!--服务中文名称-->
+    <Name>用于测试</Name>
+    <!--服务名称-->
+    <ServiceName>TestServiceContract</ServiceName>
+    <!--服务契约命名空间-->
+    <ServiceContractNamespace>BerryCore.WCF.ServiceContract.Test.ITestServiceContract,BerryCore.WCF.ServiceContract</ServiceContractNamespace>
+    <!--服务行为命名空间-->
+    <ServiceBehaviorNamespace>BerryCore.WCF.ServiceBehavior.TestImpl.TestServiceContract,BerryCore.WCF.ServiceBehavior</ServiceBehaviorNamespace>
+    <!--是否启用Http请求检索-->
+    <CanHttp>1</CanHttp>
+    <!--是否启动此服务-->
+    <Enabled>1</Enabled>
+  </Setting>
+
+</BerryCoreWcfServiceSettings>
