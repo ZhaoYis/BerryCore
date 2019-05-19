@@ -59,6 +59,7 @@
     <None Include="packages.config" />
     <Content Include="XmlConfig\database.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="XmlConfig\ioc.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -91,15 +92,15 @@
       <Project>{e17bd892-70dd-4a2c-ae1d-728237eb9da1}</Project>
       <Name>BerryCore.Code</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\BerryCore.Framework\Utils\BerryCore.Extensions\BerryCore.Extensions.csproj">
+    <ProjectReference Include="..\..\BerryCore.Framework\Utilities\BerryCore.Extensions\BerryCore.Extensions.csproj">
       <Project>{c89b9ab2-a27b-498b-8d59-fd1713596c35}</Project>
       <Name>BerryCore.Extensions</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\BerryCore.Framework\Utils\BerryCore.Log\BerryCore.Log.csproj">
+    <ProjectReference Include="..\..\BerryCore.Framework\Utilities\BerryCore.Log\BerryCore.Log.csproj">
       <Project>{36f14e26-5650-400c-ba8f-a76d28c767cb}</Project>
       <Name>BerryCore.Log</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\BerryCore.Framework\Utils\BerryCore.Utilities\BerryCore.Utilities.csproj">
+    <ProjectReference Include="..\..\BerryCore.Framework\Utilities\BerryCore.Utilities\BerryCore.Utilities.csproj">
       <Project>{f843472b-e7c1-4e45-9e52-99f29c7f16e3}</Project>
       <Name>BerryCore.Utilities</Name>
     </ProjectReference>

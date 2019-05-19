@@ -92,7 +92,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Utils\BerryCore.Extensions\BerryCore.Extensions.csproj">
+    <ProjectReference Include="..\..\Utilities\BerryCore.Extensions\BerryCore.Extensions.csproj">
       <Project>{c89b9ab2-a27b-498b-8d59-fd1713596c35}</Project>
       <Name>BerryCore.Extensions</Name>
     </ProjectReference>

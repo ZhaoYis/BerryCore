@@ -27,17 +27,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04-Wizard", "04-Wizard", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "05-SDK", "05-SDK", "{98B600AB-4FEA-4555-87F4-4D0321B444BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BerryCore.Extensions", "BerryCore.Framework\Utils\BerryCore.Extensions\BerryCore.Extensions.csproj", "{C89B9AB2-A27B-498B-8D59-FD1713596C35}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BerryCore.Extensions", "BerryCore.Framework\Utilities\BerryCore.Extensions\BerryCore.Extensions.csproj", "{C89B9AB2-A27B-498B-8D59-FD1713596C35}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BerryCore.Utilities", "BerryCore.Framework\Utils\BerryCore.Utilities\BerryCore.Utilities.csproj", "{F843472B-E7C1-4E45-9E52-99F29C7F16E3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BerryCore.Utilities", "BerryCore.Framework\Utilities\BerryCore.Utilities\BerryCore.Utilities.csproj", "{F843472B-E7C1-4E45-9E52-99F29C7F16E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BerryCore.Log", "BerryCore.Framework\Utils\BerryCore.Log\BerryCore.Log.csproj", "{36F14E26-5650-400C-BA8F-A76D28C767CB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BerryCore.Log", "BerryCore.Framework\Utilities\BerryCore.Log\BerryCore.Log.csproj", "{36F14E26-5650-400C-BA8F-A76D28C767CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BerryCore.IOC", "BerryCore.Framework\Utils\BerryCore.IOC\BerryCore.IOC.csproj", "{9174FE79-EC43-4932-9CB2-65ED716DD6AA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BerryCore.IOC", "BerryCore.Framework\Utilities\BerryCore.IOC\BerryCore.IOC.csproj", "{9174FE79-EC43-4932-9CB2-65ED716DD6AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BerryCore.AutoMapper", "BerryCore.Framework\Utils\BerryCore.AutoMapper\BerryCore.AutoMapper.csproj", "{5BA10BF7-4609-470A-8BB4-0D6C5862A703}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BerryCore.AutoMapper", "BerryCore.Framework\Utilities\BerryCore.AutoMapper\BerryCore.AutoMapper.csproj", "{5BA10BF7-4609-470A-8BB4-0D6C5862A703}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BerryCore.Utilities.JWT", "BerryCore.Framework\Utils\BerryCore.Utilities.JWT\BerryCore.Utilities.JWT.csproj", "{14CC6D65-BCEF-48E1-82BB-C6BB6BD27F20}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BerryCore.Utilities.JWT", "BerryCore.Framework\Utilities\BerryCore.Utilities.JWT\BerryCore.Utilities.JWT.csproj", "{14CC6D65-BCEF-48E1-82BB-C6BB6BD27F20}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BerryCore.Code", "BerryCore.Framework\Global\BerryCore.Code\BerryCore.Code.csproj", "{E17BD892-70DD-4A2C-AE1D-728237EB9DA1}"
 EndProject
@@ -71,7 +71,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BerryCore.Data.Repository",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BerryCore.UnitTest", "BerryCore.Test\BerryCore.UnitTest\BerryCore.UnitTest.csproj", "{EE1CCD97-06AC-4CF1-B031-087DD1B52D8A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BerryCore.Utilities.Lambda2SQL", "BerryCore.Framework\Utils\BerryCore.Utilities.Lambda2SQL\BerryCore.Utilities.Lambda2SQL.csproj", "{488F2FB7-DD80-4227-A60E-D02F14F97F0C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BerryCore.Utilities.Lambda2SQL", "BerryCore.Framework\Utilities\BerryCore.Utilities.Lambda2SQL\BerryCore.Utilities.Lambda2SQL.csproj", "{488F2FB7-DD80-4227-A60E-D02F14F97F0C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Cache.Core", "BerryCore.Framework\Cache\Berry.Cache.Core\Berry.Cache.Core.csproj", "{1F0D4E6E-FFF8-4914-89F3-53198463D5A3}"
 EndProject
@@ -86,6 +86,14 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BerryCore.WCF.ServiceBehavior", "BerryCore.WCF\BerryCore.WCF.ServiceBehavior\BerryCore.WCF.ServiceBehavior.csproj", "{7F755F8F-7141-420E-A9AB-709A2EA3AFDA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BerryCore.WCF.ServiceContract", "BerryCore.WCF\BerryCore.WCF.ServiceContract\BerryCore.WCF.ServiceContract.csproj", "{4E3AF45D-9152-425F-AA39-FA0FCDE779CB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "06-Socket", "06-Socket", "{123E6341-41C9-4F61-98FF-9DD62082FE35}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SurperSocket.Core.Client", "BerryCore.Framework\Socket\SurperSocket.Core.Client\SurperSocket.Core.Client.csproj", "{C1F08A73-FB29-4088-9873-6F68B65438B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SurperSocket.Core.Service", "BerryCore.Framework\Socket\SurperSocket.Core.Service\SurperSocket.Core.Service.csproj", "{9B383B9C-1BC4-46A3-9104-DBDBC6E58719}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SurperSocket.Core", "BerryCore.Framework\Socket\SurperSocket.Core\SurperSocket.Core.csproj", "{8DBD56FE-B4A7-42F2-976A-BEF6C8703AF8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -197,6 +205,18 @@ Global
 		{4E3AF45D-9152-425F-AA39-FA0FCDE779CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E3AF45D-9152-425F-AA39-FA0FCDE779CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4E3AF45D-9152-425F-AA39-FA0FCDE779CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1F08A73-FB29-4088-9873-6F68B65438B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1F08A73-FB29-4088-9873-6F68B65438B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1F08A73-FB29-4088-9873-6F68B65438B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1F08A73-FB29-4088-9873-6F68B65438B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B383B9C-1BC4-46A3-9104-DBDBC6E58719}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B383B9C-1BC4-46A3-9104-DBDBC6E58719}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B383B9C-1BC4-46A3-9104-DBDBC6E58719}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B383B9C-1BC4-46A3-9104-DBDBC6E58719}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DBD56FE-B4A7-42F2-976A-BEF6C8703AF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DBD56FE-B4A7-42F2-976A-BEF6C8703AF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DBD56FE-B4A7-42F2-976A-BEF6C8703AF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DBD56FE-B4A7-42F2-976A-BEF6C8703AF8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -237,6 +257,10 @@ Global
 		{3EF89CA1-9D62-4DFA-B27D-F9AD948709E3} = {B11401D8-2E53-485E-AAC0-4342F6A20C2C}
 		{7F755F8F-7141-420E-A9AB-709A2EA3AFDA} = {B11401D8-2E53-485E-AAC0-4342F6A20C2C}
 		{4E3AF45D-9152-425F-AA39-FA0FCDE779CB} = {B11401D8-2E53-485E-AAC0-4342F6A20C2C}
+		{123E6341-41C9-4F61-98FF-9DD62082FE35} = {A75AFCC0-873C-4D15-A969-211A5D4DBA27}
+		{C1F08A73-FB29-4088-9873-6F68B65438B6} = {123E6341-41C9-4F61-98FF-9DD62082FE35}
+		{9B383B9C-1BC4-46A3-9104-DBDBC6E58719} = {123E6341-41C9-4F61-98FF-9DD62082FE35}
+		{8DBD56FE-B4A7-42F2-976A-BEF6C8703AF8} = {123E6341-41C9-4F61-98FF-9DD62082FE35}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7F439A65-1309-4355-A34A-732E6F7B774E}

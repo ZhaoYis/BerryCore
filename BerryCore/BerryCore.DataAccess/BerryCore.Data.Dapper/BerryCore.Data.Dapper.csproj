@@ -54,15 +54,15 @@
     <Compile Include="SQLiteDatabase4Dapper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\BerryCore.Framework\Utils\BerryCore.Log\BerryCore.Log.csproj">
+    <ProjectReference Include="..\..\BerryCore.Framework\Utilities\BerryCore.Log\BerryCore.Log.csproj">
       <Project>{36f14e26-5650-400c-ba8f-a76d28c767cb}</Project>
       <Name>BerryCore.Log</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\BerryCore.Framework\Utils\BerryCore.Utilities.Lambda2SQL\BerryCore.Utilities.Lambda2SQL.csproj">
+    <ProjectReference Include="..\..\BerryCore.Framework\Utilities\BerryCore.Utilities.Lambda2SQL\BerryCore.Utilities.Lambda2SQL.csproj">
       <Project>{488f2fb7-dd80-4227-a60e-d02f14f97f0c}</Project>
       <Name>BerryCore.Utilities.Lambda2SQL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\BerryCore.Framework\Utils\BerryCore.Utilities\BerryCore.Utilities.csproj">
+    <ProjectReference Include="..\..\BerryCore.Framework\Utilities\BerryCore.Utilities\BerryCore.Utilities.csproj">
       <Project>{f843472b-e7c1-4e45-9e52-99f29c7f16e3}</Project>
       <Name>BerryCore.Utilities</Name>
     </ProjectReference>

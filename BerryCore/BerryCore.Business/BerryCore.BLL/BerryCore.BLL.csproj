@@ -50,7 +50,7 @@
       <Project>{a3724e87-cb69-4498-90e9-4efbf51632a0}</Project>
       <Name>BerryCore.Data.Repository</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\BerryCore.Framework\Utils\BerryCore.Log\BerryCore.Log.csproj">
+    <ProjectReference Include="..\..\BerryCore.Framework\Utilities\BerryCore.Log\BerryCore.Log.csproj">
       <Project>{36f14e26-5650-400c-ba8f-a76d28c767cb}</Project>
       <Name>BerryCore.Log</Name>
     </ProjectReference>
