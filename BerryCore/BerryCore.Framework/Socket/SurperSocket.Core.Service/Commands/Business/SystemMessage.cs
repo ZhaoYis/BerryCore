@@ -30,7 +30,7 @@ namespace SurperSocket.Core.Service.Commands.Business
             Console.WriteLine($"[{command.GetDescription()}]命令被执行");
             Console.WriteLine("内容是：" + requestInfo.Body);
 
-            string jsonData = "收到消息".GetTransmitPackets(command);
+            string jsonData = "收到消息".GetTransmitPackets(SocketCommand.CustomMsg);
             session.Send(SocketCommand.CustomMsg, jsonData);
         }
     }

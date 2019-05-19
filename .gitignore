@@ -59,3 +59,7 @@ BerryCore/BerryCore.Framework/Utilities/BerryCore.Utilities.JWT/bin/
 BerryCore/BerryCore.Framework/Socket/SurperSocket.Core/bin/
 BerryCore/BerryCore.Framework/Socket/SurperSocket.Core.Service/bin/
 BerryCore/BerryCore.Framework/Utilities/BerryCore.Log/bin/
+BerryCore/BerryCore.Simples/SurperSocket.Client/bin/
+BerryCore/BerryCore.Simples/SurperSocket.Client/obj/
+BerryCore/BerryCore.Simples/SurperSocket.Service/obj/
+BerryCore/BerryCore.Simples/SurperSocket.Service/bin/
