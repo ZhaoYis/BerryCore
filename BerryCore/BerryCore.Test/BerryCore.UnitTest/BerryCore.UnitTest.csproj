@@ -52,6 +52,7 @@
     <Compile Include="BaseServiceUnitTest.cs" />
     <Compile Include="BaseServiceUnitTest.T.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="DistributedLockUnitTest.cs" />
     <Compile Include="UtilitiesUnitTest.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -91,6 +92,10 @@
     <ProjectReference Include="..\..\BerryCore.Framework\Global\BerryCore.Code\BerryCore.Code.csproj">
       <Project>{e17bd892-70dd-4a2c-ae1d-728237eb9da1}</Project>
       <Name>BerryCore.Code</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\BerryCore.Framework\Utilities\BerryCore.DistributedLockManager\BerryCore.DistributedLockManager.csproj">
+      <Project>{da51c5c2-d438-4ce7-84e7-3bac54cde699}</Project>
+      <Name>BerryCore.DistributedLockManager</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\BerryCore.Framework\Utilities\BerryCore.Extensions\BerryCore.Extensions.csproj">
       <Project>{c89b9ab2-a27b-498b-8d59-fd1713596c35}</Project>

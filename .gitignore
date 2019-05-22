@@ -63,3 +63,5 @@ BerryCore/BerryCore.Simples/SurperSocket.Client/bin/
 BerryCore/BerryCore.Simples/SurperSocket.Client/obj/
 BerryCore/BerryCore.Simples/SurperSocket.Service/obj/
 BerryCore/BerryCore.Simples/SurperSocket.Service/bin/
+BerryCore/BerryCore.Framework/Utilities/BerryCore.DistributedLockManager/obj/
+BerryCore/BerryCore.Framework/Utilities/BerryCore.DistributedLockManager/bin/
