@@ -41,7 +41,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MsSqlDatabase4EF.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\BerryCore.Framework\Utilities\BerryCore.Log\BerryCore.Log.csproj">
+      <Project>{36f14e26-5650-400c-ba8f-a76d28c767cb}</Project>
+      <Name>BerryCore.Log</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BerryCore.Data\BerryCore.Data.csproj">
+      <Project>{6f955ef1-b280-4d0c-92a8-2c8a73265027}</Project>
+      <Name>BerryCore.Data</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
