@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{06FD1478-69BB-493A-A057-95C7CD49D442}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>RabbitMq.Subscribe</RootNamespace>
+    <AssemblyName>RabbitMq.Subscribe</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Topshelf, Version=3.3.154.0, Culture=neutral, PublicKeyToken=b800c4cfcdeea87b, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Topshelf.3.3.1\lib\net40-full\Topshelf.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MainService.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\BerryCore.Framework\MQ\BerryCore.MQ.RabbitMQ\BerryCore.MQ.RabbitMQ.csproj">
+      <Project>{faa8db0a-51bb-4509-ac24-9d5f6310de5d}</Project>
+      <Name>BerryCore.MQ.RabbitMQ</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\BerryCore.Framework\MQ\BerryCore.MQ\BerryCore.MQ.csproj">
+      <Project>{9ecd6f32-887e-4f85-8254-13e67a96295e}</Project>
+      <Name>BerryCore.MQ</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\BerryCore.Framework\Utilities\BerryCore.Extensions\BerryCore.Extensions.csproj">
+      <Project>{c89b9ab2-a27b-498b-8d59-fd1713596c35}</Project>
+      <Name>BerryCore.Extensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\BerryCore.Framework\Utilities\BerryCore.Log\BerryCore.Log.csproj">
+      <Project>{36f14e26-5650-400c-ba8f-a76d28c767cb}</Project>
+      <Name>BerryCore.Log</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

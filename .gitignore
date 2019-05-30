@@ -67,3 +67,10 @@ BerryCore/BerryCore.Framework/Utilities/BerryCore.DistributedLockManager/obj/
 BerryCore/BerryCore.Framework/Utilities/BerryCore.DistributedLockManager/bin/
 BerryCore/BerryCore.DataAccess/BerryCore.Data.EF/bin/
 BerryCore/BerryCore.Framework/Utilities/BerryCore.AutoMapper/bin/
+BerryCore/BerryCore.Framework/MQ/BerryCore.MQ.RabbitMQ/obj/
+BerryCore/BerryCore.Framework/MQ/BerryCore.MQ.RabbitMQ/bin/
+BerryCore/BerryCore.Framework/MQ/BerryCore.MQ/obj/
+BerryCore/BerryCore.Simples/RabbitMq.Publish/obj/
+BerryCore/BerryCore.Simples/RabbitMq.Subscribe/bin/
+BerryCore/BerryCore.Simples/RabbitMq.Subscribe/obj/
+BerryCore/BerryCore.Simples/RabbitMq.Publish/bin/

@@ -933,6 +933,28 @@ namespace BerryCore.Extensions
 
         #endregion 把对象类型转换成指定的类型，转化失败时返回类型默认值
 
+        #region 字节序列
+        /// <summary>
+        /// 字符串序列化成字节序列
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static byte[] SerializeUtf8(this string str)
+        {
+            return str == null ? null : Encoding.UTF8.GetBytes(str);
+        }
+
+        /// <summary>
+        /// 字节序列序列化成字符串
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <returns></returns>
+        public static string DeserializeUtf8(this byte[] stream)
+        {
+            return stream == null ? null : Encoding.UTF8.GetString(stream);
+        }
+        #endregion
+
         #region 补足位数
 
         /// <summary>
@@ -1047,7 +1069,5 @@ namespace BerryCore.Extensions
         }
 
         #endregion 检验参数合法性，数值类型不小于0，引用类型不能为null，否则抛出异常
-
-
     }
 }
