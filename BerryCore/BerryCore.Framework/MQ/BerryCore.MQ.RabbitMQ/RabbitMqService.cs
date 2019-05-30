@@ -21,6 +21,7 @@
 using BerryCore.Extensions;
 using BerryCore.Log;
 using BerryCore.MQ.Base;
+using BerryCore.MQ.RabbitMQ.RabbitMqModel;
 using BerryCore.MQ.RabbitMQ.RabbitMqProxyConfig;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -29,7 +30,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
-using BerryCore.MQ.RabbitMQ.RabbitMqModel;
 
 namespace BerryCore.MQ.RabbitMQ
 {
@@ -619,7 +619,13 @@ namespace BerryCore.MQ.RabbitMQ
             //队列声明
             var channel = this.GetModel(queue, isProperties);
 
+            channel.QueueDeclare(queue: queue, durable: false, exclusive: false, autoDelete: false, arguments: null);
+            channel.BasicQos(0, 1, false);
             var consumer = new EventingBasicConsumer(channel);
+            channel.BasicConsume(queue: queue, noAck: false, consumer: consumer);
+
+            //var consumer = new EventingBasicConsumer(channel);
+
             consumer.Received += (model, ea) =>
             {
                 var body = ea.Body;
@@ -632,7 +638,7 @@ namespace BerryCore.MQ.RabbitMQ
 
                 Logger(this.GetType(), "RPC服务端-RpcService", () =>
                 {
-                    handler(msg);
+                    msg = handler(msg);
                 }, e =>
                 {
 

@@ -23,6 +23,7 @@ using BerryCore.MQ.RabbitMQ;
 using BerryCore.MQ.RabbitMQ.RabbitMqModel;
 using BerryCore.MQ.RabbitMQ.RabbitMqProxyConfig;
 using System;
+using BerryCore.MQ.Base;
 
 namespace RabbitMq.Subscribe
 {
@@ -56,7 +57,7 @@ namespace RabbitMq.Subscribe
 
             return true;
         }
-
+        
         public bool Stop()
         {
             subscriber.Stop();
