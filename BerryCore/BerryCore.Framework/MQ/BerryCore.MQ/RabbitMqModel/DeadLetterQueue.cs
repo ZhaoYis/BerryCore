@@ -1,7 +1,7 @@
 ﻿using System;
-using BerryCore.MQ.RabbitMQ.RabbitMqProxyConfig;
+using BerryCore.MQ.Base;
 
-namespace BerryCore.MQ.RabbitMQ.RabbitMqModel
+namespace BerryCore.MQ.RabbitMqModel
 {
     /// <summary>
     /// 死信队列实体

@@ -44,11 +44,16 @@
   <ItemGroup>
     <Compile Include="Base\BaseMqMessageEntity.cs" />
     <Compile Include="Base\IBaseMqMessage.cs" />
+    <Compile Include="Base\RabbitMqConfig.cs" />
+    <Compile Include="Base\RabbitMqQueueAttribute.cs" />
     <Compile Include="CustomEvent\DefaultMQMsgHandler.cs" />
     <Compile Include="CustomEvent\IMQMsgHandler.cs" />
     <Compile Include="CustomEvent\MQEventSource.cs" />
     <Compile Include="CustomEvent\MQEventListener.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RabbitMqModel\DeadLetterQueue.cs" />
+    <Compile Include="RabbitMqModel\RpcMessageEntity.cs" />
+    <Compile Include="RabbitMqModel\TestMessageEntity.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Utilities\BerryCore.Extensions\BerryCore.Extensions.csproj">

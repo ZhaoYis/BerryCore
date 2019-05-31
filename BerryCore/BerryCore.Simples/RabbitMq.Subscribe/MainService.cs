@@ -19,11 +19,11 @@
 #endregion
 
 using BerryCore.Extensions;
-using BerryCore.MQ.RabbitMQ;
-using BerryCore.MQ.RabbitMQ.RabbitMqModel;
-using BerryCore.MQ.RabbitMQ.RabbitMqProxyConfig;
-using System;
 using BerryCore.MQ.Base;
+using BerryCore.MQ.RabbitMQ;
+using BerryCore.MQ.RabbitMQ.EasyNetQ;
+using BerryCore.MQ.RabbitMqModel;
+using System;
 
 namespace RabbitMq.Subscribe
 {
@@ -38,14 +38,27 @@ namespace RabbitMq.Subscribe
     {
         private readonly RabbitMQSubscriber subscriber;
 
+        private readonly EasyNetQSubscriber easyNetQSubscriber;
+
         public MainService()
         {
-            subscriber = new RabbitMQSubscriber();
+            //subscriber = new RabbitMQSubscriber();
+            easyNetQSubscriber = new EasyNetQSubscriber();
         }
 
         public bool Start()
         {
-            subscriber.Subscribe<TestMessageEntity>(msg =>
+            //subscriber.Subscribe<TestMessageEntity>(msg =>
+            //{
+            //    var json = msg.TryToJson();
+            //    Console.WriteLine(json);
+            //    Console.WriteLine();
+            //}, () =>
+            //{
+            //    Console.WriteLine("消息订阅失败");
+            //}, ExchangeTypeCode.Direct);
+            
+            easyNetQSubscriber.Subscribe<TestMessageEntity>(msg =>
             {
                 var json = msg.TryToJson();
                 Console.WriteLine(json);
@@ -53,11 +66,11 @@ namespace RabbitMq.Subscribe
             }, () =>
             {
                 Console.WriteLine("消息订阅失败");
-            }, ExchangeTypeCode.Direct);
+            });
 
             return true;
         }
-        
+
         public bool Stop()
         {
             subscriber.Stop();

@@ -115,6 +115,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RabbitMq.Subscribe", "Berry
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RabbitMq.Publish", "BerryCore.Simples\RabbitMq.Publish\RabbitMq.Publish.csproj", "{6EFBCDD9-DC20-4E5C-9742-7D7CA2223040}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BerryCore.MQ.RabbitMQ.EasyNetQ", "BerryCore.Framework\MQ\BerryCore.MQ.RabbitMQ.EasyNetQ\BerryCore.MQ.RabbitMQ.EasyNetQ.csproj", "{8BA10D7E-4C89-4906-AF9B-FA11651D8675}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -265,6 +267,10 @@ Global
 		{6EFBCDD9-DC20-4E5C-9742-7D7CA2223040}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6EFBCDD9-DC20-4E5C-9742-7D7CA2223040}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6EFBCDD9-DC20-4E5C-9742-7D7CA2223040}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BA10D7E-4C89-4906-AF9B-FA11651D8675}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BA10D7E-4C89-4906-AF9B-FA11651D8675}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BA10D7E-4C89-4906-AF9B-FA11651D8675}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BA10D7E-4C89-4906-AF9B-FA11651D8675}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -318,6 +324,7 @@ Global
 		{2699EBFA-F06D-485F-AF79-B7F1FFC498AD} = {D1BE9E85-DBD7-41A3-85D3-E58063DC38E3}
 		{06FD1478-69BB-493A-A057-95C7CD49D442} = {2699EBFA-F06D-485F-AF79-B7F1FFC498AD}
 		{6EFBCDD9-DC20-4E5C-9742-7D7CA2223040} = {2699EBFA-F06D-485F-AF79-B7F1FFC498AD}
+		{8BA10D7E-4C89-4906-AF9B-FA11651D8675} = {EB0D5B8A-A477-4AC5-B844-A14F252C246B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7F439A65-1309-4355-A34A-732E6F7B774E}

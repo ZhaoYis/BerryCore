@@ -18,15 +18,9 @@
 */
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BerryCore.MQ.Base;
-using BerryCore.MQ.RabbitMQ.RabbitMqProxyConfig;
 
-namespace BerryCore.MQ.RabbitMQ.RabbitMqModel
+namespace BerryCore.MQ.RabbitMqModel
 {
     /// <summary>
     /// 功能描述    ：RpcMessageEntity  

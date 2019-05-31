@@ -74,3 +74,5 @@ BerryCore/BerryCore.Simples/RabbitMq.Publish/obj/
 BerryCore/BerryCore.Simples/RabbitMq.Subscribe/bin/
 BerryCore/BerryCore.Simples/RabbitMq.Subscribe/obj/
 BerryCore/BerryCore.Simples/RabbitMq.Publish/bin/
+BerryCore/BerryCore.Framework/MQ/BerryCore.MQ.RabbitMQ.EasyNetQ/obj/
+BerryCore/BerryCore.Framework/MQ/BerryCore.MQ.RabbitMQ.EasyNetQ/bin/

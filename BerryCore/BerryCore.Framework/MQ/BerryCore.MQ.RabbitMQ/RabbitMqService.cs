@@ -21,8 +21,6 @@
 using BerryCore.Extensions;
 using BerryCore.Log;
 using BerryCore.MQ.Base;
-using BerryCore.MQ.RabbitMQ.RabbitMqModel;
-using BerryCore.MQ.RabbitMQ.RabbitMqProxyConfig;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
@@ -30,6 +28,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
+using BerryCore.MQ.RabbitMqModel;
 
 namespace BerryCore.MQ.RabbitMQ
 {

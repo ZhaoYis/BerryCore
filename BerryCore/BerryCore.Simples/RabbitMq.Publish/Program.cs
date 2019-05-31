@@ -1,6 +1,5 @@
-﻿using BerryCore.MQ.RabbitMQ;
-using BerryCore.MQ.RabbitMQ.RabbitMqModel;
-using BerryCore.MQ.RabbitMQ.RabbitMqProxyConfig;
+﻿using BerryCore.MQ.RabbitMQ.EasyNetQ;
+using BerryCore.MQ.RabbitMqModel;
 using System;
 
 namespace RabbitMq.Publish
@@ -9,8 +8,26 @@ namespace RabbitMq.Publish
     {
         static void Main(string[] args)
         {
-            var publisher = new RabbitMQPublisher();
+            //var publisher = new RabbitMQPublisher();
 
+            //var input = Input();
+            //while (input != "exit")
+            //{
+            //    var log = new TestMessageEntity
+            //    {
+            //        Platform = "test",
+            //        ClientId = "test_cli",
+            //        Command = 100,
+            //        Data = input,
+            //        Message = "测试消息"
+            //    };
+            //    publisher.Publish(log, ExchangeTypeCode.Direct);
+            //    input = Input();
+            //}
+
+            //publisher.Stop();
+
+            EasyNetQPublisher easyNetQPublisher = new EasyNetQPublisher();
             var input = Input();
             while (input != "exit")
             {
@@ -22,11 +39,10 @@ namespace RabbitMq.Publish
                     Data = input,
                     Message = "测试消息"
                 };
-                publisher.Publish(log, ExchangeTypeCode.Direct);
+                easyNetQPublisher.Publish(log);
                 input = Input();
             }
-
-            publisher.Stop();
+            easyNetQPublisher.Stop();
         }
 
         private static string Input()

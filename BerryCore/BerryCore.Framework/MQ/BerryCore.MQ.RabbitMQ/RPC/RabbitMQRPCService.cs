@@ -24,8 +24,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BerryCore.Log;
+using BerryCore.MQ.Base;
 using BerryCore.MQ.CustomEvent;
-using BerryCore.MQ.RabbitMQ.RabbitMqProxyConfig;
 
 namespace BerryCore.MQ.RabbitMQ.RPC
 {

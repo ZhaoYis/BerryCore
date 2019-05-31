@@ -61,12 +61,12 @@ namespace BerryCore.MQ.Base
         string Message { get; set; }
 
         /// <summary>
-        /// 创建时间
+        /// 创建时间戳
         /// </summary>
         long CreateTime { get; set; }
 
         /// <summary>
-        /// 消息MD5
+        /// 消息签名
         /// </summary>
         string Sign { get; set; }
     }

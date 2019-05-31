@@ -1,7 +1,6 @@
 ﻿using BerryCore.MQ.Base;
-using BerryCore.MQ.RabbitMQ.RabbitMqProxyConfig;
 
-namespace BerryCore.MQ.RabbitMQ.RabbitMqModel
+namespace BerryCore.MQ.RabbitMqModel
 {
     /// <summary>
     /// 测试消息模型

@@ -8,9 +8,10 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>RabbitMq.Subscribe</RootNamespace>
     <AssemblyName>RabbitMq.Subscribe</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -54,6 +55,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\BerryCore.Framework\MQ\BerryCore.MQ.RabbitMQ.EasyNetQ\BerryCore.MQ.RabbitMQ.EasyNetQ.csproj">
+      <Project>{8ba10d7e-4c89-4906-af9b-fa11651d8675}</Project>
+      <Name>BerryCore.MQ.RabbitMQ.EasyNetQ</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\BerryCore.Framework\MQ\BerryCore.MQ.RabbitMQ\BerryCore.MQ.RabbitMQ.csproj">
       <Project>{faa8db0a-51bb-4509-ac24-9d5f6310de5d}</Project>
       <Name>BerryCore.MQ.RabbitMQ</Name>

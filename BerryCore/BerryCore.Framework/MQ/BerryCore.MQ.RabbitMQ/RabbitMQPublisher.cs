@@ -20,7 +20,6 @@
 
 using BerryCore.Log;
 using BerryCore.MQ.Base;
-using BerryCore.MQ.RabbitMQ.RabbitMqProxyConfig;
 using System;
 
 namespace BerryCore.MQ.RabbitMQ

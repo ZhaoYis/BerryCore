@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BerryCore.MQ.RabbitMQ.RabbitMqProxyConfig
+namespace BerryCore.MQ.Base
 {
     /// <summary>
     /// 配置
@@ -13,6 +13,7 @@ namespace BerryCore.MQ.RabbitMQ.RabbitMqProxyConfig
         public RabbitMqConfig()
         {
             this.Host = "localhost";
+            this.Port = 5672;
             this.VirtualHost = "/";
             this.HeartBeat = 30;
             this.AutomaticRecoveryEnabled = true;
@@ -20,27 +21,16 @@ namespace BerryCore.MQ.RabbitMQ.RabbitMqProxyConfig
             this.UserName = "guest";
             this.Password = "guest";
         }
-
-        /// <summary>
-        /// 自定义账户密码
-        /// </summary>
-        /// <param name="userName">账号</param>
-        /// <param name="password">密码</param>
-        public RabbitMqConfig(string userName, string password)
-        {
-            this.Host = "localhost";
-            this.VirtualHost = "/";
-            this.HeartBeat = 30;
-            this.AutomaticRecoveryEnabled = true;
-            this.NetworkRecoveryInterval = new TimeSpan(100);
-            this.UserName = userName;
-            this.Password = password;
-        }
-
+        
         /// <summary>
         /// 主机地址
         /// </summary>
         public string Host { get; set; }
+
+        /// <summary>
+        /// 端口
+        /// </summary>
+        public ushort Port { get; set; }
 
         /// <summary>
         /// 虚拟主机
