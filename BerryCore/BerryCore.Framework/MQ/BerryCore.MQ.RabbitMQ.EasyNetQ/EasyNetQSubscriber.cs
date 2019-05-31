@@ -21,6 +21,7 @@
 using BerryCore.Log;
 using BerryCore.MQ.Base;
 using EasyNetQ;
+using EasyNetQ.Consumer;
 using EasyNetQ.Topology;
 using System;
 using System.Reflection;
@@ -168,7 +169,47 @@ namespace BerryCore.MQ.RabbitMQ.EasyNetQ
 
         #region Direct
 
+        /// <summary>
+        /// 消息接收
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="work">消息处理方式</param>
+        /// <param name="queueName">队列名称</param>
+        /// <param name="fail">失败处理方式</param>
+        public void Receive<T>(Action<T> work, string queueName, Action fail = null) where T : class, IBaseMqMessage
+        {
+            this.Logger(this.GetType(), "消息接收-Receive", () =>
+            {
+                bus.Receive<T>(queueName, work);
+            }, e =>
+            {
+                if (fail != null)
+                {
+                    fail.Invoke();
+                }
+            });
+        }
 
+        /// <summary>
+        /// 消息接收
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="addHandlers">消息处理方式</param>
+        /// <param name="queueName">队列名称</param>
+        /// <param name="fail">失败处理方式</param>
+        public void Receive<T>(Action<IReceiveRegistration> addHandlers, string queueName, Action fail = null) where T : class, IBaseMqMessage
+        {
+            this.Logger(this.GetType(), "消息接收-Receive", () =>
+            {
+                bus.Receive(queueName, addHandlers);
+            }, e =>
+            {
+                if (fail != null)
+                {
+                    fail.Invoke();
+                }
+            });
+        }
 
         #endregion
 

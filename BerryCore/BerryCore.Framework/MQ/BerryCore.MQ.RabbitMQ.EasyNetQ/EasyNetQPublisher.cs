@@ -162,7 +162,29 @@ namespace BerryCore.MQ.RabbitMQ.EasyNetQ
 
         #region Direct
 
-
+        /// <summary>
+        /// 发送消息。自定义队列名称
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="message"></param>
+        /// <param name="queueName"></param>
+        /// <returns></returns>
+        public bool Send<T>(T message, string queueName) where T : class, IBaseMqMessage
+        {
+            bool res = false;
+            this.Logger(this.GetType(), "发送消息。自定义队列名称-Send", () =>
+            {
+                if (message != null)
+                {
+                    bus.Send(queueName, message);
+                    res = true;
+                }
+            }, e =>
+            {
+                res = false;
+            });
+            return res;
+        }
 
         #endregion
 

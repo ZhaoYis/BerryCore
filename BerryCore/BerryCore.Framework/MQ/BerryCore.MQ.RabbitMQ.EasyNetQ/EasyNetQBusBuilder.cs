@@ -35,7 +35,7 @@ namespace BerryCore.MQ.RabbitMQ.EasyNetQ
         /// <summary>
         /// 默认连接信息
         /// </summary>
-        private const string DefaultConnection = "host=localhost:5672;virtualHost=/;username=guest;password=guest";
+        private const string DefaultConnection = "host=localhost:5672;virtualHost=test_queue_vir;username=test_queue;password=123456";
 
         /// <summary>
         /// 创建连接。默认配置
