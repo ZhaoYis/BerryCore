@@ -28,7 +28,7 @@ using System.Reflection;
 namespace BerryCore.MQ.RabbitMQ.EasyNetQ
 {
     /// <summary>
-    /// 功能描述    ：EasyNetQPublisher（Topic方式）
+    /// 功能描述    ：EasyNetQPublisher
     /// 创 建 者    ：赵轶
     /// 创建日期    ：2019-05-31 13:09:39 
     /// 最后修改者  ：赵轶

@@ -135,7 +135,7 @@ namespace BerryCore.MQ.RabbitMQ.EasyNetQ
         /// <param name="fail">失败处理方式</param>
         /// <param name="exchangeName">交换机名称</param>
         /// <param name="topics">主题</param>
-        public void Subscribe<T>(Action<T> work, Action fail = null, string exchangeName = "default_exchange", string subscriptionId = "topic_subid", params string[] topics) where T : class, IBaseMqMessage
+        public void Subscribe<T>(Action<T> work, Action fail = null, string subscriptionId = "topic_subid", string exchangeName = "default_exchange", params string[] topics) where T : class, IBaseMqMessage
         {
             this.Logger(this.GetType(), "订阅消息。自定义主题、交换机名称-Subscribe", () =>
             {
