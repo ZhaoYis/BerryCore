@@ -25,10 +25,12 @@ using BerryCore.Utilities.Lambda2SQL;
 using Dapper;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 
 namespace BerryCore.Data.Dapper
@@ -118,14 +120,14 @@ namespace BerryCore.Data.Dapper
         {
             int res = -1;
             this.Logger(this.GetType(), "提交事务-Commit", () =>
-             {
-                 if (this.BaseDbTransaction != null)
-                 {
-                     this.BaseDbTransaction.Commit();
-                     this.Close();
-                 }
-                 res = 1;
-             }, e =>
+            {
+                if (this.BaseDbTransaction != null)
+                {
+                    this.BaseDbTransaction.Commit();
+                    this.Close();
+                }
+                res = 1;
+            }, e =>
             {
                 if (e.InnerException != null && e is CustomException)
                 {
@@ -408,18 +410,67 @@ namespace BerryCore.Data.Dapper
             {
                 if (entities != null && entities.Count > 0)
                 {
-                    string sql = DatabaseCommon.InsertSql<T>(entities.First()).ToString();
+                    //string sql = DatabaseCommon.InsertSql<T>(entities.First()).ToString();
+                    SqlBulkCopy bulkCopy = null;
+                    //表名
+                    string tableName = EntityAttributeHelper.GetEntityTable<T>();
 
                     if (this.BaseDbTransaction == null)
                     {
-                        using (IDbConnection connection = this.BaseDbConnection)
-                        {
-                            res = connection.Execute(sql, entities, null, timeout, CommandType.Text);
-                        }
+                        //res = connection.Execute(sql, entities, null, timeout, CommandType.Text);
+                        bulkCopy = new SqlBulkCopy(this.BaseDbConnection as SqlConnection ?? throw new InvalidOperationException());
                     }
                     else
                     {
-                        res = this.BaseDbTransaction.Connection.Execute(sql, entities, this.BaseDbTransaction, timeout, CommandType.Text);
+                        //res = this.BaseDbTransaction.Connection.Execute(sql, entities, this.BaseDbTransaction, timeout, CommandType.Text);
+                        bulkCopy = new SqlBulkCopy(
+                            this.BaseDbTransaction.Connection as SqlConnection ?? throw new InvalidOperationException(),
+                            SqlBulkCopyOptions.TableLock, this.BaseDbTransaction as SqlTransaction);
+                    }
+
+                    using (bulkCopy)
+                    {
+                        bulkCopy.BatchSize = entities.Count;
+                        bulkCopy.DestinationTableName = tableName;
+                        bulkCopy.BulkCopyTimeout = Timeout * 2;//一分钟超时时间
+
+                        DataTable table = new DataTable(tableName + "_TEMP");
+
+                        #region 需要用到DapperExtensions
+
+                        //ISqlGenerator sqlGenerator = new SqlGeneratorImpl(new DapperExtensionsConfiguration());
+                        //IClassMapper classMap = sqlGenerator.Configuration.GetMap<T>();
+                        //List<IPropertyMap> props = classMap.Properties.Where(x => x.Ignored == false).ToList();
+
+                        #endregion
+
+                        Type type = typeof(T);
+                        PropertyInfo[] props = type.GetProperties();
+                        List<PropertyInfo> propertyInfos = new List<PropertyInfo>();
+
+                        foreach (PropertyInfo propertyInfo in props)
+                        {
+                            var attr = propertyInfo.GetCustomAttribute<NotMappedAttribute>();
+                            if (attr == null)
+                            {
+                                bulkCopy.ColumnMappings.Add(propertyInfo.Name, propertyInfo.Name);
+                                table.Columns.Add(propertyInfo.Name, Nullable.GetUnderlyingType(propertyInfo.PropertyType) ?? propertyInfo.PropertyType);
+
+                                propertyInfos.Add(propertyInfo);
+                            }
+                        }
+
+                        object[] entityValues = new object[propertyInfos.Count];
+                        foreach (var item in entities)
+                        {
+                            for (var i = 0; i < entityValues.Length; i++)
+                            {
+                                entityValues[i] = propertyInfos[i].GetValue(item);
+                            }
+                            table.Rows.Add(entityValues);
+                        }
+                        bulkCopy.WriteToServer(table);
+                        res = entities.Count;
                     }
                 }
             }, e =>
@@ -1229,6 +1280,37 @@ namespace BerryCore.Data.Dapper
                 this.Rollback();
             });
             total = temp;
+            return res;
+        }
+
+        /// <summary>
+        /// 获取记录数
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="strSql">T-SQL语句</param>
+        /// <param name="parameters">参数</param>
+        /// <param name="timeout">超时时间</param>
+        /// <returns></returns>
+        public int Count(string strSql, object parameters, int? timeout)
+        {
+            int res = 0;
+            this.Logger(this.GetType(), "获取记录数-Count", () =>
+            {
+                if (this.BaseDbTransaction == null)
+                {
+                    using (IDbConnection connection = this.BaseDbConnection)
+                    {
+                        res = connection.Execute(strSql, parameters, null, timeout, CommandType.Text);
+                    }
+                }
+                else
+                {
+                    res = this.BaseDbTransaction.Connection.Execute(strSql, parameters, this.BaseDbTransaction, timeout, CommandType.Text);
+                }
+            }, e =>
+            {
+                this.Rollback();
+            });
             return res;
         }
 

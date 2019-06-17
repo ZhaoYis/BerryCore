@@ -280,5 +280,15 @@ namespace Berry.Cache.Core.Base
         Task<bool> ReplaceAsync(string key, object value, TimeSpan? expiresIn, bool isSliding = false);
 
         #endregion
+
+        #region Key管理
+
+        /// <summary>
+        /// 获取所有的Key
+        /// </summary>
+        /// <returns></returns>
+        List<string> GetKeys();
+
+        #endregion
     }
 }

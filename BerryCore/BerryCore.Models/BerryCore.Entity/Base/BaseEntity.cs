@@ -18,13 +18,22 @@
 //----------------------------------------------------------------*/
 #endregion
 
-using BerryCore.Utilities;
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using BerryCore.Entity.Protocol;
 
 namespace BerryCore.Entity.Base
 {
+
+    /// <summary>
+    /// 实体基类（默认）
+    /// </summary>
+    [Serializable]
+    public abstract class BaseEntity : BaseEntity<long>, IEntity
+    {
+
+    }
+
     /// <summary>
     /// 功能描述    ：实体基类  
     /// 创 建 者    ：赵轶
@@ -32,19 +41,14 @@ namespace BerryCore.Entity.Base
     /// 最后修改者  ：赵轶
     /// 最后修改日期：2019/5/4 8:36:25 
     /// </summary>
-    public class BaseEntity
+    [Serializable]
+    public abstract class BaseEntity<TPrimaryKey> : IEntityOfTPrimaryKey<TPrimaryKey>
     {
-        /// <summary>
-        /// PK
-        /// </summary>
-        [NotMapped]
-        public virtual int PK { get; set; }
-
         /// <summary>
         /// 主键
         /// </summary>
         [Key]
-        public virtual string Id { get; set; }
+        public virtual TPrimaryKey Id { get; set; }
 
         #region 扩展操作方法
 
@@ -53,14 +57,14 @@ namespace BerryCore.Entity.Base
         /// </summary>
         public virtual void Create()
         {
-            this.Id = CommonHelper.GetGuid();
+
         }
 
         /// <summary>
         /// 编辑调用
         /// </summary>
         /// <param name="id">主键值</param>
-        public virtual void Modify(string id)
+        public virtual void Modify(TPrimaryKey id)
         {
             this.Id = id;
         }

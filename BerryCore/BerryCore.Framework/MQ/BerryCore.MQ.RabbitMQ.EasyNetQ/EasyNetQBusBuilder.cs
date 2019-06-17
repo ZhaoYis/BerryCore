@@ -68,7 +68,7 @@ namespace BerryCore.MQ.RabbitMQ.EasyNetQ
         /// <returns></returns>
         public static IBus CreateMessageBus(string connectionStr)
         {
-            if (!string.IsNullOrEmpty(connectionStr))
+            if (string.IsNullOrEmpty(connectionStr))
             {
                 connectionStr = DefaultConnection;
             }

@@ -369,6 +369,15 @@ namespace BerryCore.Data
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
         DataTable FindTable(string strSql, object parameters, string orderField, bool isAsc, int pageSize, int pageIndex, out int total, int? timeout = 15);
+
+        /// <summary>
+        /// 获取记录数
+        /// </summary>
+        /// <param name="strSql">T-SQL语句</param>
+        /// <param name="parameters">参数</param>
+        /// <param name="timeout">超时时间</param>
+        /// <returns></returns>
+        int Count(string strSql, object parameters, int? timeout = 15);
         #endregion
 
         #region 更新

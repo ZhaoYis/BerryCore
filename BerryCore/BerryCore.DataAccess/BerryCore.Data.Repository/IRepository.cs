@@ -37,10 +37,16 @@ namespace BerryCore.Data.Repository
     public interface IRepository
     {
         /// <summary>
-        /// 开始数据库事务
+        /// 返回仓储对象，并开始数据库事务
         /// </summary>
         /// <returns></returns>
         IRepository BeginTrans();
+
+        /// <summary>
+        /// 返回仓储对象，不使用数据库事务
+        /// </summary>
+        /// <returns></returns>
+        IRepository Instance();
 
         /// <summary>
         /// 提交事务
@@ -305,6 +311,13 @@ namespace BerryCore.Data.Repository
         /// <returns></returns>
         DataTable FindTable(string strSql, object parameters, Pagination pagination);
 
+        /// <summary>
+        /// 获取记录数
+        /// </summary>
+        /// <param name="strSql">T-SQL语句</param>
+        /// <param name="parameters">参数</param>
+        /// <returns></returns>
+        int Count(string strSql, object parameters);
         #endregion 查询
 
         #region 更新

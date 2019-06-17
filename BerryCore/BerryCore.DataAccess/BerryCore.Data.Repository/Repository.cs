@@ -48,12 +48,21 @@ namespace BerryCore.Data.Repository
         #endregion
 
         /// <summary>
-        /// 开始数据库事务
+        /// 返回仓储对象，并开始数据库事务
         /// </summary>
         /// <returns></returns>
         public IRepository BeginTrans()
         {
             _db.BeginTrans();
+            return this;
+        }
+
+        /// <summary>
+        /// 返回仓储对象，不使用数据库事务
+        /// </summary>
+        /// <returns></returns>
+        public IRepository Instance()
+        {
             return this;
         }
 
@@ -405,6 +414,17 @@ namespace BerryCore.Data.Repository
             var data = _db.FindTable(strSql, parameters, pagination.Sidx, pagination.Sord.ToLower() == "asc", pagination.PageSize, pagination.PageIndex, out total);
             pagination.TotalRecords = total;
             return data;
+        }
+
+        /// <summary>
+        /// 获取记录数
+        /// </summary>
+        /// <param name="strSql">T-SQL语句</param>
+        /// <param name="parameters">参数</param>
+        /// <returns></returns>
+        public int Count(string strSql, object parameters)
+        {
+            return _db.Count(strSql, parameters);
         }
 
         /// <summary>

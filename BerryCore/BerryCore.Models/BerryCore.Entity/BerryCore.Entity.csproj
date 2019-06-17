@@ -34,6 +34,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -43,11 +44,26 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base\BaseEntity.cs" />
+    <Compile Include="Base\BaseJsonResult.cs" />
+    <Compile Include="Base\BaseJsonResult4Page.cs" />
+    <Compile Include="Base\DefaultReturnValue.cs" />
     <Compile Include="Base\Pagination.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Protocol\IEntity.cs" />
+    <Compile Include="Protocol\IEntityOfCreator.cs" />
+    <Compile Include="Protocol\IEntityOfSort.cs" />
+    <Compile Include="Protocol\IEntityOfTPrimaryKey.cs" />
+    <Compile Include="Protocol\IEntityOfUpdater.cs" />
+    <Compile Include="Protocol\IExtendableObject.cs" />
+    <Compile Include="Protocol\ISoftClose.cs" />
+    <Compile Include="Protocol\ISoftDelete.cs" />
     <Compile Include="Test\UserEntity.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\BerryCore.Framework\Global\BerryCore.Code\BerryCore.Code.csproj">
+      <Project>{E17BD892-70DD-4A2C-AE1D-728237EB9DA1}</Project>
+      <Name>BerryCore.Code</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\BerryCore.Framework\Utilities\BerryCore.Utilities\BerryCore.Utilities.csproj">
       <Project>{f843472b-e7c1-4e45-9e52-99f29c7f16e3}</Project>
       <Name>BerryCore.Utilities</Name>

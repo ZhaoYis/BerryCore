@@ -76,3 +76,8 @@ BerryCore/BerryCore.Simples/RabbitMq.Subscribe/obj/
 BerryCore/BerryCore.Simples/RabbitMq.Publish/bin/
 BerryCore/BerryCore.Framework/MQ/BerryCore.MQ.RabbitMQ.EasyNetQ/obj/
 BerryCore/BerryCore.Framework/MQ/BerryCore.MQ.RabbitMQ.EasyNetQ/bin/
+BerryCore/BerryCore.AutomaticTask/BerryCore.AutomaticTask/obj/
+BerryCore/BerryCore.Framework/Utilities/BerryCore.Utilities.KetamaHash/obj/
+BerryCore/BerryCore.Framework/Utilities/BerryCore.Utilities.Quartz/obj/
+BerryCore/BerryCore.Framework/Utilities/BerryCore.Utilities.Quartz/bin/
+BerryCore/BerryCore.AutomaticTask/BerryCore.AutomaticTask/bin/

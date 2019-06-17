@@ -646,5 +646,18 @@ namespace Berry.Cache.Core.MemoryCache
             });
         }
         #endregion
+
+        #region Key管理
+
+        /// <summary>
+        /// 获取所有的Key
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetKeys()
+        {
+            return keyList;
+        }
+
+        #endregion
     }
 }

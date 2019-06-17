@@ -23,7 +23,6 @@
 using BerryCore.Entity.Base;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using BerryCore.Utilities;
 
 namespace BerryCore.Entity.Test
 {
@@ -44,7 +43,6 @@ namespace BerryCore.Entity.Test
         /// </summary>
         public override void Create()
         {
-            this.Id = CommonHelper.GetGuid();
             this.DeleteMark = false;
             this.EnabledMark = true;
             this.CreateDate = DateTime.Now;

@@ -120,11 +120,11 @@ namespace BerryCore.UnitTest
         public void TestMethod_DeleteByCondition_T()
         {
             BaseBLL<UserEntity> bll = new BaseBLL<UserEntity>();
-            int res = bll.Delete(u => u.PK > 90);
+            int res = bll.Delete(u => u.Id > 90);
 
             Console.WriteLine("执行结果：{0}", res);
 
-            IEnumerable<UserEntity> userEntities = bll.GetList(u => u.Id != "");
+            IEnumerable<UserEntity> userEntities = bll.GetList(u => u.Id != 0);
             Console.WriteLine("删除后剩余记录数：{0}", userEntities.Count());
         }
 
@@ -138,7 +138,7 @@ namespace BerryCore.UnitTest
             int res = bll.Update(new
             {
                 Name = "大师兄丶"
-            }, u => u.PK > 1 && u.PK < 10);
+            }, u => u.Id > 1 && u.Id < 10);
 
             Console.WriteLine("执行结果：{0}", res);
         }

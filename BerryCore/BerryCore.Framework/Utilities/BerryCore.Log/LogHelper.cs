@@ -204,8 +204,8 @@ namespace BerryCore.Log
         /// <param name="desc">描述</param>
         /// <param name="tryHandel">调试代码</param>
         /// <param name="catchHandel">异常处理方式</param>
-        /// <param name="finallHandel">最终处理方式</param>
-        public static void Logger(Type type, string desc, Action tryHandel, Action<Exception> catchHandel = null, Action finallHandel = null)
+        /// <param name="finallyHandel">最终处理方式</param>
+        public static void Logger(Type type, string desc, Action tryHandel, Action<Exception> catchHandel = null, Action finallyHandel = null)
         {
             ILog log = LogManager.GetLogger(type);
             try
@@ -227,12 +227,39 @@ namespace BerryCore.Log
             }
             finally
             {
-                if (finallHandel != null)
+                if (finallyHandel != null)
                 {
-                    finallHandel.Invoke();
+                    finallyHandel.Invoke();
                 }
             }
         }
+        
+        /// <summary>
+        /// 记录日志信息
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="desc"></param>
+        /// <param name="level"></param>
+        public static void Logger(Type type, string desc, LoggerLevel level = LoggerLevel.Info)
+        {
+            ILog log = LogHelper.GetLogger(type);
+            switch (level)
+            {
+                case LoggerLevel.Info:
+                    log.Info(desc);
+                    break;
+                case LoggerLevel.Error:
+                    log.Error(desc);
+                    break;
+                case LoggerLevel.Debug:
+                    log.Debug(desc);
+                    break;
+                case LoggerLevel.Warn:
+                    log.Warn(desc);
+                    break;
+            }
+        }
+
         #endregion
     }
 }

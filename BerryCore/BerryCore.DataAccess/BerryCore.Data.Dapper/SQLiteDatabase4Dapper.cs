@@ -1251,6 +1251,18 @@ namespace BerryCore.Data.Dapper
         }
 
         /// <summary>
+        /// 获取记录数
+        /// </summary>
+        /// <param name="strSql">T-SQL语句</param>
+        /// <param name="parameters">参数</param>
+        /// <param name="timeout">超时时间</param>
+        /// <returns></returns>
+        public int Count(string strSql, object parameters, int? timeout)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// 更新
         /// </summary>
         /// <typeparam name="T">动态对象</typeparam>

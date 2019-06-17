@@ -1,50 +1,45 @@
 ﻿#region << 版 本 注 释 >>
-/*----------------------------------------------------------------
-* 项目名称 ：BerryCore.IOC
+/*
+* 项目名称 ：GCP.IOC
 * 项目描述 ：
 * 类 名 称 ：UnityIocHelper
 * 类 描 述 ：
-* 所在的域 ：MRZHAOYI
-* 命名空间 ：BerryCore.IOC
-* 机器名称 ：MRZHAOYI 
+* 所在的域 ：DASHIXIONG
+* 命名空间 ：GCP.IOC
+* 机器名称 ：DASHIXIONG 
 * CLR 版本 ：4.0.30319.42000
 * 作    者 ：赵轶
-* 创建时间 ：2019/5/3 21:55:04
-* 更新时间 ：2019/5/3 21:55:04
-* 版 本 号 ：V1.0.0.0
+* 创建时间 ：2019-06-04 15:05:00
+* 更新时间 ：2019-06-04 15:05:00
+* 版 本 号 ：V2.0.0.0
 ***********************************************************************
 * Copyright © 大師兄丶 2019. All rights reserved.                     *
 ***********************************************************************
-//----------------------------------------------------------------*/
+*/
 #endregion
 
-using BerryCore.Utilities;
+using System;
+using System.Configuration;
 using Microsoft.Practices.Unity;
 using Microsoft.Practices.Unity.Configuration;
-using System;
 
 namespace BerryCore.IOC
 {
     /// <summary>
     /// 功能描述    ：UnityIoc帮助类  
     /// 创 建 者    ：赵轶
-    /// 创建日期    ：2019/5/3 21:55:04 
+    /// 创建日期    ：2019-06-04 15:05:00 
     /// 最后修改者  ：赵轶
-    /// 最后修改日期：2019/5/3 21:55:04 
+    /// 最后修改日期：2019-06-04 15:05:00 
     /// </summary>
     public sealed class UnityIocHelper : IServiceProvider
     {
         private readonly IUnityContainer _container;
 
-        private static readonly UnityIocHelper iocHelper = new UnityIocHelper("DbContainer");
-
         /// <summary>
         /// 获取DbContainer对象
         /// </summary>
-        public static UnityIocHelper UnityIocInstance
-        {
-            get { return iocHelper; }
-        }
+        public static UnityIocHelper UnityIocInstance { get; } = new UnityIocHelper("DbContainer");
 
         /// <summary>
         /// 构造
@@ -53,7 +48,7 @@ namespace BerryCore.IOC
         {
             try
             {
-                UnityConfigurationSection section = ConfigHelper.GetSection<UnityConfigurationSection>(UnityConfigurationSection.SectionName);
+                UnityConfigurationSection section = GetSection<UnityConfigurationSection>(UnityConfigurationSection.SectionName);
                 _container = new UnityContainer();
                 section.Configure(_container, containerName);
             }
@@ -67,11 +62,11 @@ namespace BerryCore.IOC
         /// 获取配置节点的mapTo
         /// </summary>
         /// <returns></returns>
-        public static string GetmapToByName(string containerName, string itype)
+        public static string GetMapToValue(string containerName, string type)
         {
             try
             {
-                UnityConfigurationSection section = ConfigHelper.GetSection<UnityConfigurationSection>(UnityConfigurationSection.SectionName);
+                UnityConfigurationSection section = GetSection<UnityConfigurationSection>(UnityConfigurationSection.SectionName);
                 ContainerElementCollection containers = section.Containers;
 
                 foreach (var container in containers)
@@ -81,7 +76,7 @@ namespace BerryCore.IOC
                         RegisterElementCollection registrations = container.Registrations;
                         foreach (var registration in registrations)
                         {
-                            if (string.IsNullOrEmpty(registration.Name) && registration.TypeName == itype)
+                            if (string.IsNullOrEmpty(registration.Name) && registration.TypeName == type)
                             {
                                 string mapToName = registration.MapToName;
                                 return mapToName;
@@ -149,5 +144,16 @@ namespace BerryCore.IOC
             return _container.Resolve<T>(name, obj);
         }
 
+        /// <summary>
+        /// 获取配置文件节点
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sectionName"></param>
+        /// <returns></returns>
+        private static T GetSection<T>(string sectionName) where T : class, new()
+        {
+            T res = ConfigurationManager.GetSection(sectionName) as T;
+            return res;
+        }
     }
 }

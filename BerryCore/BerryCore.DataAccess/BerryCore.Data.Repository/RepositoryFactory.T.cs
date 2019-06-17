@@ -36,18 +36,29 @@ namespace BerryCore.Data.Repository
         private static readonly DbFactory dbFactory = new DbFactory();
 
         /// <summary>
-        /// 定义仓储
+        /// 定义仓储（默认适用MSSQL的基础库）
         /// </summary>
         /// <param name="databaseType">数据库类型，默认SqlServer数据库</param>
         /// <param name="connConfigName">连接字符串配置项名称</param>
         /// <returns></returns>
-        protected IRepository<T> BaseRepository(DatabaseType databaseType = DatabaseType.SqlServer, string connConfigName = "")
+        [Obsolete("建议不用这个方法，不能灵活指定数据库类型，请使用重载方法BaseRepository(string connConfigName)")]
+        private IRepository<T> BaseRepository(DatabaseType databaseType, string connConfigName = "")
         {
             if (string.IsNullOrEmpty(connConfigName))
             {
                 connConfigName = dbFactory.GetDefaultBaseConnStringConfigName(databaseType);
             }
-            return new Repository<T>(dbFactory.Base(databaseType, connConfigName));
+            return new Repository<T>(dbFactory.GetDatabase(databaseType, connConfigName));
+        }
+
+        /// <summary>
+        /// 定义仓储
+        /// </summary>
+        /// <param name="connConfigName">连接字符串配置项名称</param>
+        /// <returns></returns>
+        private IRepository<T> BaseRepository(string connConfigName)
+        {
+            return new Repository<T>(dbFactory.GetDatabase(connConfigName));
         }
 
         #region 扩展操作方法
@@ -58,17 +69,35 @@ namespace BerryCore.Data.Repository
         /// <param name="action"></param>
         protected virtual void UseTransaction(Action<IRepository<T>> action)
         {
-            this.Logger(this.GetType(), "使用数据库事务-UseTransaction", () =>
-             {
-                 IRepository<T> repository = this.BaseRepository().BeginTrans();
+            this.Logger(this.GetType(), "使用数据库事务，无返回值-UseTransaction", () =>
+            {
+                IRepository<T> repository = this.BaseRepository(dbFactory.GetUsedDbConfigKey()).BeginTrans();
 
-                 action.Invoke(repository);
+                action.Invoke(repository);
 
-                 repository.Commit();
-             }, e =>
-             {
+                repository.Commit();
+            }, e =>
+            {
 
-             });
+            });
+        }
+
+        /// <summary>
+        /// 不使用数据库事务，无返回值
+        /// </summary>
+        /// <param name="action"></param>
+        protected virtual void NotUseTransaction(Action<IRepository<T>> action)
+        {
+            this.Logger(this.GetType(), "不使用数据库事务，无返回值-NotUseTransaction", () =>
+            {
+                IRepository<T> repository = this.BaseRepository(dbFactory.GetUsedDbConfigKey()).Instance();
+
+                action.Invoke(repository);
+
+            }, e =>
+            {
+
+            });
         }
 
         /// <summary>
@@ -78,17 +107,37 @@ namespace BerryCore.Data.Repository
         protected virtual TR UseTransaction<TR>(Func<IRepository<T>, TR> action)
         {
             TR res = default(TR);
-            this.Logger(this.GetType(), "使用数据库事务-UseTransaction", () =>
+            this.Logger(this.GetType(), "使用数据库事务，有返回值-UseTransaction", () =>
             {
-                IRepository<T> repository = this.BaseRepository().BeginTrans();
+                IRepository<T> repository = this.BaseRepository(dbFactory.GetUsedDbConfigKey()).BeginTrans();
 
                 res = action.Invoke(repository);
 
                 repository.Commit();
             }, e =>
-             {
+            {
 
-             });
+            });
+            return res;
+        }
+
+        /// <summary>
+        /// 不使用数据库事务，有返回值
+        /// </summary>
+        /// <param name="action"></param>
+        protected virtual TR NotUseTransaction<TR>(Func<IRepository<T>, TR> action)
+        {
+            TR res = default(TR);
+            this.Logger(this.GetType(), "不使用数据库事务，有返回值-NotUseTransaction", () =>
+            {
+                IRepository<T> repository = this.BaseRepository(dbFactory.GetUsedDbConfigKey()).Instance();
+
+                res = action.Invoke(repository);
+
+            }, e =>
+            {
+
+            });
             return res;
         }
 
