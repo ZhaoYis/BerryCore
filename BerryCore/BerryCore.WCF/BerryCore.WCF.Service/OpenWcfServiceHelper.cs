@@ -1,17 +1,16 @@
-﻿using System;
+﻿using BerryCore.Extensions;
+using BerryCore.Log;
+using BerryCore.WCF.BaseBehavior;
+using BerryCore.WCF.BaseBehavior.MessageInspector;
+using BerryCore.WCF.DataContract;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Description;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
-using BerryCore.Extensions;
-using BerryCore.Log;
-using BerryCore.WCF.BaseBehavior;
-using BerryCore.WCF.BaseBehavior.MessageInspector;
-using BerryCore.WCF.DataContract;
 
 namespace BerryCore.WCF.Service
 {
@@ -30,15 +29,14 @@ namespace BerryCore.WCF.Service
         /// </summary>
         public void InitWcfService(List<WcfServiceCanRunMember> canRunMembers)
         {
-            string serviceAddress = "http://127.0.0.1:4421";
+            string baseServiceAddress = "127.0.0.1";
 
             foreach (WcfServiceCanRunMember item in canRunMembers)
             {
                 string serviceName = item.ServiceBehavior.Name;
-                Uri baseAddress = new Uri(string.Format("{0}/{1}", serviceAddress, serviceName));
 
                 //ServiceHost
-                ServiceHost serviceHost = new ServiceHost(item.ServiceBehavior, baseAddress);
+                ServiceHost serviceHost = null;
                 //// 设置自定义验证器
                 //serviceHost.Credentials.UserNameAuthentication.UserNamePasswordValidationMode = UserNamePasswordValidationMode.Custom;
                 //serviceHost.Credentials.UserNameAuthentication.CustomUserNamePasswordValidator = new CustomUserNamePasswordValidator();
@@ -53,18 +51,32 @@ namespace BerryCore.WCF.Service
 
                 if (item.CanHttp)
                 {
+                    Uri baseAddress = new Uri(string.Format("http://{0}:4421/{1}", baseServiceAddress, serviceName));
+                    serviceHost = new ServiceHost(item.ServiceBehavior, baseAddress);
                     //WebHttpBinding
                     this.WebHttpBinding(serviceHost, item.ServiceContract, baseAddress);
+
+                    //把自定义的IEndPointBehavior插入到终结点中
+                    foreach (ServiceEndpoint endpoint in serviceHost.Description.Endpoints)
+                    {
+                        endpoint.EndpointBehaviors.Add(new CustomEndpointBehavior());
+                    }
+
+                    //启动服务监听
+                    this.StartMonitor(serviceHost, baseAddress, item.Name);
                 }
 
-                //把自定义的IEndPointBehavior插入到终结点中
-                foreach (ServiceEndpoint endpoint in serviceHost.Description.Endpoints)
+                if (item.CanNetTcp)
                 {
-                    endpoint.EndpointBehaviors.Add(new CustomEndpointBehavior());
-                }
+                    serviceHost = new ServiceHost(item.ServiceBehavior);
 
-                //启动服务监听
-                this.StartMonitor(serviceHost, baseAddress, item.Name);
+                    //NetTcpBinding
+                    Uri netTcpAddress = new Uri(string.Format("net.tcp://{0}:8801/{1}", baseServiceAddress, serviceName));
+                    this.NetTcpBinding(serviceHost, item.ServiceContract, netTcpAddress);
+
+                    //启动服务监听
+                    this.StartMonitor(serviceHost, netTcpAddress, item.Name);
+                }
             }
         }
 
@@ -192,6 +204,15 @@ namespace BerryCore.WCF.Service
         }
 
         /// <summary>
+        /// NetTcpBinding
+        /// </summary>
+        private void NetTcpBinding(ServiceHost serviceHost, Type serviceContract, Uri baseAddress)
+        {
+            NetTcpBinding netTcpBinding = new NetTcpBinding();
+            serviceHost.AddServiceEndpoint(serviceContract, netTcpBinding, baseAddress);
+        }
+
+        /// <summary>
         /// 从配置文件中加载服务项目
         /// </summary>
         /// <returns></returns>
@@ -215,7 +236,8 @@ namespace BerryCore.WCF.Service
                             Name = entity.Name,
                             ServiceContract = serviceContractType,
                             ServiceBehavior = serviceBehaviorType,
-                            CanHttp = entity.CanHttp == "1"
+                            CanHttp = entity.CanHttp == "1",
+                            CanNetTcp = entity.CanNetTcp == "1"
                         });
                     }
                 }

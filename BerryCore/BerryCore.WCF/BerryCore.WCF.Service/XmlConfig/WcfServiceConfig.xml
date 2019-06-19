@@ -18,6 +18,24 @@
     <ServiceBehaviorNamespace>BerryCore.WCF.ServiceBehavior.TestImpl.TestServiceContract,BerryCore.WCF.ServiceBehavior</ServiceBehaviorNamespace>
     <!--是否启用Http请求检索-->
     <CanHttp>1</CanHttp>
+    <!--是否启用NetTcp请求检索-->
+    <CanNetTcp>0</CanNetTcp>
+    <!--是否启动此服务-->
+    <Enabled>1</Enabled>
+  </Setting>
+  <Setting>
+    <!--服务中文名称-->
+    <Name>用于测试双工通讯</Name>
+    <!--服务名称-->
+    <ServiceName>NoticeOperatorContract</ServiceName>
+    <!--服务契约命名空间-->
+    <ServiceContractNamespace>BerryCore.WCF.ServiceContract.Test.INoticeOperatorContract,BerryCore.WCF.ServiceContract</ServiceContractNamespace>
+    <!--服务行为命名空间-->
+    <ServiceBehaviorNamespace>BerryCore.WCF.ServiceBehavior.TestImpl.NoticeOperatorContract,BerryCore.WCF.ServiceBehavior</ServiceBehaviorNamespace>
+    <!--是否启用Http请求检索-->
+    <CanHttp>0</CanHttp>
+    <!--是否启用NetTcp请求检索-->
+    <CanNetTcp>1</CanNetTcp>
     <!--是否启动此服务-->
     <Enabled>1</Enabled>
   </Setting>

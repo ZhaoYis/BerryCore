@@ -27,5 +27,9 @@ namespace BerryCore.WCF.DataContract
         /// 是否启用Http请求检索
         /// </summary>
         public bool CanHttp { get; set; }
+        /// <summary>
+        /// 是否启用NetTcp请求检索
+        /// </summary>
+        public bool CanNetTcp { get; set; }
     }
 }
