@@ -39,7 +39,7 @@ namespace BerryCore.Entity.Base
         /// 状态码
         /// </summary>
         [DataMember]
-        public JsonObjectStatus Status { get; set; }
+        public GlobalErrorCodes Status { get; set; }
 
         /// <summary>
         /// 附带数据

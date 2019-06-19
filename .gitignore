@@ -83,3 +83,6 @@ BerryCore/BerryCore.Framework/Utilities/BerryCore.Utilities.Quartz/bin/
 BerryCore/BerryCore.AutomaticTask/BerryCore.AutomaticTask/bin/
 BerryCore/BerryCore.Simples/WCF.Client/WcfTestClient/obj/
 BerryCore/BerryCore.Simples/WCF.Client/WcfTestClient/bin/
+BerryCore/BerryCore.SOA/BerryCore.SOA.API/bin/
+BerryCore/BerryCore.SOA/BerryCore.SOA.API/obj/
+BerryCore/Publish/

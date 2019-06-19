@@ -22,7 +22,7 @@ namespace BerryCore.WCF.BaseBehavior.ErrorHandler
             //要修改返回内容注意这里
             BaseSoapResult<string> res = new BaseSoapResult<string>
             {
-                Status = JsonObjectStatus.Exception,
+                Status = GlobalErrorCodes.Exception,
                 Data = error.TargetSite.Name,
                 Msg = error.Message.ToString()
             };

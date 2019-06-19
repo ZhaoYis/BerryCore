@@ -44,7 +44,7 @@
   <ItemGroup>
     <Compile Include="Attributes\CustomValidationAttributes.cs" />
     <Compile Include="GlobalConstCode.cs" />
-    <Compile Include="JsonObjectStatus.cs" />
+    <Compile Include="GlobalErrorCodes.cs" />
     <Compile Include="NumberRangeOfValueType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

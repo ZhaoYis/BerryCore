@@ -27,7 +27,7 @@ namespace BerryCore.WCF.BaseBehavior
         /// <param name="status">状态</param>
         /// <param name="message">消息</param>
         /// <returns></returns>
-        protected virtual BaseSoapResult<string> GetBaseSoapResult<T>(T data = default(T), JsonObjectStatus status = JsonObjectStatus.Error, string message = "") where T : class
+        protected virtual BaseSoapResult<string> GetBaseSoapResult<T>(T data = default(T), GlobalErrorCodes status = GlobalErrorCodes.Error, string message = "") where T : class
         {
             message = string.Format("{0}{1}", status.GetEnumDescription(), string.IsNullOrEmpty(message) ? "" : "," + message);
             BaseSoapResult<string> resultMsg = new BaseSoapResult<string>
@@ -46,9 +46,9 @@ namespace BerryCore.WCF.BaseBehavior
         /// <param name="status">状态</param>
         /// <param name="message">消息</param>
         /// <returns></returns>
-        protected virtual BaseSoapResult<string> GetBaseSoapResult<T>(JsonObjectStatus status = JsonObjectStatus.Error, string message = "") where T : class
+        protected virtual BaseSoapResult<string> GetBaseSoapResult<T>(GlobalErrorCodes status = GlobalErrorCodes.Error, string message = "") where T : class
         {
-            message = status == JsonObjectStatus.Success
+            message = status == GlobalErrorCodes.Success
                 ? status.GetEnumDescription()
                 : string.Format("{0}{1}", status.GetEnumDescription(), string.IsNullOrEmpty(message) ? "" : "," + message);
             BaseSoapResult<string> resultMsg = new BaseSoapResult<string>

@@ -47,8 +47,10 @@
     <Compile Include="BaseLogger.cs" />
     <Compile Include="CustomConsole.cs" />
     <Compile Include="ILogger.cs" />
+    <Compile Include="LoggerFormat.cs" />
     <Compile Include="LoggerLevel.cs" />
     <Compile Include="LogHelper.cs" />
+    <Compile Include="LogMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

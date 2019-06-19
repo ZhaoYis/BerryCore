@@ -14,7 +14,7 @@ namespace BerryCore.WCF.DataContract.Base
         /// 状态码
         /// </summary>
         [DataMember(IsRequired = true)]
-        public JsonObjectStatus Status { get; set; }
+        public GlobalErrorCodes Status { get; set; }
 
         /// <summary>
         /// 数据

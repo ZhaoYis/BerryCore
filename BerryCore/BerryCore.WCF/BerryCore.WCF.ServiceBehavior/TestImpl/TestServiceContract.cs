@@ -41,19 +41,19 @@ namespace BerryCore.WCF.ServiceBehavior.TestImpl
         [CustomParameterBehavior]
         public BaseSoapResult<string> GetTestObjectMsg()
         {
-            BaseSoapResult<string> res = this.GetBaseSoapResult<string>(JsonObjectStatus.Error);
+            BaseSoapResult<string> res = this.GetBaseSoapResult<string>(GlobalErrorCodes.Error);
 
             this.Logger(this.GetType(), "实体测试-GetTestObjectMsg", () =>
             {
                 res = new BaseSoapResult<string>
                 {
-                    Status = JsonObjectStatus.Success,
+                    Status = GlobalErrorCodes.Success,
                     Data = "Hello World！",
                     Msg = "欢迎使用WCF服务！"
                 };
             }, e =>
             {
-                res = this.GetBaseSoapResult<string>(JsonObjectStatus.Exception, e.Message);
+                res = this.GetBaseSoapResult<string>(GlobalErrorCodes.Exception, e.Message);
             });
             return res;
         }
@@ -71,7 +71,7 @@ namespace BerryCore.WCF.ServiceBehavior.TestImpl
                 Id = userId,
                 Name = "测试：" + userId
             };
-            return this.GetBaseSoapResult<UserInfoTestEntity>(info, JsonObjectStatus.Success);
+            return this.GetBaseSoapResult<UserInfoTestEntity>(info, GlobalErrorCodes.Success);
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace BerryCore.WCF.ServiceBehavior.TestImpl
         [CustomParameterBehavior]
         public BaseSoapResult<string> SaveUserInfo(UserInfoTestEntity info)
         {
-            return this.GetBaseSoapResult<UserInfoTestEntity>(info, JsonObjectStatus.Success);
+            return this.GetBaseSoapResult<UserInfoTestEntity>(info, GlobalErrorCodes.Success);
         }
     }
 }
