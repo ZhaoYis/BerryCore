@@ -19,6 +19,7 @@
 #endregion
 
 using Berry.Cache.Core.Base;
+using BerryCore.Extensions;
 using BerryCore.Utilities;
 using System;
 using System.Collections;
@@ -108,6 +109,14 @@ namespace BerryCore.Data
                                 }
                             }
                             else
+                            {
+                                sbPrame.Append(",[" + prop.Name + "]");
+                                sp.Append("," + DbParameters.CreateDbParmCharacter() + "" + (prop.Name));
+                            }
+                        }
+                        else
+                        {
+                            if (prop.PropertyType.IsNullableType())
                             {
                                 sbPrame.Append(",[" + prop.Name + "]");
                                 sp.Append("," + DbParameters.CreateDbParmCharacter() + "" + (prop.Name));
@@ -238,6 +247,15 @@ namespace BerryCore.Data
                                 }
                             }
                         }
+                        else
+                        {
+                            if (prop.PropertyType.IsNullableType())
+                            {
+                                sb.Append(",[" + prop.Name + "]");
+                                sb.Append("=");
+                                sb.Append(DbParameters.CreateDbParmCharacter() + prop.Name);
+                            }
+                        }
                     }
                 }
 
@@ -324,6 +342,15 @@ namespace BerryCore.Data
                                     sb.Append("=");
                                     sb.Append(DbParameters.CreateDbParmCharacter() + prop.Name);
                                 }
+                            }
+                        }
+                        else
+                        {
+                            if (prop.PropertyType.IsNullableType())
+                            {
+                                sb.Append(",[" + prop.Name + "]");
+                                sb.Append("=");
+                                sb.Append(DbParameters.CreateDbParmCharacter() + prop.Name);
                             }
                         }
                     }

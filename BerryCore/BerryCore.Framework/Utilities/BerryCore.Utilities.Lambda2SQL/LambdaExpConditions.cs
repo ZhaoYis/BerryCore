@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text.RegularExpressions;
 
 namespace BerryCore.Utilities.Lambda2SQL
 {
@@ -22,11 +23,16 @@ namespace BerryCore.Utilities.Lambda2SQL
         /// <summary>
         /// 获取 Where 条件语句
         /// </summary>
-        /// <param name="addCinditionKey">是否加Where词</param>
+        /// <param name="addConditionKey">是否加Where词</param>
         /// <returns>Where条件语句</returns>
-        public string Where(bool addCinditionKey = true)
+        public string Where(bool addConditionKey = true)
         {
-            if (string.IsNullOrWhiteSpace(_aiWhereStr)) return string.Empty;
+            if (string.IsNullOrWhiteSpace(_aiWhereStr))
+            {
+                return string.Empty;
+            }
+            //System.Func`2[GCP.Entity.UserTestEntity,System.Boolean]
+            // Where (((Name = 'dsx') And (Creator = 1)) Or (UserId != 'ADMIN')) And System.Func`2[GCP.Entity.UserTestEntity,System.Boolean]
             //(1 And (( (Category = 1) And (DeleteMark = 0)) And (EnabledMark = 1)))
             //((1 And (CategoryId = 1)) And ((OperateTime >= '2018/5/6 0:00:00') And (OperateTime <= '2018/5/14 0:00:00')))
 
@@ -35,40 +41,33 @@ namespace BerryCore.Utilities.Lambda2SQL
             temp = temp.Replace("(", "").Replace(")", "").Trim();
             if (temp.StartsWith("1 And"))
             {
-                _aiWhereStr = _aiWhereStr.Replace("1 And", "");
+                _aiWhereStr = _aiWhereStr.Replace("1 And", "1 = 1 And ");
             }
             else if (temp.StartsWith("0 And"))
             {
-                _aiWhereStr = _aiWhereStr.Replace("0 And", "");
+                _aiWhereStr = _aiWhereStr.Replace("0 And", "1 = 1 And ");
+            }
+            else if (Regex.IsMatch(temp, @"System.Func`2\[.+\System.Boolean]"))
+            {
+                _aiWhereStr = Regex.Replace(_aiWhereStr, @"System.Func`2\[.+\System.Boolean]", "1 = 1");
             }
 
-            if (addCinditionKey)
-            {
-                return " Where " + _aiWhereStr;
-            }
-            else
-            {
-                return _aiWhereStr;
-            }
+            return addConditionKey ? " Where " + _aiWhereStr : _aiWhereStr;
         }
 
         /// <summary>
         /// 获取 OrderBy 条件语句
         /// </summary>
-        /// <param name="addCinditionKey">是否加Order By词</param>
+        /// <param name="addConditionKey">是否加Order By词</param>
         /// <returns>OrderBy 条件语句</returns>
-        public string OrderBy(bool addCinditionKey = true)
+        public string OrderBy(bool addConditionKey = true)
         {
-            if (string.IsNullOrWhiteSpace(_aiOrderByStr)) return string.Empty;
+            if (string.IsNullOrWhiteSpace(_aiOrderByStr))
+            {
+                return string.Empty;
+            }
 
-            if (addCinditionKey)
-            {
-                return " Order By " + _aiOrderByStr;
-            }
-            else
-            {
-                return _aiOrderByStr;
-            }
+            return addConditionKey ? " Order By " + _aiOrderByStr : _aiOrderByStr;
         }
 
         #endregion 外部访问方法
@@ -348,20 +347,20 @@ namespace BerryCore.Utilities.Lambda2SQL
         /// </summary>
         private string _aiOrderByStr = string.Empty;
 
-        private void SetConditionStr(Expression aiExp, LambdaExpUnion lambdaUion = LambdaExpUnion.And)
+        private void SetConditionStr(Expression aiExp, LambdaExpUnion bizUnion = LambdaExpUnion.And)
         {
             SetWhere(aiExp);//Where条件句
 
             SetOrderBy(aiExp);//Order by 语句
         }
 
-        private void SetOneConditionStr(Expression aiExp, LambdaExpUnion bizUion = LambdaExpUnion.And)
+        private void SetOneConditionStr(Expression aiExp, LambdaExpUnion bizUnion = LambdaExpUnion.And)
         {
-            if ((bizUion == LambdaExpUnion.And) || (bizUion == LambdaExpUnion.Or))
+            if ((bizUnion == LambdaExpUnion.And) || (bizUnion == LambdaExpUnion.Or))
             {
                 SetWhere(aiExp);//Where条件句
             }
-            else if (bizUion == LambdaExpUnion.OrderBy)
+            else if (bizUnion == LambdaExpUnion.OrderBy)
             {
                 SetOrderBy(aiExp);//Order by 语句
             }
@@ -380,7 +379,7 @@ namespace BerryCore.Utilities.Lambda2SQL
             }
         }
 
-        private void SetWhere(Expression aiExp, LambdaExpUnion bizUion = LambdaExpUnion.And)
+        private void SetWhere(Expression aiExp, LambdaExpUnion bizUnion = LambdaExpUnion.And)
         {
             var itemstr = ExpressionWriterSql.BizWhereWriteToString(aiExp, SqlType.Where);
             if (string.IsNullOrWhiteSpace(_aiWhereStr))
@@ -389,7 +388,7 @@ namespace BerryCore.Utilities.Lambda2SQL
             }
             else
             {
-                if (bizUion == LambdaExpUnion.Or)
+                if (bizUnion == LambdaExpUnion.Or)
                 {
                     _aiWhereStr = _aiWhereStr + " Or " + itemstr;
                 }

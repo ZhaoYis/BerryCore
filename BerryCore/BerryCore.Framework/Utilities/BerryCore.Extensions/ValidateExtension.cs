@@ -154,5 +154,15 @@ namespace BerryCore.Extensions
                 return true;
             }
         }
+
+        /// <summary>
+        /// 判断一个属性类型是否是可空类型
+        /// </summary>
+        /// <param name="theType"></param>
+        /// <returns></returns>
+        public static bool IsNullableType(this Type theType)
+        {
+            return (theType.IsGenericType && theType.GetGenericTypeDefinition() == typeof(Nullable<>));
+        }
     }
 }
