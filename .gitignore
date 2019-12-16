@@ -86,3 +86,6 @@ BerryCore/BerryCore.Simples/WCF.Client/WcfTestClient/bin/
 BerryCore/BerryCore.SOA/BerryCore.SOA.API/bin/
 BerryCore/BerryCore.SOA/BerryCore.SOA.API/obj/
 BerryCore/Publish/
+BerryCore/BerryCore.Test/BerryCore.EventBus.Test/obj/
+BerryCore/BerryCore.Test/BerryCore.EventBus.Test/bin/
+BerryCore/BerryCore.Framework/EventBus/BerryCore.EventBus/obj/
