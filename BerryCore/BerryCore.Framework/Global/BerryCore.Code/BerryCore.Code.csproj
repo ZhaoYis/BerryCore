@@ -43,10 +43,27 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\CustomValidationAttributes.cs" />
+    <Compile Include="AuthorizeTypeEnum.cs" />
     <Compile Include="GlobalConstCode.cs" />
     <Compile Include="GlobalErrorCodes.cs" />
+    <Compile Include="LoggerCategoryType.cs" />
     <Compile Include="NumberRangeOfValueType.cs" />
+    <Compile Include="Operator\AuthorizeDataModel.cs" />
+    <Compile Include="Operator\IOperatorProvider.cs" />
+    <Compile Include="Operator\OperatorEntity.cs" />
+    <Compile Include="Operator\OperatorProvider.cs" />
+    <Compile Include="PermissionMode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Utilities\BerryCore.Extensions\BerryCore.Extensions.csproj">
+      <Project>{C89B9AB2-A27B-498B-8D59-FD1713596C35}</Project>
+      <Name>BerryCore.Extensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Utilities\BerryCore.Utilities\BerryCore.Utilities.csproj">
+      <Project>{F843472B-E7C1-4E45-9E52-99F29C7F16E3}</Project>
+      <Name>BerryCore.Utilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

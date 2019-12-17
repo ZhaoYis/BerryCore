@@ -89,3 +89,6 @@ BerryCore/Publish/
 BerryCore/BerryCore.Test/BerryCore.EventBus.Test/obj/
 BerryCore/BerryCore.Test/BerryCore.EventBus.Test/bin/
 BerryCore/BerryCore.Framework/EventBus/BerryCore.EventBus/obj/
+BerryCore/BerryCore.Models/BerryCore.Entity.DTOs/obj/
+BerryCore/BerryCore.Models/BerryCore.Entity.Mapping/obj/
+BerryCore/BerryCore.Models/BerryCore.Entity.VOs/obj/

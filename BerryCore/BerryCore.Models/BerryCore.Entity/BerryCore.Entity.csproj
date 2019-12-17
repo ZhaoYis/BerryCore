@@ -43,12 +43,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AuthorizeManage\AuthorizeDataEntity.cs" />
+    <Compile Include="AuthorizeManage\AuthorizeEntity.cs" />
+    <Compile Include="AuthorizeManage\ModuleButtonEntity.cs" />
+    <Compile Include="AuthorizeManage\ModuleColumnEntity.cs" />
+    <Compile Include="AuthorizeManage\ModuleEntity.cs" />
+    <Compile Include="AuthorizeManage\ModuleFormEntity.cs" />
+    <Compile Include="AuthorizeManage\ModuleFormInstanceEntity.cs" />
+    <Compile Include="BaseManage\DepartmentEntity.cs" />
+    <Compile Include="BaseManage\OrganizeEntity.cs" />
+    <Compile Include="BaseManage\RoleEntity.cs" />
+    <Compile Include="BaseManage\UserEntity.cs" />
+    <Compile Include="BaseManage\UserRelationEntity.cs" />
     <Compile Include="Base\BaseEntity.cs" />
     <Compile Include="Base\BaseJsonResult.cs" />
     <Compile Include="Base\BaseJsonResult4Page.cs" />
     <Compile Include="Base\DefaultReturnValue.cs" />
-    <Compile Include="Base\Pagination.cs" />
+    <Compile Include="Base\PaginationEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Protocol\FullAuditedEntity.cs" />
+    <Compile Include="Protocol\FullAuditedOfCreator.cs" />
+    <Compile Include="Protocol\FullAuditedOfUpdater.cs" />
     <Compile Include="Protocol\IEntity.cs" />
     <Compile Include="Protocol\IEntityOfCreator.cs" />
     <Compile Include="Protocol\IEntityOfSort.cs" />
@@ -57,7 +72,13 @@
     <Compile Include="Protocol\IExtendableObject.cs" />
     <Compile Include="Protocol\ISoftClose.cs" />
     <Compile Include="Protocol\ISoftDelete.cs" />
-    <Compile Include="Test\UserEntity.cs" />
+    <Compile Include="SystemManage\AreaEntity.cs" />
+    <Compile Include="SystemManage\DataBaseBackupEntity.cs" />
+    <Compile Include="SystemManage\DataBaseLinkEntity.cs" />
+    <Compile Include="SystemManage\DataItemDetailEntity.cs" />
+    <Compile Include="SystemManage\DataItemEntity.cs" />
+    <Compile Include="SystemManage\LoggerEntity.cs" />
+    <Compile Include="Test\UserTestEntity.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\BerryCore.Framework\Global\BerryCore.Code\BerryCore.Code.csproj">
@@ -68,6 +89,10 @@
       <Project>{f843472b-e7c1-4e45-9e52-99f29c7f16e3}</Project>
       <Name>BerryCore.Utilities</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="CustomManage\" />
+    <Folder Include="PublicInfoManage\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

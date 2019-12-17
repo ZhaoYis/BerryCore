@@ -1,4 +1,5 @@
 ﻿#region << 版 本 注 释 >>
+
 /*----------------------------------------------------------------
 * 项目名称 ：BerryCore.Entity.Base
 * 项目描述 ：
@@ -6,7 +7,7 @@
 * 类 描 述 ：
 * 所在的域 ：MRZHAOYI
 * 命名空间 ：BerryCore.Entity.Base
-* 机器名称 ：MRZHAOYI 
+* 机器名称 ：MRZHAOYI
 * CLR 版本 ：4.0.30319.42000
 * 作    者 ：赵轶
 * 创建时间 ：2019/5/4 8:36:25
@@ -16,30 +17,40 @@
 * Copyright © 大師兄丶 2019. All rights reserved.                     *
 ***********************************************************************
 //----------------------------------------------------------------*/
-#endregion
 
+#endregion << 版 本 注 释 >>
+
+using BerryCore.Entity.Protocol;
+using BerryCore.Utilities;
 using System;
 using System.ComponentModel.DataAnnotations;
-using BerryCore.Entity.Protocol;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BerryCore.Entity.Base
 {
-
     /// <summary>
     /// 实体基类（默认）
     /// </summary>
     [Serializable]
-    public abstract class BaseEntity : BaseEntity<long>, IEntity
+    public abstract class BaseEntity : BaseEntity<string>, IEntity
     {
+        /// <summary>
+        /// 新增调用
+        /// </summary>
+        public override void Create()
+        {
+            this.Id = CommonHelper.GetGuid().ToString();
 
+            base.Create();
+        }
     }
 
     /// <summary>
-    /// 功能描述    ：实体基类  
+    /// 功能描述    ：实体基类
     /// 创 建 者    ：赵轶
-    /// 创建日期    ：2019/5/4 8:36:25 
+    /// 创建日期    ：2019/5/4 8:36:25
     /// 最后修改者  ：赵轶
-    /// 最后修改日期：2019/5/4 8:36:25 
+    /// 最后修改日期：2019/5/4 8:36:25
     /// </summary>
     [Serializable]
     public abstract class BaseEntity<TPrimaryKey> : IEntityOfTPrimaryKey<TPrimaryKey>
@@ -50,6 +61,12 @@ namespace BerryCore.Entity.Base
         [Key]
         public virtual TPrimaryKey Id { get; set; }
 
+        /// <summary>
+        /// 自增键。暂无实际用处。
+        /// </summary>
+        [NotMapped]
+        public virtual long PK { get; set; }
+
         #region 扩展操作方法
 
         /// <summary>
@@ -57,7 +74,6 @@ namespace BerryCore.Entity.Base
         /// </summary>
         public virtual void Create()
         {
-
         }
 
         /// <summary>
@@ -79,7 +95,6 @@ namespace BerryCore.Entity.Base
             return func.Invoke();
         }
 
-        #endregion
-
+        #endregion 扩展操作方法
     }
 }

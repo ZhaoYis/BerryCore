@@ -41,15 +41,52 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AuthorizeManage\IAuthorizeBLL.cs" />
+    <Compile Include="AuthorizeManage\IModuleBLL.cs" />
+    <Compile Include="AuthorizeManage\IModuleButtonBLL.cs" />
+    <Compile Include="AuthorizeManage\IModuleColumnBLL.cs" />
+    <Compile Include="AuthorizeManage\IModuleFormBLL.cs" />
+    <Compile Include="AuthorizeManage\IModuleFormInstanceBLL.cs" />
+    <Compile Include="AuthorizeManage\IPermissionBLL.cs" />
+    <Compile Include="BaseManage\IDepartmentBLL.cs" />
+    <Compile Include="BaseManage\IJobBLL.cs" />
+    <Compile Include="BaseManage\IOrganizeBLL.cs" />
+    <Compile Include="BaseManage\IPostBLL.cs" />
+    <Compile Include="BaseManage\IRoleBLL.cs" />
+    <Compile Include="BaseManage\IUserBLL.cs" />
+    <Compile Include="BaseManage\IUserGroupBLL.cs" />
     <Compile Include="Base\IBaseBLL.cs" />
     <Compile Include="Base\IBaseBLL.T.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SystemManage\IAreaBLL.cs" />
+    <Compile Include="SystemManage\IDataBaseBackupBLL.cs" />
+    <Compile Include="SystemManage\IDataBaseLinkBLL.cs" />
+    <Compile Include="SystemManage\IDataBaseTableBLL.cs" />
+    <Compile Include="SystemManage\IDataItemBLL.cs" />
+    <Compile Include="SystemManage\IDataItemDetailBLL.cs" />
+    <Compile Include="SystemManage\ILoggerBLL.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\BerryCore.Framework\Global\BerryCore.Code\BerryCore.Code.csproj">
+      <Project>{E17BD892-70DD-4A2C-AE1D-728237EB9DA1}</Project>
+      <Name>BerryCore.Code</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\BerryCore.Models\BerryCore.Entity.DTOs\BerryCore.Entity.DTOs.csproj">
+      <Project>{387A6F7F-6C49-44BB-89ED-A3D126EC0F75}</Project>
+      <Name>BerryCore.Entity.DTOs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\BerryCore.Models\BerryCore.Entity.VOs\BerryCore.Entity.VOs.csproj">
+      <Project>{17C52A09-44C3-4D05-87DB-DB73F4290A83}</Project>
+      <Name>BerryCore.Entity.VOs</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\BerryCore.Models\BerryCore.Entity\BerryCore.Entity.csproj">
       <Project>{a9e7dda2-4029-45ae-aa1f-5a27d3182954}</Project>
       <Name>BerryCore.Entity</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="CustomManage\" />
+    <Folder Include="PublicInfoManage\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

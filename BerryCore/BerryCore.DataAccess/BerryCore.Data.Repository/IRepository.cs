@@ -267,7 +267,7 @@ namespace BerryCore.Data.Repository
         /// <param name="parameters">参数</param>
         /// <param name="pagination">分页参数</param>
         /// <returns></returns>
-        IEnumerable<T> FindList<T>(string strSql, object parameters, Pagination pagination) where T : class, new();
+        IEnumerable<T> FindList<T>(string strSql, object parameters, PaginationEntity pagination) where T : class, new();
 
         /// <summary>
         /// 根据条件获取分页数据
@@ -276,7 +276,7 @@ namespace BerryCore.Data.Repository
         /// <param name="condition">筛选条件</param>
         /// <param name="pagination">分页参数</param>
         /// <returns></returns>
-        IEnumerable<T> FindList<T>(Expression<Func<T, bool>> condition, Pagination pagination) where T : class, new();
+        IEnumerable<T> FindList<T>(Expression<Func<T, bool>> condition, PaginationEntity pagination) where T : class, new();
 
         /// <summary>
         /// 根据条件查询一个DataTable
@@ -300,7 +300,7 @@ namespace BerryCore.Data.Repository
         /// <param name="strSql">T-SQL语句</param>
         /// <param name="pagination">分页参数</param>
         /// <returns></returns>
-        DataTable FindTable(string strSql, Pagination pagination);
+        DataTable FindTable(string strSql, PaginationEntity pagination);
 
         /// <summary>
         /// 获取分页DataTable
@@ -309,7 +309,7 @@ namespace BerryCore.Data.Repository
         /// <param name="parameters">参数</param>
         /// <param name="pagination">分页参数</param>
         /// <returns></returns>
-        DataTable FindTable(string strSql, object parameters, Pagination pagination);
+        DataTable FindTable(string strSql, object parameters, PaginationEntity pagination);
 
         /// <summary>
         /// 获取记录数
@@ -337,7 +337,7 @@ namespace BerryCore.Data.Repository
         /// <param name="entity">待更新实体</param>
         /// <param name="condition">筛选条件</param>
         /// <returns></returns>
-        int Update<T>(T entity, Expression<Func<T, bool>> condition) where T : class, new();
+        int Update<T>(T entity, Expression<Func<T, bool>> condition) where T : class;
 
         #endregion 更新
     }

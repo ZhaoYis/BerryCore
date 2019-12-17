@@ -108,7 +108,7 @@ namespace BerryCore.BLL.Base
         /// <param name="entity">要修改的列及修改后列的值集合</param>
         /// <param name="condition">筛选条件</param>
         /// <returns>返回受影响行数</returns>
-        public int Update<T>(T entity, Expression<Func<T, bool>> condition) where T : class, new()
+        public int Update<T>(T entity, Expression<Func<T, bool>> condition) where T : class
         {
             return service.Update(entity, condition);
         }
@@ -220,7 +220,7 @@ namespace BerryCore.BLL.Base
         /// <param name="parameters">参数</param>
         /// <param name="pagination">分页参数</param>
         /// <returns></returns>
-        public DataTable FindTable(string strSql, object parameters, Pagination pagination)
+        public DataTable FindTable(string strSql, object parameters, PaginationEntity pagination)
         {
             return service.FindTable(strSql, parameters, pagination);
         }
@@ -231,7 +231,7 @@ namespace BerryCore.BLL.Base
         /// <param name="strSql">T-SQL语句</param>
         /// <param name="pagination">分页参数</param>
         /// <returns></returns>
-        public DataTable FindTable(string strSql, Pagination pagination)
+        public DataTable FindTable(string strSql, PaginationEntity pagination)
         {
             return service.FindTable(strSql, pagination);
         }
@@ -243,7 +243,7 @@ namespace BerryCore.BLL.Base
         /// <param name="condition">筛选条件</param>
         /// <param name="pagination">分页参数</param>
         /// <returns></returns>
-        public IEnumerable<T> FindList<T>(Expression<Func<T, bool>> condition, Pagination pagination) where T : class, new()
+        public IEnumerable<T> FindList<T>(Expression<Func<T, bool>> condition, PaginationEntity pagination) where T : class, new()
         {
             return service.FindList(condition, pagination);
         }

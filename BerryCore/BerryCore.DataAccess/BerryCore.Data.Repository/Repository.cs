@@ -342,11 +342,11 @@ namespace BerryCore.Data.Repository
         /// <param name="parameters">参数</param>
         /// <param name="pagination">分页参数</param>
         /// <returns></returns>
-        public IEnumerable<T> FindList<T>(string strSql, object parameters, Pagination pagination) where T : class, new()
+        public IEnumerable<T> FindList<T>(string strSql, object parameters, PaginationEntity pagination) where T : class, new()
         {
-            int total = pagination.TotalRecords;
-            var data = _db.FindList<T>(strSql, parameters, pagination.Sidx, pagination.Sord.ToLower() == "asc", pagination.PageSize, pagination.PageIndex, out total);
-            pagination.TotalRecords = total;
+            int total = pagination.records;
+            var data = _db.FindList<T>(strSql, parameters, pagination.sidx, pagination.sord.ToLower() == "asc", pagination.rows, pagination.page, out total);
+            pagination.records = total;
             return data;
         }
 
@@ -357,11 +357,11 @@ namespace BerryCore.Data.Repository
         /// <param name="condition">筛选条件</param>
         /// <param name="pagination">分页参数</param>
         /// <returns></returns>
-        public IEnumerable<T> FindList<T>(Expression<Func<T, bool>> condition, Pagination pagination) where T : class, new()
+        public IEnumerable<T> FindList<T>(Expression<Func<T, bool>> condition, PaginationEntity pagination) where T : class, new()
         {
-            int total = pagination.TotalRecords;
-            var data = _db.FindList<T>(condition, pagination.Sidx, pagination.Sord.ToLower() == "asc", pagination.PageSize, pagination.PageIndex, out total);
-            pagination.TotalRecords = total;
+            int total = pagination.records;
+            var data = _db.FindList<T>(condition, pagination.sidx, pagination.sord.ToLower() == "asc", pagination.rows, pagination.page, out total);
+            pagination.records = total;
             return data;
         }
 
@@ -393,11 +393,11 @@ namespace BerryCore.Data.Repository
         /// <param name="strSql">T-SQL语句</param>
         /// <param name="pagination">分页参数</param>
         /// <returns></returns>
-        public DataTable FindTable(string strSql, Pagination pagination)
+        public DataTable FindTable(string strSql, PaginationEntity pagination)
         {
-            int total = pagination.TotalRecords;
-            var data = _db.FindTable(strSql, pagination.Sidx, pagination.Sord.ToLower() == "asc", pagination.PageSize, pagination.PageIndex, out total);
-            pagination.TotalRecords = total;
+            int total = pagination.records;
+            var data = _db.FindTable(strSql, pagination.sidx, pagination.sord.ToLower() == "asc", pagination.rows, pagination.page, out total);
+            pagination.records = total;
             return data;
         }
 
@@ -408,11 +408,11 @@ namespace BerryCore.Data.Repository
         /// <param name="parameters">参数</param>
         /// <param name="pagination">分页参数</param>
         /// <returns></returns>
-        public DataTable FindTable(string strSql, object parameters, Pagination pagination)
+        public DataTable FindTable(string strSql, object parameters, PaginationEntity pagination)
         {
-            int total = pagination.TotalRecords;
-            var data = _db.FindTable(strSql, parameters, pagination.Sidx, pagination.Sord.ToLower() == "asc", pagination.PageSize, pagination.PageIndex, out total);
-            pagination.TotalRecords = total;
+            int total = pagination.records;
+            var data = _db.FindTable(strSql, parameters, pagination.sidx, pagination.sord.ToLower() == "asc", pagination.rows, pagination.page, out total);
+            pagination.records = total;
             return data;
         }
 
@@ -445,7 +445,7 @@ namespace BerryCore.Data.Repository
         /// <param name="entity">待更新实体</param>
         /// <param name="condition">筛选条件</param>
         /// <returns></returns>
-        public int Update<T>(T entity, Expression<Func<T, bool>> condition) where T : class, new()
+        public int Update<T>(T entity, Expression<Func<T, bool>> condition) where T : class
         {
             return _db.Update<T>(entity, condition);
         }

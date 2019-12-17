@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using BerryCore.WCF.ServiceContract.Test;
 
 namespace WcfTestClient
@@ -11,7 +12,7 @@ namespace WcfTestClient
         /// <param name="msg"></param>
         public void Notice(string msg)
         {
-            Console.WriteLine(msg);
+            Trace.WriteLine(msg);
         }
     }
 }

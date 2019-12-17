@@ -12,11 +12,11 @@ namespace BerryCore.UnitTest
         [TestMethod]
         public void TestMethod_()
         {
-            UserEntity user1 = new UserEntity
+            UserTestEntity user1 = new UserTestEntity
             {
                 Name = "dsx"
             };
-            UserEntity user2 = new UserEntity();
+            UserTestEntity user2 = new UserTestEntity();
 
             int hash1 = user1.GetHashCode();
             int hash2 = user2.GetHashCode();

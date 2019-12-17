@@ -41,18 +41,55 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AuthorizeManage\AuthorizeBLL.cs" />
+    <Compile Include="AuthorizeManage\ModuleBLL.cs" />
+    <Compile Include="AuthorizeManage\ModuleButtonBLL.cs" />
+    <Compile Include="AuthorizeManage\ModuleColumnBLL.cs" />
+    <Compile Include="AuthorizeManage\ModuleFormBLL.cs" />
+    <Compile Include="AuthorizeManage\ModuleFormInstanceBLL.cs" />
+    <Compile Include="AuthorizeManage\PermissionBLL.cs" />
+    <Compile Include="BaseManage\DepartmentBLL.cs" />
+    <Compile Include="BaseManage\JobBLL.cs" />
+    <Compile Include="BaseManage\OrganizeBLL.cs" />
+    <Compile Include="BaseManage\PostBLL.cs" />
+    <Compile Include="BaseManage\RoleBLL.cs" />
+    <Compile Include="BaseManage\UserBLL.cs" />
+    <Compile Include="BaseManage\UserGroupBLL.cs" />
     <Compile Include="Base\BaseBLL.cs" />
     <Compile Include="Base\BaseBLL.T.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SystemManage\AreaBLL.cs" />
+    <Compile Include="SystemManage\DataBaseBackupBLL.cs" />
+    <Compile Include="SystemManage\DataBaseLinkBLL.cs" />
+    <Compile Include="SystemManage\DataBaseTableBLL.cs" />
+    <Compile Include="SystemManage\DataItemBLL.cs" />
+    <Compile Include="SystemManage\DataItemDetailBLL.cs" />
+    <Compile Include="SystemManage\LoggerBLL.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\BerryCore.DataAccess\BerryCore.Data.Repository\BerryCore.Data.Repository.csproj">
       <Project>{a3724e87-cb69-4498-90e9-4efbf51632a0}</Project>
       <Name>BerryCore.Data.Repository</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\BerryCore.Framework\Global\BerryCore.Code\BerryCore.Code.csproj">
+      <Project>{E17BD892-70DD-4A2C-AE1D-728237EB9DA1}</Project>
+      <Name>BerryCore.Code</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\BerryCore.Framework\Utilities\BerryCore.Extensions\BerryCore.Extensions.csproj">
+      <Project>{C89B9AB2-A27B-498B-8D59-FD1713596C35}</Project>
+      <Name>BerryCore.Extensions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\BerryCore.Framework\Utilities\BerryCore.Log\BerryCore.Log.csproj">
       <Project>{36f14e26-5650-400c-ba8f-a76d28c767cb}</Project>
       <Name>BerryCore.Log</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\BerryCore.Models\BerryCore.Entity.DTOs\BerryCore.Entity.DTOs.csproj">
+      <Project>{387A6F7F-6C49-44BB-89ED-A3D126EC0F75}</Project>
+      <Name>BerryCore.Entity.DTOs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\BerryCore.Models\BerryCore.Entity.VOs\BerryCore.Entity.VOs.csproj">
+      <Project>{17C52A09-44C3-4D05-87DB-DB73F4290A83}</Project>
+      <Name>BerryCore.Entity.VOs</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\BerryCore.Models\BerryCore.Entity\BerryCore.Entity.csproj">
       <Project>{a9e7dda2-4029-45ae-aa1f-5a27d3182954}</Project>
@@ -70,6 +107,10 @@
       <Project>{93f2b784-8364-42dd-a170-83ac969f5bf3}</Project>
       <Name>BerryCore.Service</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="CustomManage\" />
+    <Folder Include="PublicInfoManage\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

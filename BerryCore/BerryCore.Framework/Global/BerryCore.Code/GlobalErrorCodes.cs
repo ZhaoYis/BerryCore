@@ -20,7 +20,7 @@ namespace BerryCore.Code
         [Description("当前接口已弃用")]
         Obsolete = 1001,
 
-        #endregion
+        #endregion 系统保留
 
         #region 系统
 
@@ -66,7 +66,7 @@ namespace BerryCore.Code
         [Description("记录（资源）存在多条")]
         MultipleRecords = 2006,
 
-        #endregion
+        #endregion 系统
 
         #region TOKEN验证相关
 
@@ -94,7 +94,7 @@ namespace BerryCore.Code
         [Description("无权执行当前操作")]
         NoPermission = 3004,
 
-        #endregion
+        #endregion TOKEN验证相关
 
         #region 业务相关
 
@@ -124,14 +124,8 @@ namespace BerryCore.Code
         [Description("获取AccessToken失败")]
         OAuthAccessTokenFail = 4003,
 
-        #endregion
+        #endregion 微信授权相关
 
-        #region Token相关
-
-
-
-        #endregion
-
-        #endregion
+        #endregion 业务相关
     }
 }

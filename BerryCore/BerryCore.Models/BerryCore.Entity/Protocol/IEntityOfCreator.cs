@@ -34,11 +34,16 @@ namespace BerryCore.Entity.Protocol
         /// <summary>
         /// 创建时间
         /// </summary>
-        DateTime CreateTime { get; set; }
+        DateTime CreateDate { get; set; }
 
         /// <summary>
         /// 创建人ID
         /// </summary>
-        TCreator Creator { get; set; }
+        TCreator CreateUserId { get; set; }
+
+        /// <summary>
+        /// 创建人
+        /// </summary>
+        string CreateUserName { get; set; }
     }
 }

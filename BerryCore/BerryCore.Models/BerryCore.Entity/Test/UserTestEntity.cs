@@ -20,7 +20,7 @@
 
 #endregion << 版 本 注 释 >>
 
-using BerryCore.Entity.Base;
+using BerryCore.Entity.Protocol;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -34,7 +34,7 @@ namespace BerryCore.Entity.Test
     /// 最后修改日期：2019/5/4 8:35:58
     /// </summary>
     [Table("B_Users")]
-    public class UserEntity : BaseEntity
+    public class UserTestEntity : FullAuditedEntity
     {
         #region 扩展操作
 
@@ -71,23 +71,9 @@ namespace BerryCore.Entity.Test
         public string Mobile { get; set; }
 
         /// <summary>
-        /// 删除标记
-        /// </summary>
-        public bool DeleteMark { get; set; }
-
-        /// <summary>
-        /// 有效标志
-        /// </summary>
-        public bool EnabledMark { get; set; }
-
-        /// <summary>
         /// 备注
         /// </summary>
         public string Description { get; set; }
 
-        /// <summary>
-        /// 创建日期
-        /// </summary>
-        public DateTime? CreateDate { get; set; }
     }
 }

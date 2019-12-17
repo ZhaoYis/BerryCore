@@ -1,11 +1,11 @@
-﻿using BerryCore.BLL.Base;
+﻿using Berry.Cache.Core.RegisterService;
+using BerryCore.BLL.Base;
 using BerryCore.Entity.Test;
 using BerryCore.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Berry.Cache.Core.RegisterService;
 
 namespace BerryCore.UnitTest
 {
@@ -27,7 +27,7 @@ namespace BerryCore.UnitTest
         public void TestMethod_ExecuteBySql_T()
         {
             string sql = "UPDATE [dbo].[B_Users] SET NAME = '大师兄' WHERE PK = @PK";
-            BaseBLL<UserEntity> bll = new BaseBLL<UserEntity>();
+            BaseBLL<UserTestEntity> bll = new BaseBLL<UserTestEntity>();
 
             int count = bll.ExecuteBySql(sql, new { PK = 1 });
             Assert.IsTrue(count > 0);
@@ -41,9 +41,9 @@ namespace BerryCore.UnitTest
         public void TestMethod_ExecuteBySqlAndReturnList_T()
         {
             string sql = "SELECT * FROM dbo.B_Users WHERE PK <> @PK";
-            BaseBLL<UserEntity> bll = new BaseBLL<UserEntity>();
+            BaseBLL<UserTestEntity> bll = new BaseBLL<UserTestEntity>();
 
-            IEnumerable<UserEntity> userEntities = bll.ExecuteBySqlAndReturnList<UserEntity>(sql, new { PK = 0 });
+            IEnumerable<UserTestEntity> userEntities = bll.ExecuteBySqlAndReturnList<UserTestEntity>(sql, new { PK = 0 });
             Assert.IsTrue(userEntities.Any());
 
             Console.WriteLine("获取到{0}条记录。", userEntities.Count());
@@ -56,9 +56,9 @@ namespace BerryCore.UnitTest
         public void TestMethod_ExecuteBySqlAndReturnObject_T()
         {
             string sql = "SELECT * FROM dbo.B_Users WHERE PK = @PK";
-            BaseBLL<UserEntity> bll = new BaseBLL<UserEntity>();
+            BaseBLL<UserTestEntity> bll = new BaseBLL<UserTestEntity>();
 
-            UserEntity userEntities = bll.ExecuteBySqlAndReturnObject<UserEntity>(sql, new { PK = 1 });
+            UserTestEntity userEntities = bll.ExecuteBySqlAndReturnObject<UserTestEntity>(sql, new { PK = 1 });
             Assert.IsTrue(userEntities != null);
 
             Console.WriteLine("获取到记录，JSON：{0}", userEntities.TryToJson());
@@ -70,7 +70,7 @@ namespace BerryCore.UnitTest
         [TestMethod]
         public void TestMethod_Insert_T()
         {
-            UserEntity user = new UserEntity
+            UserTestEntity user = new UserTestEntity
             {
                 Name = "小师弟",
                 Age = 18,
@@ -80,7 +80,7 @@ namespace BerryCore.UnitTest
             };
             user.Create();
 
-            BaseBLL<UserEntity> bll = new BaseBLL<UserEntity>();
+            BaseBLL<UserTestEntity> bll = new BaseBLL<UserTestEntity>();
             int res = bll.Add(user);
 
             Console.WriteLine("执行结果：{0}", res);
@@ -92,10 +92,10 @@ namespace BerryCore.UnitTest
         [TestMethod]
         public void TestMethod_BatchInsert_T()
         {
-            List<UserEntity> userEntities = new List<UserEntity>();
+            List<UserTestEntity> userEntities = new List<UserTestEntity>();
             for (int i = 0; i < 100; i++)
             {
-                UserEntity user = new UserEntity
+                UserTestEntity user = new UserTestEntity
                 {
                     Name = "小师弟",
                     Age = 18,
@@ -107,7 +107,7 @@ namespace BerryCore.UnitTest
                 userEntities.Add(user);
             }
 
-            BaseBLL<UserEntity> bll = new BaseBLL<UserEntity>();
+            BaseBLL<UserTestEntity> bll = new BaseBLL<UserTestEntity>();
             int res = bll.AddList(userEntities);
 
             Console.WriteLine("执行结果：{0}", res);
@@ -119,12 +119,12 @@ namespace BerryCore.UnitTest
         [TestMethod]
         public void TestMethod_DeleteByCondition_T()
         {
-            BaseBLL<UserEntity> bll = new BaseBLL<UserEntity>();
-            int res = bll.Delete(u => u.Id > 90);
+            BaseBLL<UserTestEntity> bll = new BaseBLL<UserTestEntity>();
+            int res = bll.Delete(u => u.Id != "");
 
             Console.WriteLine("执行结果：{0}", res);
 
-            IEnumerable<UserEntity> userEntities = bll.GetList(u => u.Id != 0);
+            IEnumerable<UserTestEntity> userEntities = bll.GetList(u => u.Id != "");
             Console.WriteLine("删除后剩余记录数：{0}", userEntities.Count());
         }
 
@@ -134,11 +134,11 @@ namespace BerryCore.UnitTest
         [TestMethod]
         public void TestMethod_UpdateByCondition_T()
         {
-            BaseBLL<UserEntity> bll = new BaseBLL<UserEntity>();
+            BaseBLL<UserTestEntity> bll = new BaseBLL<UserTestEntity>();
             int res = bll.Update(new
             {
                 Name = "大师兄丶"
-            }, u => u.Id > 1 && u.Id < 10);
+            }, u => u.Id != "");
 
             Console.WriteLine("执行结果：{0}", res);
         }

@@ -32,6 +32,6 @@ namespace BerryCore.Entity.Protocol
         /// <summary>
         /// 无效标识。默认false
         /// </summary>
-        bool Closed { get; set; }
+        bool EnabledMark { get; set; }
     }
 }

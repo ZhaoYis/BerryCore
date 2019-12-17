@@ -34,11 +34,16 @@ namespace BerryCore.Entity.Protocol
         /// <summary>
         /// 更新时间
         /// </summary>
-        DateTime UpdateTime { get; set; }
+        DateTime ModifyDate { get; set; }
 
         /// <summary>
         /// 更新人ID
         /// </summary>
-        TUpdater Updater { get; set; }
+        TUpdater ModifyUserId { get; set; }
+
+        /// <summary>
+        /// 更新人
+        /// </summary>
+        string ModifyUserName { get; set; }
     }
 }

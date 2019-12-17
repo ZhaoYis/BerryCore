@@ -32,6 +32,6 @@ namespace BerryCore.Entity.Protocol
         /// <summary>
         /// 排序码
         /// </summary>
-        TSort Sort { get; set; }
+        TSort SortCode { get; set; }
     }
 }

@@ -32,6 +32,6 @@ namespace BerryCore.Entity.Protocol
         /// <summary>
         /// 删除标识。默认false
         /// </summary>
-        bool Deleted { get; set; }
+        bool DeleteMark { get; set; }
     }
 }

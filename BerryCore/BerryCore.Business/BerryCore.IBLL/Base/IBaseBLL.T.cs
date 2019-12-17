@@ -149,7 +149,7 @@ namespace BerryCore.IBLL.Base
         /// <param name="condition">筛选条件</param>
         /// <param name="pagination">分页参数</param>
         /// <returns></returns>
-        IEnumerable<T> FindList(Expression<Func<T, bool>> condition, Pagination pagination);
+        IEnumerable<T> FindList(Expression<Func<T, bool>> condition, PaginationEntity pagination);
 
         /// <summary>
         /// 根据条件查询一个DataTable
@@ -173,7 +173,7 @@ namespace BerryCore.IBLL.Base
         /// <param name="strSql">T-SQL语句</param>
         /// <param name="pagination">分页参数</param>
         /// <returns></returns>
-        DataTable FindTable(string strSql, Pagination pagination);
+        DataTable FindTable(string strSql, PaginationEntity pagination);
 
         /// <summary>
         /// 获取分页DataTable
@@ -182,7 +182,7 @@ namespace BerryCore.IBLL.Base
         /// <param name="parameters">参数</param>
         /// <param name="pagination">分页参数</param>
         /// <returns></returns>
-        DataTable FindTable(string strSql, object parameters, Pagination pagination);
+        DataTable FindTable(string strSql, object parameters, PaginationEntity pagination);
 
         #endregion
     }

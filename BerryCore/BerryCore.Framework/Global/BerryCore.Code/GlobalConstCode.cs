@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BerryCore.Code
+﻿namespace BerryCore.Code
 {
     /// <summary>
     /// 全局公共编码
@@ -18,6 +12,6 @@ namespace BerryCore.Code
         /// </summary>
         public const string DEFAULT_WSDL_NAMESPACE = "http://www.zhaoyis.com.cn";
 
-        #endregion
+        #endregion 公用基础信息
     }
 }

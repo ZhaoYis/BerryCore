@@ -34,7 +34,7 @@ namespace BerryCore.SOA.API.Controllers.V1
         /// <param name="user"></param>
         /// <returns></returns>
         [HttpPost]
-        public HttpResponseMessage AddUser(UserEntity user)
+        public HttpResponseMessage AddUser(UserTestEntity user)
         {
             BaseJsonResult<string> resultMsg = new BaseJsonResult<string>
             {

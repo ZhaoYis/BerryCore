@@ -175,7 +175,7 @@ namespace BerryCore.Service.Base
         /// <param name="entity">要修改的列及修改后列的值集合</param>
         /// <param name="condition">筛选条件</param>
         /// <returns>返回受影响行数</returns>
-        public int Update<T>(T entity, Expression<Func<T, bool>> condition) where T : class, new()
+        public int Update<T>(T entity, Expression<Func<T, bool>> condition) where T : class
         {
             int res = 0;
             this.Logger(this.GetType(), "Update-根据条件更新", () =>
@@ -397,7 +397,7 @@ namespace BerryCore.Service.Base
         /// <param name="parameters">参数</param>
         /// <param name="pagination">分页参数</param>
         /// <returns></returns>
-        public DataTable FindTable(string strSql, object parameters, Pagination pagination)
+        public DataTable FindTable(string strSql, object parameters, PaginationEntity pagination)
         {
             DataTable res = new DataTable("DefaultPageTable");
             this.Logger(this.GetType(), "FindTable-获取分页DataTable", () =>
@@ -419,7 +419,7 @@ namespace BerryCore.Service.Base
         /// <param name="strSql">T-SQL语句</param>
         /// <param name="pagination">分页参数</param>
         /// <returns></returns>
-        public DataTable FindTable(string strSql, Pagination pagination)
+        public DataTable FindTable(string strSql, PaginationEntity pagination)
         {
             DataTable res = new DataTable("DefaultPageTable");
             this.Logger(this.GetType(), "FindTable-获取分页DataTable", () =>
@@ -442,7 +442,7 @@ namespace BerryCore.Service.Base
         /// <param name="condition">筛选条件</param>
         /// <param name="pagination">分页参数</param>
         /// <returns></returns>
-        public IEnumerable<T> FindList<T>(Expression<Func<T, bool>> condition, Pagination pagination) where T : class, new()
+        public IEnumerable<T> FindList<T>(Expression<Func<T, bool>> condition, PaginationEntity pagination) where T : class, new()
         {
             IEnumerable<T> res = default(IEnumerable<T>);
             this.Logger(this.GetType(), "FindList-根据条件获取分页数据", () =>

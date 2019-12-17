@@ -84,7 +84,7 @@ namespace BerryCore.IBLL.Base
         /// <param name="entity">要修改的列及修改后列的值集合</param>
         /// <param name="condition">筛选条件</param>
         /// <returns>返回受影响行数</returns>
-        int Update<T>(T entity, Expression<Func<T, bool>> condition) where T : class, new();
+        int Update<T>(T entity, Expression<Func<T, bool>> condition) where T : class;
 
         /// <summary>
         /// 执行T-SQL
@@ -149,7 +149,7 @@ namespace BerryCore.IBLL.Base
         /// <param name="condition">筛选条件</param>
         /// <param name="pagination">分页参数</param>
         /// <returns></returns>
-        IEnumerable<T> FindList<T>(Expression<Func<T, bool>> condition, Pagination pagination) where T : class, new();
+        IEnumerable<T> FindList<T>(Expression<Func<T, bool>> condition, PaginationEntity pagination) where T : class, new();
 
         /// <summary>
         /// 根据条件查询一个DataTable
@@ -174,7 +174,7 @@ namespace BerryCore.IBLL.Base
         /// <param name="strSql">T-SQL语句</param>
         /// <param name="pagination">分页参数</param>
         /// <returns></returns>
-        DataTable FindTable(string strSql, Pagination pagination);
+        DataTable FindTable(string strSql, PaginationEntity pagination);
 
         /// <summary>
         /// 获取分页DataTable
@@ -183,7 +183,7 @@ namespace BerryCore.IBLL.Base
         /// <param name="parameters">参数</param>
         /// <param name="pagination">分页参数</param>
         /// <returns></returns>
-        DataTable FindTable(string strSql, object parameters, Pagination pagination);
+        DataTable FindTable(string strSql, object parameters, PaginationEntity pagination);
 
         #endregion
     }
