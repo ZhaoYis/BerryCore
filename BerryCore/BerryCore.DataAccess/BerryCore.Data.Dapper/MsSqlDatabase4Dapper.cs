@@ -19,6 +19,7 @@
 #endregion
 
 using BerryCore.Data.ExMessage;
+using BerryCore.Entity.Protocol;
 using BerryCore.Log;
 using BerryCore.Utilities;
 using BerryCore.Utilities.Lambda2SQL;
@@ -368,7 +369,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="entity">实体</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public int Insert<T>(T entity, int? timeout = Timeout) where T : class
+        public int Insert<T>(T entity, int? timeout = Timeout) where T : IEntity
         {
             int res = 0;
             this.Logger(this.GetType(), "实体插入-Insert", () =>
@@ -403,7 +404,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="entities">实体集合</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public int BatchInsert<T>(List<T> entities, int? timeout = Timeout) where T : class
+        public int BatchInsert<T>(List<T> entities, int? timeout = Timeout) where T : IEntity
         {
             int res = 0;
             this.Logger(this.GetType(), "实体批量插入-BatchInsert", () =>
@@ -485,7 +486,7 @@ namespace BerryCore.Data.Dapper
         /// </summary>
         /// <typeparam name="T">动态对象</typeparam>
         /// <returns></returns>
-        public int Delete<T>(int? timeout = Timeout) where T : class
+        public int Delete<T>(int? timeout = Timeout) where T : IEntity
         {
             int res = 0;
             this.Logger(this.GetType(), "删除-Delete", () =>
@@ -518,7 +519,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="entity">实体</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public int Delete<T>(T entity, int? timeout = Timeout) where T : class
+        public int Delete<T>(T entity, int? timeout = Timeout) where T : IEntity
         {
             int res = 0;
             this.Logger(this.GetType(), "删除-Delete", () =>
@@ -553,7 +554,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="entities">实体集合</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public int BatchDelete<T>(List<T> entities, int? timeout = Timeout) where T : class
+        public int BatchDelete<T>(List<T> entities, int? timeout = Timeout) where T : IEntity
         {
             int res = 0;
             this.Logger(this.GetType(), "批量删除-BatchDelete", () =>
@@ -588,7 +589,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="condition">筛选条件</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public int Delete<T>(Expression<Func<T, bool>> condition, int? timeout = Timeout) where T : class
+        public int Delete<T>(Expression<Func<T, bool>> condition, int? timeout = Timeout) where T : IEntity
         {
             int res = 0;
             this.Logger(this.GetType(), "根据条件删除-Delete", () =>
@@ -624,7 +625,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="keyValue">主键</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public int Delete<T>(object keyValue, int? timeout = Timeout) where T : class
+        public int Delete<T>(object keyValue, int? timeout = Timeout)
         {
             int res = 0;
             this.Logger(this.GetType(), "根据主键删除-Delete", () =>
@@ -660,7 +661,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="keyValue">主键</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public T FindEntity<T>(object keyValue, int? timeout = Timeout) where T : class
+        public T FindEntity<T>(object keyValue, int? timeout = Timeout) where T : IEntity
         {
             T res = default(T);
             this.Logger(this.GetType(), "根据主键查询一个实体-FindEntity", () =>
@@ -696,7 +697,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="condition">筛选条件</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public T FindEntity<T>(Expression<Func<T, bool>> condition, int? timeout = Timeout) where T : class
+        public T FindEntity<T>(Expression<Func<T, bool>> condition, int? timeout = Timeout) where T : IEntity
         {
             T res = default(T);
             this.Logger(this.GetType(), "根据条件查询一个实体-FindEntity", () =>
@@ -731,7 +732,7 @@ namespace BerryCore.Data.Dapper
         /// <typeparam name="T">动态对象</typeparam>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public IQueryable<T> IQueryable<T>(int? timeout = Timeout) where T : class
+        public IQueryable<T> IQueryable<T>(int? timeout = Timeout) where T : IEntity
         {
             IQueryable<T> res = default(IQueryable<T>);
             this.Logger(this.GetType(), "获取IQueryable对象-IQueryable", () =>
@@ -763,7 +764,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="condition">筛选条件</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public IQueryable<T> IQueryable<T>(Expression<Func<T, bool>> condition, int? timeout = Timeout) where T : class
+        public IQueryable<T> IQueryable<T>(Expression<Func<T, bool>> condition, int? timeout = Timeout) where T : IEntity
         {
             IQueryable<T> res = default(IQueryable<T>);
             this.Logger(this.GetType(), "获取IQueryable对象-IQueryable", () =>
@@ -797,7 +798,7 @@ namespace BerryCore.Data.Dapper
         /// <typeparam name="T">动态对象</typeparam>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public IEnumerable<T> FindList<T>(int? timeout = Timeout) where T : class
+        public IEnumerable<T> FindList<T>(int? timeout = Timeout) where T : IEntity
         {
             IEnumerable<T> res = default(IEnumerable<T>);
             this.Logger(this.GetType(), "得到一个集合-FindList", () =>
@@ -829,7 +830,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="condition">筛选条件</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public IEnumerable<T> FindList<T>(Expression<Func<T, bool>> condition, int? timeout = Timeout) where T : class
+        public IEnumerable<T> FindList<T>(Expression<Func<T, bool>> condition, int? timeout = Timeout) where T : IEntity
         {
             IEnumerable<T> res = default(IEnumerable<T>);
             this.Logger(this.GetType(), "根据条件查询出一个集合-FindList", () =>
@@ -864,7 +865,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="strSql">T-SQL语句</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public IEnumerable<T> FindList<T>(string strSql, int? timeout = Timeout) where T : class
+        public IEnumerable<T> FindList<T>(string strSql, int? timeout = Timeout) where T : IEntity
         {
             IEnumerable<T> res = default(IEnumerable<T>);
             this.Logger(this.GetType(), "执行sql语句，得到一个集合-FindList", () =>
@@ -895,7 +896,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="parameters">参数</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public IEnumerable<T> FindList<T>(string strSql, object parameters, int? timeout = Timeout) where T : class
+        public IEnumerable<T> FindList<T>(string strSql, object parameters, int? timeout = Timeout) where T : IEntity
         {
             IEnumerable<T> res = default(IEnumerable<T>);
             this.Logger(this.GetType(), "执行sql语句，得到一个集合-FindList", () =>
@@ -932,7 +933,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
         public IEnumerable<T> FindList<T>(string strSql, object parameters, string orderField, bool isAsc, int pageSize, int pageIndex,
-            out int total, int? timeout = Timeout) where T : class
+            out int total, int? timeout = Timeout) where T : IEntity
         {
             IEnumerable<T> res = default(IEnumerable<T>);
             int temp = 0;
@@ -1005,7 +1006,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
         public IEnumerable<T> FindList<T>(Expression<Func<T, bool>> condition, string orderField, bool isAsc, int pageSize, int pageIndex, out int total,
-            int? timeout = Timeout) where T : class
+            int? timeout = Timeout) where T : IEntity
         {
             IEnumerable<T> res = default(IEnumerable<T>);
             int temp = 0;
@@ -1077,7 +1078,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="condition">筛选条件</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public DataTable FindTable<T>(Expression<Func<T, bool>> condition, int? timeout = Timeout) where T : class
+        public DataTable FindTable<T>(Expression<Func<T, bool>> condition, int? timeout = Timeout) where T : IEntity
         {
             DataTable res = new DataTable(typeof(T).Name);
             this.Logger(this.GetType(), "根据条件查询一个DataTable-FindTable", () =>
@@ -1321,7 +1322,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="entity">待更新实体</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public int Update<T>(object entity, int? timeout = Timeout) where T : class
+        public int Update<T>(object entity, int? timeout = Timeout) where T : IEntity
         {
             int res = 0;
             this.Logger(this.GetType(), "更新-Update", () =>
@@ -1357,7 +1358,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="condition">筛选条件</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public int Update<T>(object entity, Expression<Func<T, bool>> condition, int? timeout = Timeout) where T : class
+        public int Update<T>(object entity, Expression<Func<T, bool>> condition, int? timeout = Timeout) where T : IEntity
         {
             int res = 0;
             this.Logger(this.GetType(), "根据条件以及指定属性名称更新-Update", () =>

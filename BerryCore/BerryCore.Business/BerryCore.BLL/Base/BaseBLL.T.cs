@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
+using BerryCore.Entity.Protocol;
 
 namespace BerryCore.BLL.Base
 {
@@ -36,12 +37,12 @@ namespace BerryCore.BLL.Base
     /// 最后修改者  ：赵轶
     /// 最后修改日期：2019/5/4 10:14:56 
     /// </summary>
-    public class BaseBLL<T> : IBaseBLL<T> where T : class, new()
+    public class BaseBLL<T> : IBaseBLL<T> where T : IEntity, new()
     {
         /// <summary>
         /// 通用操作
         /// </summary>
-        private IBaseService<T> service = new BaseService<T>();
+        private readonly IBaseService<T> service = new BaseService<T>();
 
         /// <summary>
         /// 添加一条记录

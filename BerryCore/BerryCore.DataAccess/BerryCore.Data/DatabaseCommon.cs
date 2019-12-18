@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Data.SqlTypes;
 using System.Reflection;
 using System.Text;
+using BerryCore.Entity.Protocol;
 
 namespace BerryCore.Data
 {
@@ -490,7 +491,7 @@ namespace BerryCore.Data
         /// <param name="where">条件</param>
         /// <param name="allFieid">是否查询所有字段</param>
         /// <returns></returns>
-        public static string SelectSql<T>(string where, bool allFieid = false) where T : class
+        public static string SelectSql<T>(string where, bool allFieid = false) where T : IEntity
         {
             string cacheKey = string.Format("T-SQL:SELECT:{0}:{1}", typeof(T).Name, string.Format("{0}{1}", typeof(T).FullName, allFieid.ToString()).GetMd5Code());
             string cache = CacheFactory.GetCache().Get<string>(cacheKey);

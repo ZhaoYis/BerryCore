@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
 using BerryCore.Entity.Base;
+using BerryCore.Entity.Protocol;
 
 namespace BerryCore.IService.Base
 {
@@ -33,7 +34,7 @@ namespace BerryCore.IService.Base
     /// 最后修改者  ：赵轶
     /// 最后修改日期：2019/5/4 9:19:20 
     /// </summary>
-    public interface IBaseService<T> where T : class, new()
+    public interface IBaseService<T> where T : IEntity, new()
     {
         #region 公共操作方法
 

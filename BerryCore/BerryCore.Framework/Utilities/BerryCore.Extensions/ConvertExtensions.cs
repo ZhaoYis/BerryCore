@@ -22,6 +22,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlTypes;
 using System.Reflection;
 using System.Text;
 using System.Xml;
@@ -1044,7 +1045,9 @@ namespace BerryCore.Extensions
                     throw new Exception(String.Format("参数{0}为空，引发异常", argName), argumentNullException);
                 }
 
+                //参数类型
                 Type t = arg.GetType();
+
                 if (t.IsValueType && t.IsNumeric())
                 {
                     bool flag = !canZero ? arg.CastTo(0.0) <= 0.0 : arg.CastTo(0.0) < 0.0;
@@ -1054,10 +1057,23 @@ namespace BerryCore.Extensions
                         throw new Exception(String.Format("参数{0}不在有效范围内，引发异常", argName), argumentOutOfRangeException);
                     }
                 }
+
                 if (t == typeof(Guid) && (Guid)arg == Guid.Empty)
                 {
                     ArgumentNullException argumentNullException1 = new ArgumentNullException(argName);
                     throw new Exception(String.Format("参数{0}为空引发GUID异常", argName), argumentNullException1);
+                }
+
+                if (t == typeof(DateTime))
+                {
+                    DateTime dateTime = (DateTime)arg;
+                    bool isSucc = dateTime != DateTime.MinValue || dateTime != DateTime.MaxValue || dateTime != SqlDateTime.MinValue.Value || dateTime != SqlDateTime.MaxValue.Value;
+
+                    if (!isSucc)
+                    {
+                        ArgumentOutOfRangeException argumentOutOfRangeException = new ArgumentOutOfRangeException(argName);
+                        throw new Exception(String.Format("参数{0}不在有效范围内，引发异常", argName), argumentOutOfRangeException);
+                    }
                 }
 
                 return true;

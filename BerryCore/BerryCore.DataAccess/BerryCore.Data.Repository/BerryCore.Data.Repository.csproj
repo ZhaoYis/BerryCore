@@ -67,6 +67,10 @@
       <Project>{e17bd892-70dd-4a2c-ae1d-728237eb9da1}</Project>
       <Name>BerryCore.Code</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\BerryCore.Framework\Utilities\BerryCore.Extensions\BerryCore.Extensions.csproj">
+      <Project>{C89B9AB2-A27B-498B-8D59-FD1713596C35}</Project>
+      <Name>BerryCore.Extensions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\BerryCore.Framework\Utilities\BerryCore.IOC\BerryCore.IOC.csproj">
       <Project>{9174fe79-ec43-4932-9cb2-65ed716dd6aa}</Project>
       <Name>BerryCore.IOC</Name>

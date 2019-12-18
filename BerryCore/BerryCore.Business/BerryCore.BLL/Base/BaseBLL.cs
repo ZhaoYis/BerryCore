@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
+using BerryCore.Entity.Protocol;
 
 namespace BerryCore.BLL.Base
 {
@@ -41,14 +42,14 @@ namespace BerryCore.BLL.Base
         /// <summary>
         /// 通用操作
         /// </summary>
-        private IBaseService service = new BaseService();
+        private readonly IBaseService service = new BaseService();
 
         /// <summary>
         /// 添加一条记录
         /// </summary>
         /// <param name="entity">待添加实体</param>
         /// <returns></returns>
-        public int Add<T>(T entity) where T : class, new()
+        public int Add<T>(T entity) where T : IEntity, new()
         {
             return service.Add(entity);
         }
@@ -58,7 +59,7 @@ namespace BerryCore.BLL.Base
         /// </summary>
         /// <param name="entitys">待添加实体集合</param>
         /// <returns></returns>
-        public int AddList<T>(List<T> entitys) where T : class, new()
+        public int AddList<T>(List<T> entitys) where T : IEntity, new()
         {
             return service.AddList(entitys);
         }
@@ -68,7 +69,7 @@ namespace BerryCore.BLL.Base
         /// </summary>
         /// <param name="condition">筛选条件</param>
         /// <returns></returns>
-        public T GetEntity<T>(Expression<Func<T, bool>> condition) where T : class, new()
+        public T GetEntity<T>(Expression<Func<T, bool>> condition) where T : IEntity, new()
         {
             return service.GetEntity(condition);
         }
@@ -78,7 +79,7 @@ namespace BerryCore.BLL.Base
         /// </summary>
         /// <param name="condition">筛选条件</param>
         /// <returns></returns>
-        public IEnumerable<T> GetList<T>(Expression<Func<T, bool>> condition) where T : class, new()
+        public IEnumerable<T> GetList<T>(Expression<Func<T, bool>> condition) where T : IEntity, new()
         {
             return service.GetList(condition);
         }
@@ -87,7 +88,7 @@ namespace BerryCore.BLL.Base
         /// 删除表所有数据
         /// </summary>
         /// <returns></returns>
-        public int Delete<T>() where T : class, new()
+        public int Delete<T>() where T : IEntity, new()
         {
             return service.Delete<T>();
         }
@@ -97,7 +98,7 @@ namespace BerryCore.BLL.Base
         /// </summary>
         /// <param name="condition">筛选条件</param>
         /// <returns></returns>
-        public int Delete<T>(Expression<Func<T, bool>> condition) where T : class, new()
+        public int Delete<T>(Expression<Func<T, bool>> condition) where T : IEntity, new()
         {
             return service.Delete(condition);
         }
@@ -108,7 +109,7 @@ namespace BerryCore.BLL.Base
         /// <param name="entity">要修改的列及修改后列的值集合</param>
         /// <param name="condition">筛选条件</param>
         /// <returns>返回受影响行数</returns>
-        public int Update<T>(T entity, Expression<Func<T, bool>> condition) where T : class
+        public int Update<T>(T entity, Expression<Func<T, bool>> condition) where T : IEntity
         {
             return service.Update(entity, condition);
         }
@@ -197,7 +198,7 @@ namespace BerryCore.BLL.Base
         /// <typeparam name="T"></typeparam>
         /// <param name="condition">筛选条件</param>
         /// <returns></returns>
-        public DataTable FindTable<TR, T>(Expression<Func<T, bool>> condition) where TR : class, new() where T : class, new()
+        public DataTable FindTable<TR, T>(Expression<Func<T, bool>> condition) where TR : class, new() where T : IEntity, new()
         {
             return service.FindTable<TR, T>(condition);
         }
@@ -243,7 +244,7 @@ namespace BerryCore.BLL.Base
         /// <param name="condition">筛选条件</param>
         /// <param name="pagination">分页参数</param>
         /// <returns></returns>
-        public IEnumerable<T> FindList<T>(Expression<Func<T, bool>> condition, PaginationEntity pagination) where T : class, new()
+        public IEnumerable<T> FindList<T>(Expression<Func<T, bool>> condition, PaginationEntity pagination) where T : IEntity, new()
         {
             return service.FindList(condition, pagination);
         }

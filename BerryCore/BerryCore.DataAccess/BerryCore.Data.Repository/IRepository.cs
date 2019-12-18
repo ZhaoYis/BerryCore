@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
+using BerryCore.Entity.Protocol;
 
 namespace BerryCore.Data.Repository
 {
@@ -140,7 +141,7 @@ namespace BerryCore.Data.Repository
         /// <typeparam name="T">动态对象</typeparam>
         /// <param name="entity">实体</param>
         /// <returns></returns>
-        int Insert<T>(T entity) where T : class, new();
+        int Insert<T>(T entity) where T : IEntity, new();
 
         /// <summary>
         /// 实体批量插入
@@ -148,7 +149,7 @@ namespace BerryCore.Data.Repository
         /// <typeparam name="T">动态对象</typeparam>
         /// <param name="entities">实体集合</param>
         /// <returns></returns>
-        int BatchInsert<T>(List<T> entities) where T : class, new();
+        int BatchInsert<T>(List<T> entities) where T : IEntity, new();
 
         #endregion 新增
 
@@ -158,7 +159,7 @@ namespace BerryCore.Data.Repository
         /// 删除
         /// </summary>
         /// <returns></returns>
-        int Delete<T>() where T : class, new();
+        int Delete<T>() where T : IEntity, new();
 
         /// <summary>
         /// 删除
@@ -166,7 +167,7 @@ namespace BerryCore.Data.Repository
         /// <typeparam name="T">动态对象</typeparam>
         /// <param name="entity">实体</param>
         /// <returns></returns>
-        int Delete<T>(T entity) where T : class, new();
+        int Delete<T>(T entity) where T : IEntity, new();
 
         /// <summary>
         /// 批量删除
@@ -174,7 +175,7 @@ namespace BerryCore.Data.Repository
         /// <typeparam name="T">动态对象</typeparam>
         /// <param name="entities">实体集合</param>
         /// <returns></returns>
-        int BatchDelete<T>(List<T> entities) where T : class, new();
+        int BatchDelete<T>(List<T> entities) where T : IEntity, new();
 
         /// <summary>
         /// 根据条件删除
@@ -182,7 +183,7 @@ namespace BerryCore.Data.Repository
         /// <typeparam name="T">动态对象</typeparam>
         /// <param name="condition">筛选条件</param>
         /// <returns></returns>
-        int Delete<T>(Expression<Func<T, bool>> condition) where T : class, new();
+        int Delete<T>(Expression<Func<T, bool>> condition) where T : IEntity, new();
 
         /// <summary>
         /// 根据主键删除
@@ -190,11 +191,11 @@ namespace BerryCore.Data.Repository
         /// <typeparam name="T">动态对象</typeparam>
         /// <param name="keyValue">主键</param>
         /// <returns></returns>
-        int Delete(object keyValue);
+        int Delete<T>(object keyValue);
 
         #endregion 删除
 
-        #region 查询
+            #region 查询
 
         /// <summary>
         /// 根据主键查询一个实体
@@ -202,7 +203,7 @@ namespace BerryCore.Data.Repository
         /// <typeparam name="T">动态对象</typeparam>
         /// <param name="keyValue">主键</param>
         /// <returns></returns>
-        T FindEntity<T>(object keyValue) where T : class, new();
+        T FindEntity<T>(object keyValue) where T : IEntity, new();
 
         /// <summary>
         /// 根据条件查询一个实体
@@ -210,14 +211,14 @@ namespace BerryCore.Data.Repository
         /// <typeparam name="T">动态对象</typeparam>
         /// <param name="condition">筛选条件</param>
         /// <returns></returns>
-        T FindEntity<T>(Expression<Func<T, bool>> condition) where T : class, new();
+        T FindEntity<T>(Expression<Func<T, bool>> condition) where T : IEntity, new();
 
         /// <summary>
         /// 获取IQueryable对象
         /// </summary>
         /// <typeparam name="T">动态对象</typeparam>
         /// <returns></returns>
-        IQueryable<T> IQueryable<T>() where T : class, new();
+        IQueryable<T> IQueryable<T>() where T : IEntity, new();
 
         /// <summary>
         /// 获取IQueryable对象
@@ -225,14 +226,14 @@ namespace BerryCore.Data.Repository
         /// <typeparam name="T">动态对象</typeparam>
         /// <param name="condition">筛选条件</param>
         /// <returns></returns>
-        IQueryable<T> IQueryable<T>(Expression<Func<T, bool>> condition) where T : class, new();
+        IQueryable<T> IQueryable<T>(Expression<Func<T, bool>> condition) where T : IEntity, new();
 
         /// <summary>
         /// 得到一个集合
         /// </summary>
         /// <typeparam name="T">动态对象</typeparam>
         /// <returns></returns>
-        IEnumerable<T> FindList<T>() where T : class, new();
+        IEnumerable<T> FindList<T>() where T : IEntity, new();
 
         /// <summary>
         /// 根据条件查询出一个集合
@@ -240,7 +241,7 @@ namespace BerryCore.Data.Repository
         /// <typeparam name="T">动态对象</typeparam>
         /// <param name="condition">筛选条件</param>
         /// <returns></returns>
-        IEnumerable<T> FindList<T>(Expression<Func<T, bool>> condition) where T : class, new();
+        IEnumerable<T> FindList<T>(Expression<Func<T, bool>> condition) where T : IEntity, new();
 
         /// <summary>
         /// 执行sql语句，得到一个集合
@@ -248,7 +249,7 @@ namespace BerryCore.Data.Repository
         /// <typeparam name="T">动态对象</typeparam>
         /// <param name="strSql">T-SQL语句</param>
         /// <returns></returns>
-        IEnumerable<T> FindList<T>(string strSql) where T : class, new();
+        IEnumerable<T> FindList<T>(string strSql) where T : IEntity, new();
 
         /// <summary>
         /// 执行sql语句，得到一个集合
@@ -257,7 +258,7 @@ namespace BerryCore.Data.Repository
         /// <param name="strSql">T-SQL语句</param>
         /// <param name="parameters">参数</param>
         /// <returns></returns>
-        IEnumerable<T> FindList<T>(string strSql, object parameters) where T : class, new();
+        IEnumerable<T> FindList<T>(string strSql, object parameters) where T : IEntity, new();
 
         /// <summary>
         /// 执行sql语句，得到一个集合
@@ -267,7 +268,7 @@ namespace BerryCore.Data.Repository
         /// <param name="parameters">参数</param>
         /// <param name="pagination">分页参数</param>
         /// <returns></returns>
-        IEnumerable<T> FindList<T>(string strSql, object parameters, PaginationEntity pagination) where T : class, new();
+        IEnumerable<T> FindList<T>(string strSql, object parameters, PaginationEntity pagination) where T : IEntity, new();
 
         /// <summary>
         /// 根据条件获取分页数据
@@ -276,7 +277,7 @@ namespace BerryCore.Data.Repository
         /// <param name="condition">筛选条件</param>
         /// <param name="pagination">分页参数</param>
         /// <returns></returns>
-        IEnumerable<T> FindList<T>(Expression<Func<T, bool>> condition, PaginationEntity pagination) where T : class, new();
+        IEnumerable<T> FindList<T>(Expression<Func<T, bool>> condition, PaginationEntity pagination) where T : IEntity, new();
 
         /// <summary>
         /// 根据条件查询一个DataTable
@@ -284,7 +285,7 @@ namespace BerryCore.Data.Repository
         /// <typeparam name="T">动态对象</typeparam>
         /// <param name="condition">筛选条件</param>
         /// <returns></returns>
-        DataTable FindTable<T>(Expression<Func<T, bool>> condition) where T : class, new();
+        DataTable FindTable<T>(Expression<Func<T, bool>> condition) where T : IEntity, new();
 
         /// <summary>
         /// 查询一个DataTable
@@ -328,7 +329,7 @@ namespace BerryCore.Data.Repository
         /// <typeparam name="T">动态对象</typeparam>
         /// <param name="entity">待更新实体</param>
         /// <returns></returns>
-        int Update<T>(T entity) where T : class, new();
+        int Update<T>(T entity) where T : IEntity, new();
 
         /// <summary>
         /// 根据条件以及指定属性名称更新
@@ -337,7 +338,7 @@ namespace BerryCore.Data.Repository
         /// <param name="entity">待更新实体</param>
         /// <param name="condition">筛选条件</param>
         /// <returns></returns>
-        int Update<T>(T entity, Expression<Func<T, bool>> condition) where T : class;
+        int Update<T>(T entity, Expression<Func<T, bool>> condition) where T : IEntity;
 
         #endregion 更新
     }

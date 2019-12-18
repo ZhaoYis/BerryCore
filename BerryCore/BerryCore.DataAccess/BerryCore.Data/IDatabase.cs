@@ -18,6 +18,7 @@
 //----------------------------------------------------------------*/
 #endregion
 
+using BerryCore.Entity.Protocol;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -163,7 +164,7 @@ namespace BerryCore.Data
         /// <param name="entity">实体</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        int Insert<T>(T entity, int? timeout = 15) where T : class;
+        int Insert<T>(T entity, int? timeout = 15) where T : IEntity;
 
         /// <summary>
         /// 实体批量插入
@@ -172,7 +173,7 @@ namespace BerryCore.Data
         /// <param name="entities">实体集合</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        int BatchInsert<T>(List<T> entities, int? timeout = 15) where T : class;
+        int BatchInsert<T>(List<T> entities, int? timeout = 15) where T : IEntity;
 
         #endregion
 
@@ -183,7 +184,7 @@ namespace BerryCore.Data
         /// </summary>
         /// <typeparam name="T">动态对象</typeparam>
         /// <returns></returns>
-        int Delete<T>(int? timeout = 15) where T : class;
+        int Delete<T>(int? timeout = 15) where T : IEntity;
 
         /// <summary>
         /// 删除
@@ -192,7 +193,7 @@ namespace BerryCore.Data
         /// <param name="entity">实体</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        int Delete<T>(T entity, int? timeout = 15) where T : class;
+        int Delete<T>(T entity, int? timeout = 15) where T : IEntity;
 
         /// <summary>
         /// 批量删除
@@ -201,7 +202,7 @@ namespace BerryCore.Data
         /// <param name="entities">实体集合</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        int BatchDelete<T>(List<T> entities, int? timeout = 15) where T : class;
+        int BatchDelete<T>(List<T> entities, int? timeout = 15) where T : IEntity;
 
         /// <summary>
         /// 根据条件删除
@@ -210,7 +211,7 @@ namespace BerryCore.Data
         /// <param name="condition">筛选条件</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        int Delete<T>(Expression<Func<T, bool>> condition, int? timeout = 15) where T : class;
+        int Delete<T>(Expression<Func<T, bool>> condition, int? timeout = 15) where T : IEntity;
 
         /// <summary>
         /// 根据主键删除
@@ -219,7 +220,7 @@ namespace BerryCore.Data
         /// <param name="keyValue">主键</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        int Delete<T>(object keyValue, int? timeout = 15) where T : class;
+        int Delete<T>(object keyValue, int? timeout = 15);
 
         #endregion
 
@@ -232,7 +233,7 @@ namespace BerryCore.Data
         /// <param name="keyValue">主键</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        T FindEntity<T>(object keyValue, int? timeout = 15) where T : class;
+        T FindEntity<T>(object keyValue, int? timeout = 15) where T : IEntity;
 
         /// <summary>
         /// 根据条件查询一个实体
@@ -241,7 +242,7 @@ namespace BerryCore.Data
         /// <param name="condition">筛选条件</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        T FindEntity<T>(Expression<Func<T, bool>> condition, int? timeout = 15) where T : class;
+        T FindEntity<T>(Expression<Func<T, bool>> condition, int? timeout = 15) where T : IEntity;
 
         /// <summary>
         /// 获取IQueryable对象
@@ -249,7 +250,7 @@ namespace BerryCore.Data
         /// <typeparam name="T">动态对象</typeparam>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        IQueryable<T> IQueryable<T>(int? timeout = 15) where T : class;
+        IQueryable<T> IQueryable<T>(int? timeout = 15) where T : IEntity;
 
         /// <summary>
         /// 获取IQueryable对象
@@ -258,7 +259,7 @@ namespace BerryCore.Data
         /// <param name="condition">筛选条件</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        IQueryable<T> IQueryable<T>(Expression<Func<T, bool>> condition, int? timeout = 15) where T : class;
+        IQueryable<T> IQueryable<T>(Expression<Func<T, bool>> condition, int? timeout = 15) where T : IEntity;
 
         /// <summary>
         /// 得到一个集合
@@ -266,7 +267,7 @@ namespace BerryCore.Data
         /// <typeparam name="T">动态对象</typeparam>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        IEnumerable<T> FindList<T>(int? timeout = 15) where T : class;
+        IEnumerable<T> FindList<T>(int? timeout = 15) where T : IEntity;
 
         /// <summary>
         /// 根据条件查询出一个集合
@@ -275,7 +276,7 @@ namespace BerryCore.Data
         /// <param name="condition">筛选条件</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        IEnumerable<T> FindList<T>(Expression<Func<T, bool>> condition, int? timeout = 15) where T : class;
+        IEnumerable<T> FindList<T>(Expression<Func<T, bool>> condition, int? timeout = 15) where T : IEntity;
 
         /// <summary>
         /// 执行sql语句，得到一个集合
@@ -284,7 +285,7 @@ namespace BerryCore.Data
         /// <param name="strSql">T-SQL语句</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        IEnumerable<T> FindList<T>(string strSql, int? timeout = 15) where T : class;
+        IEnumerable<T> FindList<T>(string strSql, int? timeout = 15) where T : IEntity;
 
         /// <summary>
         /// 执行sql语句，得到一个集合
@@ -294,7 +295,7 @@ namespace BerryCore.Data
         /// <param name="parameters">参数</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        IEnumerable<T> FindList<T>(string strSql, object parameters, int? timeout = 15) where T : class;
+        IEnumerable<T> FindList<T>(string strSql, object parameters, int? timeout = 15) where T : IEntity;
 
         /// <summary>
         /// 执行sql语句，获取分页数据
@@ -309,7 +310,7 @@ namespace BerryCore.Data
         /// <param name="total">总页数</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        IEnumerable<T> FindList<T>(string strSql, object parameters, string orderField, bool isAsc, int pageSize, int pageIndex, out int total, int? timeout = 15) where T : class;
+        IEnumerable<T> FindList<T>(string strSql, object parameters, string orderField, bool isAsc, int pageSize, int pageIndex, out int total, int? timeout = 15) where T : IEntity;
 
         /// <summary>
         /// 根据条件获取分页数据
@@ -323,7 +324,7 @@ namespace BerryCore.Data
         /// <param name="total">总页数</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        IEnumerable<T> FindList<T>(Expression<Func<T, bool>> condition, string orderField, bool isAsc, int pageSize, int pageIndex, out int total, int? timeout = 15) where T : class;
+        IEnumerable<T> FindList<T>(Expression<Func<T, bool>> condition, string orderField, bool isAsc, int pageSize, int pageIndex, out int total, int? timeout = 15) where T : IEntity;
 
         /// <summary>
         /// 根据条件查询一个DataTable
@@ -332,7 +333,7 @@ namespace BerryCore.Data
         /// <param name="condition">筛选条件</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        DataTable FindTable<T>(Expression<Func<T, bool>> condition, int? timeout = 15) where T : class;
+        DataTable FindTable<T>(Expression<Func<T, bool>> condition, int? timeout = 15) where T : IEntity;
 
         /// <summary>
         /// 查询一个DataTable
@@ -389,7 +390,7 @@ namespace BerryCore.Data
         /// <param name="entity">待更新实体</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        int Update<T>(object entity, int? timeout = 15) where T : class;
+        int Update<T>(object entity, int? timeout = 15) where T : IEntity;
 
         /// <summary>
         /// 根据条件以及指定属性名称更新
@@ -399,7 +400,7 @@ namespace BerryCore.Data
         /// <param name="condition">筛选条件</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        int Update<T>(object entity, Expression<Func<T, bool>> condition, int? timeout = 15) where T : class;
+        int Update<T>(object entity, Expression<Func<T, bool>> condition, int? timeout = 15) where T : IEntity;
 
         #endregion
 

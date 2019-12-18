@@ -79,6 +79,10 @@
       <Project>{f843472b-e7c1-4e45-9e52-99f29c7f16e3}</Project>
       <Name>BerryCore.Utilities</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\BerryCore.Models\BerryCore.Entity\BerryCore.Entity.csproj">
+      <Project>{A9E7DDA2-4029-45AE-AA1F-5A27D3182954}</Project>
+      <Name>BerryCore.Entity</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

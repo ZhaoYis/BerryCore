@@ -26,6 +26,7 @@ using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using BerryCore.Entity.Base;
+using BerryCore.Entity.Protocol;
 
 namespace BerryCore.Data.Repository
 {
@@ -36,7 +37,7 @@ namespace BerryCore.Data.Repository
     /// 最后修改者  ：赵轶
     /// 最后修改日期：2019/5/3 14:50:58
     /// </summary>
-    public interface IRepository<T> where T : class, new()
+    public interface IRepository<T> where T : IEntity, new()
     {
         /// <summary>
         /// 返回仓储对象，并开始数据库事务

@@ -20,9 +20,10 @@
 
 using BerryCore.Entity.BaseManage;
 using BerryCore.IService.BaseManage;
+using BerryCore.Service.Base;
 using System;
 using System.Collections.Generic;
-using BerryCore.Service.Base;
+using System.Linq;
 
 namespace BerryCore.Service.BaseManage
 {
@@ -41,7 +42,19 @@ namespace BerryCore.Service.BaseManage
         /// <returns></returns>
         public IEnumerable<DepartmentEntity> GetDepartmentList()
         {
-            throw new NotImplementedException();
+            IEnumerable<DepartmentEntity> res = null;
+            this.Logger(this.GetType(), "GetDepartmentList-部门列表", () =>
+            {
+                res = this.UseTransaction<IEnumerable<DepartmentEntity>>((repository) =>
+                {
+                    IEnumerable<DepartmentEntity> data = repository.FindList(d => d.DeleteMark == false && d.EnabledMark == true);
+                    return data;
+                });
+            }, e =>
+            {
+
+            });
+            return res;
         }
 
         /// <summary>
@@ -51,7 +64,19 @@ namespace BerryCore.Service.BaseManage
         /// <returns></returns>
         public DepartmentEntity GetDepartmentEntity(string keyValue)
         {
-            throw new NotImplementedException();
+            DepartmentEntity res = null;
+            this.Logger(this.GetType(), "GetDepartmentEntity-部门实体", () =>
+            {
+                res = this.UseTransaction<DepartmentEntity>((repository) =>
+                {
+                    DepartmentEntity data = repository.FindEntity(d => d.Id == keyValue && d.DeleteMark == false && d.EnabledMark == true);
+                    return data;
+                });
+            }, e =>
+            {
+
+            });
+            return res;
         }
 
         /// <summary>
@@ -62,7 +87,24 @@ namespace BerryCore.Service.BaseManage
         /// <returns></returns>
         public bool ExistFullName(string departmentName, string keyValue)
         {
-            throw new NotImplementedException();
+            bool res = false;
+            this.Logger(this.GetType(), "ExistFullName-部门名称不能重复", () =>
+            {
+                res = this.UseTransaction<bool>((repository) =>
+                {
+                    IEnumerable<DepartmentEntity> data = repository.FindList(d => d.FullName == departmentName);
+                    if (!string.IsNullOrEmpty(keyValue))
+                    {
+                        data = data.Where(t => t.Id != keyValue).ToList();
+                    }
+
+                    return data.Any();
+                });
+            }, e =>
+            {
+
+            });
+            return res;
         }
 
         /// <summary>
@@ -73,7 +115,24 @@ namespace BerryCore.Service.BaseManage
         /// <returns></returns>
         public bool ExistEnCode(string enCode, string keyValue)
         {
-            throw new NotImplementedException();
+            bool res = false;
+            this.Logger(this.GetType(), "ExistEnCode-外文名称不能重复", () =>
+            {
+                res = this.UseTransaction<bool>((repository) =>
+                {
+                    IEnumerable<DepartmentEntity> data = repository.FindList(d => d.EnCode == enCode);
+                    if (!string.IsNullOrEmpty(keyValue))
+                    {
+                        data = data.Where(t => t.Id != keyValue).ToList();
+                    }
+
+                    return data.Any();
+                });
+            }, e =>
+            {
+
+            });
+            return res;
         }
 
         /// <summary>
@@ -84,7 +143,24 @@ namespace BerryCore.Service.BaseManage
         /// <returns></returns>
         public bool ExistShortName(string shortName, string keyValue)
         {
-            throw new NotImplementedException();
+            bool res = false;
+            this.Logger(this.GetType(), "ExistShortName-中文名称不能重复", () =>
+            {
+                res = this.UseTransaction<bool>((repository) =>
+                {
+                    IEnumerable<DepartmentEntity> data = repository.FindList(d => d.ShortName == shortName);
+                    if (!string.IsNullOrEmpty(keyValue))
+                    {
+                        data = data.Where(t => t.Id != keyValue).ToList();
+                    }
+
+                    return data.Any();
+                });
+            }, e =>
+            {
+
+            });
+            return res;
         }
 
         /// <summary>
@@ -93,7 +169,22 @@ namespace BerryCore.Service.BaseManage
         /// <param name="keyValue">主键</param>
         public void RemoveByKey(string keyValue)
         {
-            throw new NotImplementedException();
+            this.Logger(this.GetType(), "RemoveByKey-删除部门", () =>
+            {
+                this.UseTransaction((repository) =>
+                {
+                    int count = repository.FindList(d => d.ParentId == keyValue).Count();
+                    if (count > 0)
+                    {
+                        throw new Exception("当前所选数据有子节点数据！");
+                    }
+
+                    int res = repository.Delete(keyValue);
+                });
+            }, e =>
+            {
+
+            });
         }
 
         /// <summary>
@@ -104,7 +195,27 @@ namespace BerryCore.Service.BaseManage
         /// <returns></returns>
         public void AddDepartment(string keyValue, DepartmentEntity departmentEntity)
         {
-            throw new NotImplementedException();
+            this.Logger(this.GetType(), "AddDepartment-保存部门表单（新增、修改）", () =>
+            {
+                this.UseTransaction((repository) =>
+                {
+                    if (!string.IsNullOrEmpty(keyValue))
+                    {
+                        departmentEntity.Modify(keyValue);
+
+                        int res = repository.Update(departmentEntity, d => d.Id == keyValue);
+                    }
+                    else
+                    {
+                        departmentEntity.Create();
+
+                        int res = repository.Insert(departmentEntity);
+                    }
+                });
+            }, e =>
+            {
+
+            });
         }
     }
 }

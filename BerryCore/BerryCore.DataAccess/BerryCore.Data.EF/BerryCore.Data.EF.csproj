@@ -49,6 +49,10 @@
       <Project>{36f14e26-5650-400c-ba8f-a76d28c767cb}</Project>
       <Name>BerryCore.Log</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\BerryCore.Models\BerryCore.Entity\BerryCore.Entity.csproj">
+      <Project>{A9E7DDA2-4029-45AE-AA1F-5A27D3182954}</Project>
+      <Name>BerryCore.Entity</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BerryCore.Data\BerryCore.Data.csproj">
       <Project>{6f955ef1-b280-4d0c-92a8-2c8a73265027}</Project>
       <Name>BerryCore.Data</Name>

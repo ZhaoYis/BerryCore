@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Linq.Expressions;
+using BerryCore.Entity.Protocol;
 
 namespace BerryCore.Service.Base
 {
@@ -43,7 +44,7 @@ namespace BerryCore.Service.Base
         /// </summary>
         /// <param name="entity">待添加实体</param>
         /// <returns></returns>
-        public int Add<T>(T entity) where T : class, new()
+        public int Add<T>(T entity) where T : IEntity, new()
         {
             int res = 0;
             this.Logger(this.GetType(), "Add-添加一条记录", () =>
@@ -67,7 +68,7 @@ namespace BerryCore.Service.Base
         /// </summary>
         /// <param name="entitys">待添加实体集合</param>
         /// <returns></returns>
-        public int AddList<T>(List<T> entitys) where T : class, new()
+        public int AddList<T>(List<T> entitys) where T : IEntity, new()
         {
             int res = 0;
             this.Logger(this.GetType(), "AddList-批量添加", () =>
@@ -91,7 +92,7 @@ namespace BerryCore.Service.Base
         /// </summary>
         /// <param name="condition">筛选条件</param>
         /// <returns></returns>
-        public T GetEntity<T>(Expression<Func<T, bool>> condition) where T : class, new()
+        public T GetEntity<T>(Expression<Func<T, bool>> condition) where T : IEntity, new()
         {
             T res = default(T);
             this.Logger(this.GetType(), "GetEntity-根据条件获取一条记录", () =>
@@ -112,7 +113,7 @@ namespace BerryCore.Service.Base
         /// </summary>
         /// <param name="condition">筛选条件</param>
         /// <returns></returns>
-        public IEnumerable<T> GetList<T>(Expression<Func<T, bool>> condition) where T : class, new()
+        public IEnumerable<T> GetList<T>(Expression<Func<T, bool>> condition) where T : IEntity, new()
         {
             IEnumerable<T> res = default(IEnumerable<T>);
             this.Logger(this.GetType(), "GetEntity-根据条件获取一条记录", () =>
@@ -132,7 +133,7 @@ namespace BerryCore.Service.Base
         /// 删除表所有数据
         /// </summary>
         /// <returns></returns>
-        public int Delete<T>() where T : class, new()
+        public int Delete<T>() where T : IEntity, new()
         {
             int res = 0;
             this.Logger(this.GetType(), "Delete-删除表所有数据", () =>
@@ -153,7 +154,7 @@ namespace BerryCore.Service.Base
         /// </summary>
         /// <param name="condition">筛选条件</param>
         /// <returns></returns>
-        public int Delete<T>(Expression<Func<T, bool>> condition) where T : class, new()
+        public int Delete<T>(Expression<Func<T, bool>> condition) where T : IEntity, new()
         {
             int res = 0;
             this.Logger(this.GetType(), "Delete-根据条件删除数据", () =>
@@ -175,7 +176,7 @@ namespace BerryCore.Service.Base
         /// <param name="entity">要修改的列及修改后列的值集合</param>
         /// <param name="condition">筛选条件</param>
         /// <returns>返回受影响行数</returns>
-        public int Update<T>(T entity, Expression<Func<T, bool>> condition) where T : class
+        public int Update<T>(T entity, Expression<Func<T, bool>> condition) where T : IEntity
         {
             int res = 0;
             this.Logger(this.GetType(), "Update-根据条件更新", () =>
@@ -352,7 +353,7 @@ namespace BerryCore.Service.Base
         /// <typeparam name="T"></typeparam>
         /// <param name="condition">筛选条件</param>
         /// <returns></returns>
-        public DataTable FindTable<TR, T>(Expression<Func<T, bool>> condition) where TR : class, new() where T : class, new()
+        public DataTable FindTable<TR, T>(Expression<Func<T, bool>> condition) where TR : class, new() where T : IEntity, new()
         {
             DataTable res = new DataTable(typeof(TR).Name);
             this.Logger(this.GetType(), "FindTable-根据条件查询一个DataTable", () =>
@@ -442,7 +443,7 @@ namespace BerryCore.Service.Base
         /// <param name="condition">筛选条件</param>
         /// <param name="pagination">分页参数</param>
         /// <returns></returns>
-        public IEnumerable<T> FindList<T>(Expression<Func<T, bool>> condition, PaginationEntity pagination) where T : class, new()
+        public IEnumerable<T> FindList<T>(Expression<Func<T, bool>> condition, PaginationEntity pagination) where T : IEntity, new()
         {
             IEnumerable<T> res = default(IEnumerable<T>);
             this.Logger(this.GetType(), "FindList-根据条件获取分页数据", () =>

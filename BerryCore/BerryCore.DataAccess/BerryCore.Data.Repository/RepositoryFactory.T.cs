@@ -21,6 +21,7 @@
 
 using BerryCore.Log;
 using System;
+using BerryCore.Entity.Protocol;
 
 namespace BerryCore.Data.Repository
 {
@@ -31,7 +32,7 @@ namespace BerryCore.Data.Repository
     /// 最后修改者  ：赵轶
     /// 最后修改日期：2019/5/3 21:48:36 
     /// </summary>
-    public class RepositoryFactory<T> : BaseLogger where T : class, new()
+    public class RepositoryFactory<T> : BaseLogger where T : IEntity, new()
     {
         private static readonly DbFactory dbFactory = new DbFactory();
 

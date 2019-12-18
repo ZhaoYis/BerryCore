@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
+using BerryCore.Entity.Protocol;
 
 namespace BerryCore.Data.Dapper
 {
@@ -187,7 +188,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="entity">实体</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public int Insert<T>(T entity, int? timeout) where T : class
+        public int Insert<T>(T entity, int? timeout) where T : IEntity
         {
             throw new NotImplementedException();
         }
@@ -199,7 +200,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="entities">实体集合</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public int BatchInsert<T>(List<T> entities, int? timeout) where T : class
+        public int BatchInsert<T>(List<T> entities, int? timeout) where T : IEntity
         {
             throw new NotImplementedException();
         }
@@ -209,7 +210,7 @@ namespace BerryCore.Data.Dapper
         /// </summary>
         /// <typeparam name="T">动态对象</typeparam>
         /// <returns></returns>
-        public int Delete<T>(int? timeout) where T : class
+        public int Delete<T>(int? timeout) where T : IEntity
         {
             throw new NotImplementedException();
         }
@@ -221,7 +222,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="entity">实体</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public int Delete<T>(T entity, int? timeout) where T : class
+        public int Delete<T>(T entity, int? timeout) where T : IEntity
         {
             throw new NotImplementedException();
         }
@@ -233,7 +234,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="entities">实体集合</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public int BatchDelete<T>(List<T> entities, int? timeout) where T : class
+        public int BatchDelete<T>(List<T> entities, int? timeout) where T : IEntity
         {
             throw new NotImplementedException();
         }
@@ -245,7 +246,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="condition">筛选条件</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public int Delete<T>(Expression<Func<T, bool>> condition, int? timeout) where T : class
+        public int Delete<T>(Expression<Func<T, bool>> condition, int? timeout) where T : IEntity
         {
             throw new NotImplementedException();
         }
@@ -257,7 +258,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="keyValue">主键</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public int Delete<T>(object keyValue, int? timeout) where T : class
+        public int Delete<T>(object keyValue, int? timeout)
         {
             throw new NotImplementedException();
         }
@@ -269,7 +270,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="keyValue">主键</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public T FindEntity<T>(object keyValue, int? timeout) where T : class
+        public T FindEntity<T>(object keyValue, int? timeout) where T : IEntity
         {
             throw new NotImplementedException();
         }
@@ -281,7 +282,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="condition">筛选条件</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public T FindEntity<T>(Expression<Func<T, bool>> condition, int? timeout) where T : class
+        public T FindEntity<T>(Expression<Func<T, bool>> condition, int? timeout) where T : IEntity
         {
             throw new NotImplementedException();
         }
@@ -292,7 +293,7 @@ namespace BerryCore.Data.Dapper
         /// <typeparam name="T">动态对象</typeparam>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public IQueryable<T> IQueryable<T>(int? timeout) where T : class
+        public IQueryable<T> IQueryable<T>(int? timeout) where T : IEntity
         {
             throw new NotImplementedException();
         }
@@ -304,7 +305,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="condition">筛选条件</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public IQueryable<T> IQueryable<T>(Expression<Func<T, bool>> condition, int? timeout) where T : class
+        public IQueryable<T> IQueryable<T>(Expression<Func<T, bool>> condition, int? timeout) where T : IEntity
         {
             throw new NotImplementedException();
         }
@@ -315,7 +316,7 @@ namespace BerryCore.Data.Dapper
         /// <typeparam name="T">动态对象</typeparam>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public IEnumerable<T> FindList<T>(int? timeout) where T : class
+        public IEnumerable<T> FindList<T>(int? timeout) where T : IEntity
         {
             throw new NotImplementedException();
         }
@@ -327,7 +328,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="condition">筛选条件</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public IEnumerable<T> FindList<T>(Expression<Func<T, bool>> condition, int? timeout) where T : class
+        public IEnumerable<T> FindList<T>(Expression<Func<T, bool>> condition, int? timeout) where T : IEntity
         {
             throw new NotImplementedException();
         }
@@ -339,7 +340,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="strSql">T-SQL语句</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public IEnumerable<T> FindList<T>(string strSql, int? timeout) where T : class
+        public IEnumerable<T> FindList<T>(string strSql, int? timeout) where T : IEntity
         {
             throw new NotImplementedException();
         }
@@ -352,7 +353,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="parameters">参数</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public IEnumerable<T> FindList<T>(string strSql, object parameters, int? timeout) where T : class
+        public IEnumerable<T> FindList<T>(string strSql, object parameters, int? timeout) where T : IEntity
         {
             throw new NotImplementedException();
         }
@@ -371,7 +372,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
         public IEnumerable<T> FindList<T>(string strSql, object parameters, string orderField, bool isAsc, int pageSize, int pageIndex,
-            out int total, int? timeout) where T : class
+            out int total, int? timeout) where T : IEntity
         {
             throw new NotImplementedException();
         }
@@ -389,7 +390,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
         public IEnumerable<T> FindList<T>(Expression<Func<T, bool>> condition, string orderField, bool isAsc, int pageSize, int pageIndex, out int total,
-            int? timeout) where T : class
+            int? timeout) where T : IEntity
         {
             throw new NotImplementedException();
         }
@@ -401,7 +402,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="condition">筛选条件</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public DataTable FindTable<T>(Expression<Func<T, bool>> condition, int? timeout) where T : class
+        public DataTable FindTable<T>(Expression<Func<T, bool>> condition, int? timeout) where T : IEntity
         {
             throw new NotImplementedException();
         }
@@ -472,7 +473,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="entity">待更新实体</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public int Update<T>(object entity, int? timeout) where T : class
+        public int Update<T>(object entity, int? timeout) where T : IEntity
         {
             throw new NotImplementedException();
         }
@@ -485,7 +486,7 @@ namespace BerryCore.Data.Dapper
         /// <param name="condition">筛选条件</param>
         /// <param name="timeout">超时时间</param>
         /// <returns></returns>
-        public int Update<T>(object entity, Expression<Func<T, bool>> condition, int? timeout) where T : class
+        public int Update<T>(object entity, Expression<Func<T, bool>> condition, int? timeout) where T : IEntity
         {
             throw new NotImplementedException();
         }

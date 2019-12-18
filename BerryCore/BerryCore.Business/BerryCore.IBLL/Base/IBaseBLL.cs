@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
+using BerryCore.Entity.Protocol;
 
 namespace BerryCore.IBLL.Base
 {
@@ -42,41 +43,41 @@ namespace BerryCore.IBLL.Base
         /// </summary>
         /// <param name="entity">待添加实体</param>
         /// <returns></returns>
-        int Add<T>(T entity) where T : class, new();
+        int Add<T>(T entity) where T : IEntity, new();
 
         /// <summary>
         /// 批量添加
         /// </summary>
         /// <param name="entitys">待添加实体集合</param>
         /// <returns></returns>
-        int AddList<T>(List<T> entitys) where T : class, new();
+        int AddList<T>(List<T> entitys) where T : IEntity, new();
 
         /// <summary>
         /// 根据条件获取一条记录
         /// </summary>
         /// <param name="condition">筛选条件</param>
         /// <returns></returns>
-        T GetEntity<T>(Expression<Func<T, bool>> condition) where T : class, new();
+        T GetEntity<T>(Expression<Func<T, bool>> condition) where T : IEntity, new();
 
         /// <summary>
         /// 根据条件获取多条记录
         /// </summary>
         /// <param name="condition">筛选条件</param>
         /// <returns></returns>
-        IEnumerable<T> GetList<T>(Expression<Func<T, bool>> condition) where T : class, new();
+        IEnumerable<T> GetList<T>(Expression<Func<T, bool>> condition) where T : IEntity, new();
 
         /// <summary>
         /// 删除表所有数据
         /// </summary>
         /// <returns></returns>
-        int Delete<T>() where T : class, new();
+        int Delete<T>() where T : IEntity, new();
 
         /// <summary>
         /// 根据条件删除数据
         /// </summary>
         /// <param name="condition">筛选条件</param>
         /// <returns></returns>
-        int Delete<T>(Expression<Func<T, bool>> condition) where T : class, new();
+        int Delete<T>(Expression<Func<T, bool>> condition) where T : IEntity, new();
 
         /// <summary>
         /// 根据条件更新
@@ -84,7 +85,7 @@ namespace BerryCore.IBLL.Base
         /// <param name="entity">要修改的列及修改后列的值集合</param>
         /// <param name="condition">筛选条件</param>
         /// <returns>返回受影响行数</returns>
-        int Update<T>(T entity, Expression<Func<T, bool>> condition) where T : class;
+        int Update<T>(T entity, Expression<Func<T, bool>> condition) where T : IEntity;
 
         /// <summary>
         /// 执行T-SQL
@@ -149,7 +150,7 @@ namespace BerryCore.IBLL.Base
         /// <param name="condition">筛选条件</param>
         /// <param name="pagination">分页参数</param>
         /// <returns></returns>
-        IEnumerable<T> FindList<T>(Expression<Func<T, bool>> condition, PaginationEntity pagination) where T : class, new();
+        IEnumerable<T> FindList<T>(Expression<Func<T, bool>> condition, PaginationEntity pagination) where T : IEntity, new();
 
         /// <summary>
         /// 根据条件查询一个DataTable
@@ -158,7 +159,7 @@ namespace BerryCore.IBLL.Base
         /// <typeparam name="T"></typeparam>
         /// <param name="condition">筛选条件</param>
         /// <returns></returns>
-        DataTable FindTable<TR, T>(Expression<Func<T, bool>> condition) where TR : class, new() where T : class, new();
+        DataTable FindTable<TR, T>(Expression<Func<T, bool>> condition) where TR : class, new() where T : IEntity, new();
 
         /// <summary>
         /// 查询一个DataTable

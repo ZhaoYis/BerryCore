@@ -19,11 +19,13 @@
 #endregion
 
 using BerryCore.Entity.Base;
+using BerryCore.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
+using BerryCore.Entity.Protocol;
 
 namespace BerryCore.Data.Repository
 {
@@ -34,7 +36,7 @@ namespace BerryCore.Data.Repository
     /// 最后修改者  ：赵轶
     /// 最后修改日期：2019/5/3 20:40:18 
     /// </summary>
-    public class Repository<T> : IRepository<T> where T : class, new()
+    public class Repository<T> : IRepository<T> where T : IEntity, new()
     {
         #region 构造
 

@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Linq.Expressions;
+using BerryCore.Entity.Protocol;
 
 namespace BerryCore.Service.Base
 {
@@ -36,7 +37,7 @@ namespace BerryCore.Service.Base
     /// 最后修改者  ：赵轶
     /// 最后修改日期：2019/5/4 9:27:15 
     /// </summary>
-    public class BaseService<T> : RepositoryFactory<T>, IBaseService<T> where T : class, new()
+    public class BaseService<T> : RepositoryFactory<T>, IBaseService<T> where T : IEntity, new()
     {
         /// <summary>
         /// 添加一条记录
